@@ -1,0 +1,380 @@
+{
+  "schema_version": 1,
+  "seed": 42,
+  "case_seed_stride": 1000,
+  "shots_per_enumerated_circuit": 2000,
+  "exact_tolerance": 1e-10,
+  "statistical_screen_sigmas": 6,
+  "versions": {
+    "quantum-partition-research": "0.1.0",
+    "qiskit": "2.5.2",
+    "qiskit-aer": "0.17.2",
+    "qiskit-addon-cutting": "0.10.0"
+  },
+  "all_exact_checks_passed": true,
+  "all_statistical_screens_passed": true,
+  "results": [
+    {
+      "case": "bell_xx_gate",
+      "source_qasm": "bell.qasm",
+      "source_sha256": "7d44e21c07f288034b521edb642e70a4664d05b87b182d9d3604593e45ceee0b",
+      "circuit_fingerprint": "12043559053045aa8b2fe0b01956a3ac05a88d73dc6c8529bdebccbfd6fc1c56",
+      "query_fingerprint": "d98abe5736d77db19a9e878c876473335acbf6821ef1970ce1ecce4aeaa498b4",
+      "observable": [
+        [
+          "XX",
+          1.0
+        ]
+      ],
+      "analytic_expectation": 1,
+      "uncut_expectation": 0.9999999999999998,
+      "exact_reconstruction": 0.9999999999999991,
+      "exact_error": 8.881784197001252e-16,
+      "shot_result": {
+        "estimate": 1.0000015,
+        "absolute_error": 1.500000000209667e-06,
+        "standard_error": 0.0006933855873954933,
+        "error_in_standard_errors": 0.00216329849866651,
+        "within_statistical_screen": true,
+        "bootstrap": {
+          "standard_error": 0.0006933855873954933,
+          "confidence_interval": [
+            0.998684225,
+            1.0013856625000002
+          ],
+          "confidence": 0.95,
+          "replicates": 200
+        },
+        "total_shots": 20000
+      },
+      "cost": {
+        "gate_cuts": 1,
+        "wire_cuts": 0,
+        "fragment_widths": {
+          "f0": 1,
+          "f1": 1
+        },
+        "decomposition_terms": 6,
+        "generated_experiments": 12,
+        "unique_experiments": 10,
+        "gamma": 3.0,
+        "sampling_overhead": 9.0,
+        "observable_l1": 1.0,
+        "bounded_estimator_factor": 9.0
+      },
+      "exact_checks_passed": true
+    },
+    {
+      "case": "bell_yy_gate",
+      "source_qasm": "bell.qasm",
+      "source_sha256": "7d44e21c07f288034b521edb642e70a4664d05b87b182d9d3604593e45ceee0b",
+      "circuit_fingerprint": "aa8e263933167f23b70ac8474ff9279f6e6d22b9c0a58cd516df249714872238",
+      "query_fingerprint": "3d5dce9230d815a37b84cce0937d9cf2812642e396e4c6a6234452e5dc97097b",
+      "observable": [
+        [
+          "YY",
+          1.0
+        ]
+      ],
+      "analytic_expectation": -1,
+      "uncut_expectation": -0.9999999999999998,
+      "exact_reconstruction": -0.9999999999999993,
+      "exact_error": 6.661338147750939e-16,
+      "shot_result": {
+        "estimate": -0.9997854999999999,
+        "absolute_error": 0.00021449999999989533,
+        "standard_error": 0.0007752774474965297,
+        "error_in_standard_errors": 0.2766751447401744,
+        "within_statistical_screen": true,
+        "bootstrap": {
+          "standard_error": 0.0007752774474965297,
+          "confidence_interval": [
+            -1.0012442875,
+            -0.9980315
+          ],
+          "confidence": 0.95,
+          "replicates": 200
+        },
+        "total_shots": 20000
+      },
+      "cost": {
+        "gate_cuts": 1,
+        "wire_cuts": 0,
+        "fragment_widths": {
+          "f0": 1,
+          "f1": 1
+        },
+        "decomposition_terms": 6,
+        "generated_experiments": 12,
+        "unique_experiments": 10,
+        "gamma": 3.0,
+        "sampling_overhead": 9.0,
+        "observable_l1": 1.0,
+        "bounded_estimator_factor": 9.0
+      },
+      "exact_checks_passed": true
+    },
+    {
+      "case": "bell_iz_gate",
+      "source_qasm": "bell.qasm",
+      "source_sha256": "7d44e21c07f288034b521edb642e70a4664d05b87b182d9d3604593e45ceee0b",
+      "circuit_fingerprint": "b338c34700ba921a0426e911455404ac0d2658ce455cc3e93f6af2d2ea572c7f",
+      "query_fingerprint": "6980fec3418411ac9146b4771a11daa147c28e32b4d94a9f782b5891277766a7",
+      "observable": [
+        [
+          "IZ",
+          1.0
+        ]
+      ],
+      "analytic_expectation": 0,
+      "uncut_expectation": 0.0,
+      "exact_reconstruction": 2.220446049250313e-16,
+      "exact_error": 2.220446049250313e-16,
+      "shot_result": {
+        "estimate": -0.002233499999999947,
+        "absolute_error": 0.002233499999999947,
+        "standard_error": 0.017231768544984417,
+        "error_in_standard_errors": 0.12961525070217142,
+        "within_statistical_screen": true,
+        "bootstrap": {
+          "standard_error": 0.017231768544984417,
+          "confidence_interval": [
+            -0.031415987499999964,
+            0.03061244999999998
+          ],
+          "confidence": 0.95,
+          "replicates": 200
+        },
+        "total_shots": 20000
+      },
+      "cost": {
+        "gate_cuts": 1,
+        "wire_cuts": 0,
+        "fragment_widths": {
+          "f0": 1,
+          "f1": 1
+        },
+        "decomposition_terms": 6,
+        "generated_experiments": 12,
+        "unique_experiments": 10,
+        "gamma": 3.0,
+        "sampling_overhead": 9.0,
+        "observable_l1": 1.0,
+        "bounded_estimator_factor": 9.0
+      },
+      "exact_checks_passed": true
+    },
+    {
+      "case": "ghz_wire",
+      "source_qasm": "ghz.qasm",
+      "source_sha256": "8928e3ba6304814a3e25b0f178cc935915c9ae08ead1b35ba399ba44e3230fbd",
+      "circuit_fingerprint": "5dce15eaadabf63c73cdd45040860f03c88dc7a17301d4f7ec3b5a4e2e39b4b1",
+      "query_fingerprint": "653d7d6d92932513330ea9dd60dbbfa0bfd010ab050126da8085673274a75768",
+      "observable": [
+        [
+          "XXX",
+          0.3
+        ],
+        [
+          "ZIZ",
+          0.2
+        ],
+        [
+          "YXY",
+          -0.1
+        ]
+      ],
+      "analytic_expectation": 0.6,
+      "uncut_expectation": 0.5999999999999999,
+      "exact_reconstruction": 0.5999999999999996,
+      "exact_error": 3.3306690738754696e-16,
+      "shot_result": {
+        "estimate": 0.5995206500000001,
+        "absolute_error": 0.00047934999999976746,
+        "standard_error": 0.0005199226702792414,
+        "error_in_standard_errors": 0.9219640292705777,
+        "within_statistical_screen": true,
+        "bootstrap": {
+          "standard_error": 0.0005199226702792414,
+          "confidence_interval": [
+            0.59838740875,
+            0.60052487
+          ],
+          "confidence": 0.95,
+          "replicates": 200
+        },
+        "total_shots": 60000
+      },
+      "cost": {
+        "gate_cuts": 0,
+        "wire_cuts": 1,
+        "fragment_widths": {
+          "f0": 2,
+          "f1": 2
+        },
+        "decomposition_terms": 8,
+        "generated_experiments": 48,
+        "unique_experiments": 30,
+        "gamma": 4.0,
+        "sampling_overhead": 16.0,
+        "observable_l1": 0.6,
+        "bounded_estimator_factor": 5.76
+      },
+      "exact_checks_passed": true
+    },
+    {
+      "case": "ghz_mixed",
+      "source_qasm": "ghz.qasm",
+      "source_sha256": "8928e3ba6304814a3e25b0f178cc935915c9ae08ead1b35ba399ba44e3230fbd",
+      "circuit_fingerprint": "34ac8f781b42a0045b89702737bc02413b3159f604c5d2d1b390d3753c1f3ae8",
+      "query_fingerprint": "653d7d6d92932513330ea9dd60dbbfa0bfd010ab050126da8085673274a75768",
+      "observable": [
+        [
+          "XXX",
+          0.3
+        ],
+        [
+          "ZIZ",
+          0.2
+        ],
+        [
+          "YXY",
+          -0.1
+        ]
+      ],
+      "analytic_expectation": 0.6,
+      "uncut_expectation": 0.5999999999999999,
+      "exact_reconstruction": 0.599999999999999,
+      "exact_error": 9.992007221626409e-16,
+      "shot_result": {
+        "estimate": 0.6000352609749995,
+        "absolute_error": 3.5260974999618e-05,
+        "standard_error": 0.0005204500642972074,
+        "error_in_standard_errors": 0.06775092831861372,
+        "within_statistical_screen": true,
+        "bootstrap": {
+          "standard_error": 0.0005204500642972074,
+          "confidence_interval": [
+            0.5988938194543746,
+            0.6008887891937498
+          ],
+          "confidence": 0.95,
+          "replicates": 200
+        },
+        "total_shots": 106000
+      },
+      "cost": {
+        "gate_cuts": 1,
+        "wire_cuts": 1,
+        "fragment_widths": {
+          "f0": 1,
+          "f1": 1,
+          "f2": 2
+        },
+        "decomposition_terms": 48,
+        "generated_experiments": 336,
+        "unique_experiments": 53,
+        "gamma": 12.0,
+        "sampling_overhead": 144.0,
+        "observable_l1": 0.6,
+        "bounded_estimator_factor": 51.839999999999996
+      },
+      "exact_checks_passed": true
+    },
+    {
+      "case": "rzz_gate",
+      "source_qasm": "rzz.qasm",
+      "source_sha256": "8d85516aad0d3bb2c99b067069ed532f8f1337824f876d59ae00d60739773d55",
+      "circuit_fingerprint": "918ba50944f88766447050bafea15b219b1f329723c7fd8bc3554d6a8e35f213",
+      "query_fingerprint": "c1159044dc0d4ef1ba2ccbbd0ce72c14011cd6d01bcd5afff2c1c50e5fb0327d",
+      "observable": [
+        [
+          "ZY",
+          1.0
+        ]
+      ],
+      "analytic_expectation": 0.29552020666133955,
+      "uncut_expectation": 0.29552020666133944,
+      "exact_reconstruction": 0.2955202066613394,
+      "exact_error": 1.6653345369377348e-16,
+      "shot_result": {
+        "estimate": 0.29538679791839517,
+        "absolute_error": 0.0001334087429442632,
+        "standard_error": 0.0006064543403726138,
+        "error_in_standard_errors": 0.21998151231351573,
+        "within_statistical_screen": true,
+        "bootstrap": {
+          "standard_error": 0.0006064543403726138,
+          "confidence_interval": [
+            0.29418436554433147,
+            0.2965602350193589
+          ],
+          "confidence": 0.95,
+          "replicates": 200
+        },
+        "total_shots": 20000
+      },
+      "cost": {
+        "gate_cuts": 1,
+        "wire_cuts": 0,
+        "fragment_widths": {
+          "f0": 1,
+          "f1": 1
+        },
+        "decomposition_terms": 6,
+        "generated_experiments": 12,
+        "unique_experiments": 10,
+        "gamma": 1.5910404133226788,
+        "sampling_overhead": 2.5314095968260006,
+        "observable_l1": 1.0,
+        "bounded_estimator_factor": 2.5314095968260006
+      },
+      "exact_checks_passed": true
+    },
+    {
+      "case": "bell_t_excision",
+      "source_qasm": "bell_t.qasm",
+      "source_sha256": "2f224a050e046fcf46b18ecaafc976e5ac1ec42b61b66ebacaf828b53d47ad91",
+      "circuit_fingerprint": "617d8dca967cfc4f4652e9f36bb83834ff27561120c39697a748b18611fc7125",
+      "query_fingerprint": "cf8e2905a250ce6c809531ba609d364d1196d5af0f9d18388bc04cf1b1e210ef",
+      "observable": [
+        [
+          "XY",
+          1.0
+        ]
+      ],
+      "analytic_expectation": 0.7071067811865475,
+      "uncut_expectation": 0.7071067811865474,
+      "exact_reconstruction": 0.7071067811865469,
+      "exact_error": 5.551115123125783e-16,
+      "shot_result": {
+        "estimate": 0.692146626078156,
+        "absolute_error": 0.014960155108391326,
+        "standard_error": 0.029581473835783578,
+        "error_in_standard_errors": 0.5057271720618125,
+        "within_statistical_screen": true,
+        "total_shots": 24000
+      },
+      "cost": {
+        "gamma": 4.82842712474619,
+        "sampling_overhead": 23.31370849898476,
+        "algebraic_terms": [
+          6
+        ],
+        "physical_terms": 12,
+        "executed_circuits": 12,
+        "execution_qubits": 2
+      },
+      "exact_checks_passed": true,
+      "sampled_terms": {
+        "estimate": 0.7540393693145299,
+        "absolute_error": 0.04693258812798251,
+        "standard_error": 0.030785603292420215,
+        "error_in_standard_errors": 1.5244979181401288,
+        "within_statistical_screen": true,
+        "total_shots": 24000,
+        "executed_circuits": 12
+      }
+    }
+  ]
+}

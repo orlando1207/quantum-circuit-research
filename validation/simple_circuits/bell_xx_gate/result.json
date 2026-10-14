@@ -1,0 +1,50 @@
+{
+  "case": "bell_xx_gate",
+  "source_qasm": "bell.qasm",
+  "source_sha256": "7d44e21c07f288034b521edb642e70a4664d05b87b182d9d3604593e45ceee0b",
+  "circuit_fingerprint": "12043559053045aa8b2fe0b01956a3ac05a88d73dc6c8529bdebccbfd6fc1c56",
+  "query_fingerprint": "d98abe5736d77db19a9e878c876473335acbf6821ef1970ce1ecce4aeaa498b4",
+  "observable": [
+    [
+      "XX",
+      1.0
+    ]
+  ],
+  "analytic_expectation": 1,
+  "uncut_expectation": 0.9999999999999998,
+  "exact_reconstruction": 0.9999999999999991,
+  "exact_error": 8.881784197001252e-16,
+  "shot_result": {
+    "estimate": 1.0000015,
+    "absolute_error": 1.500000000209667e-06,
+    "standard_error": 0.0006933855873954933,
+    "error_in_standard_errors": 0.00216329849866651,
+    "within_statistical_screen": true,
+    "bootstrap": {
+      "standard_error": 0.0006933855873954933,
+      "confidence_interval": [
+        0.998684225,
+        1.0013856625000002
+      ],
+      "confidence": 0.95,
+      "replicates": 200
+    },
+    "total_shots": 20000
+  },
+  "cost": {
+    "gate_cuts": 1,
+    "wire_cuts": 0,
+    "fragment_widths": {
+      "f0": 1,
+      "f1": 1
+    },
+    "decomposition_terms": 6,
+    "generated_experiments": 12,
+    "unique_experiments": 10,
+    "gamma": 3.0,
+    "sampling_overhead": 9.0,
+    "observable_l1": 1.0,
+    "bounded_estimator_factor": 9.0
+  },
+  "exact_checks_passed": true
+}

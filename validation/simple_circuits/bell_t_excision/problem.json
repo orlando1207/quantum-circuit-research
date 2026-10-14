@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "circuit_fingerprint": "617d8dca967cfc4f4652e9f36bb83834ff27561120c39697a748b18611fc7125",
+  "query_fingerprint": "cf8e2905a250ce6c809531ba609d364d1196d5af0f9d18388bc04cf1b1e210ef",
+  "operation_ids": [
+    "op000000",
+    "op000001",
+    "op000002"
+  ],
+  "observable": [
+    [
+      "XY",
+      1.0
+    ]
+  ]
+}

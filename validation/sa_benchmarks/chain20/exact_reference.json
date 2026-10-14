@@ -1,0 +1,8 @@
+{
+  "complete": true,
+  "nodes_visited": 60062,
+  "states_evaluated": 240,
+  "seconds": 0.1325516040005823,
+  "best_overhead": 15.999999999999998,
+  "scope": "Supported independent templates and two-static-block constraints only."
+}

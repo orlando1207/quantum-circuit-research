@@ -1,0 +1,54 @@
+{
+  "experiment_indices": {
+    "f0": [
+      0,
+      1,
+      2,
+      2,
+      3,
+      4
+    ],
+    "f1": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      4
+    ]
+  },
+  "coefficients": [
+    {
+      "coefficient": 0.5,
+      "weight_type": "EXACT"
+    },
+    {
+      "coefficient": 0.5,
+      "weight_type": "EXACT"
+    },
+    {
+      "coefficient": 0.5,
+      "weight_type": "EXACT"
+    },
+    {
+      "coefficient": -0.5,
+      "weight_type": "EXACT"
+    },
+    {
+      "coefficient": 0.5,
+      "weight_type": "EXACT"
+    },
+    {
+      "coefficient": -0.5,
+      "weight_type": "EXACT"
+    }
+  ],
+  "fragment_observables": {
+    "f0": [
+      "Z"
+    ],
+    "f1": [
+      "I"
+    ]
+  }
+}

@@ -1,0 +1,8 @@
+name: quantum-partition
+channels:
+  - defaults
+dependencies:
+  - python=3.12.15
+  - pip
+  - pip:
+      - -r requirements.lock.txt

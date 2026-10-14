@@ -1,0 +1,18 @@
+{
+  "source": "reference/2608.05287v1.pdf",
+  "table": "I",
+  "width_rule": "floor(3*n/4)",
+  "paper_restarts": 50,
+  "metric": "squared coefficient norm / sampling-overhead factor",
+  "reported_precision": "two significant figures; compare rounded intervals",
+  "rows": {
+    "qaoa8": {"qubits": 8, "two_qubit_gates": 16, "max_qubits": 6, "mip_gate": 1700, "cutqc_wire": 65000, "qiskit": 1700, "paper_without_groups": 1700, "paper_with_groups": 260},
+    "qaoa15": {"qubits": 15, "two_qubit_gates": 30, "max_qubits": 11, "mip_gate": 1700, "cutqc_wire": 65000, "qiskit": 1700, "paper_without_groups": 1700, "paper_with_groups": 260},
+    "qft6": {"qubits": 6, "two_qubit_gates": 18, "max_qubits": 4, "mip_gate": 2500, "cutqc_wire": null, "qiskit": 2500, "paper_without_groups": 2500, "paper_with_groups": 42},
+    "qft12": {"qubits": 12, "two_qubit_gates": 72, "max_qubits": 9, "mip_gate": 800000, "cutqc_wire": null, "qiskit": 15000000, "paper_without_groups": 800000, "paper_with_groups": null},
+    "grover4": {"qubits": 4, "two_qubit_gates": 38, "max_qubits": 3, "mip_gate": 8200000, "cutqc_wire": null, "qiskit": 17000000000000000000, "paper_without_groups": 8200000, "paper_with_groups": 51000},
+    "chain10": {"qubits": 10, "two_qubit_gates": 36, "max_qubits": 7, "mip_gate": 530000, "cutqc_wire": 16, "qiskit": 16, "paper_without_groups": 16, "paper_with_groups": 16},
+    "chain20": {"qubits": 20, "two_qubit_gates": 73, "max_qubits": 15, "mip_gate": 530000, "cutqc_wire": 16, "qiskit": 16, "paper_without_groups": 16, "paper_with_groups": 16},
+    "figure4": {"qubits": 6, "two_qubit_gates": 28, "max_qubits": 4, "mip_gate": 530000, "cutqc_wire": null, "qiskit": 21000, "paper_without_groups": 21000, "paper_with_groups": 7100}
+  }
+}

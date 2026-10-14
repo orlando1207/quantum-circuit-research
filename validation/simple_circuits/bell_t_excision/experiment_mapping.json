@@ -1,0 +1,52 @@
+{
+  "scored_experiments": [
+    {
+      "coefficient": 0.49999999999999994,
+      "score_mask": 3
+    },
+    {
+      "coefficient": 0.49999999999999994,
+      "score_mask": 3
+    },
+    {
+      "coefficient": 0.35355339059327373,
+      "score_mask": 7
+    },
+    {
+      "coefficient": -0.35355339059327373,
+      "score_mask": 7
+    },
+    {
+      "coefficient": -0.35355339059327373,
+      "score_mask": 7
+    },
+    {
+      "coefficient": 0.35355339059327373,
+      "score_mask": 7
+    },
+    {
+      "coefficient": 0.35355339059327373,
+      "score_mask": 7
+    },
+    {
+      "coefficient": -0.35355339059327373,
+      "score_mask": 7
+    },
+    {
+      "coefficient": 0.35355339059327373,
+      "score_mask": 7
+    },
+    {
+      "coefficient": -0.35355339059327373,
+      "score_mask": 7
+    },
+    {
+      "coefficient": 0.49999999999999994,
+      "score_mask": 7
+    },
+    {
+      "coefficient": -0.49999999999999994,
+      "score_mask": 7
+    }
+  ]
+}

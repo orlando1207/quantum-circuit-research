@@ -1,0 +1,58 @@
+{
+  "qft6": {
+    "status": "passed",
+    "qiskit_component_widths": [
+      2,
+      4
+    ],
+    "graph_component_widths": [
+      2,
+      4
+    ],
+    "qiskit_sampling_overhead": 2521.750317775563,
+    "graph_sampling_overhead": 2521.7503177755666,
+    "scope": "Structural materialization and QPD norm; no global branch enumeration."
+  },
+  "qft12": {
+    "status": "passed",
+    "qiskit_component_widths": [
+      5,
+      8
+    ],
+    "graph_component_widths": [
+      5,
+      8
+    ],
+    "qiskit_sampling_overhead": 701729.0531647302,
+    "graph_sampling_overhead": 701729.0531647314,
+    "scope": "Structural materialization and QPD norm; no global branch enumeration."
+  },
+  "chain10": {
+    "status": "passed",
+    "qiskit_component_widths": [
+      4,
+      7
+    ],
+    "graph_component_widths": [
+      4,
+      7
+    ],
+    "qiskit_sampling_overhead": 16.0,
+    "graph_sampling_overhead": 15.999999999999998,
+    "scope": "Structural materialization and QPD norm; no global branch enumeration."
+  },
+  "chain20": {
+    "status": "passed",
+    "qiskit_component_widths": [
+      8,
+      13
+    ],
+    "graph_component_widths": [
+      8,
+      13
+    ],
+    "qiskit_sampling_overhead": 16.0,
+    "graph_sampling_overhead": 15.999999999999998,
+    "scope": "Structural materialization and QPD norm; no global branch enumeration."
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "scope": "Topology and static allocation, not a new production compiler or optimality proof",
+  "plan_sha256": "f8402a3323daddf90299ce168db72443a52cac8919be7f434de495fe8f3d88b1",
+  "circuits": [
+    {
+      "circuit": "rejoining_two_qubit_circuit",
+      "qubits": 2,
+      "assignments_checked": 576,
+      "topology_and_width_agree": true
+    },
+    {
+      "circuit": "three_qubit_chain",
+      "qubits": 3,
+      "assignments_checked": 72,
+      "topology_and_width_agree": true
+    },
+    {
+      "circuit": "single_qubit_chain",
+      "qubits": 1,
+      "assignments_checked": 8,
+      "topology_and_width_agree": true
+    },
+    {
+      "circuit": "idle_wire",
+      "qubits": 3,
+      "assignments_checked": 3,
+      "topology_and_width_agree": true
+    }
+  ],
+  "total_assignments_checked": 659,
+  "single_cx_truth_table": {
+    "retain": {
+      "components": 1,
+      "widths": [
+        2
+      ]
+    },
+    "gate": {
+      "components": 2,
+      "widths": [
+        1,
+        1
+      ]
+    },
+    "excision": {
+      "components": 4,
+      "widths": [
+        1,
+        1,
+        1,
+        1
+      ]
+    }
+  },
+  "current_star_graph": {
+    "components_after_deleting_gate_center": 4,
+    "actual_gate_cut_fragment_widths": {
+      "f0": 1,
+      "f1": 1
+    }
+  },
+  "rejoining_wire_cut": {
+    "original_qubits": 2,
+    "fragments": 1,
+    "materialized_widths": {
+      "f0": 3
+    },
+    "exact_reconstruction_error": 0.0
+  }
+}

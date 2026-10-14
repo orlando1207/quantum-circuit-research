@@ -1,0 +1,146 @@
+{
+  "schema_version": 1,
+  "seed": 42,
+  "shots_per_enumerated_unique_circuit": 2000,
+  "versions": {
+    "quantum-partition-research": "0.1.0",
+    "qiskit": "2.5.2",
+    "qiskit-aer": "0.17.2",
+    "qiskit-addon-cutting": "0.10.0",
+    "numpy": "2.5.3",
+    "scipy": "1.18.1",
+    "networkx": "3.7"
+  },
+  "results": [
+    {
+      "case": "gate",
+      "reference": 0.9726475512265507,
+      "exact_reconstruction": 0.9726475512265501,
+      "exact_error": 5.551115123125783e-16,
+      "shot_estimate": 0.97005245,
+      "shot_error": 0.002595101226550711,
+      "uncertainty": {
+        "standard_error": 0.00496549382641948,
+        "confidence_interval": [
+          0.96047493,
+          0.9795586524999998
+        ],
+        "confidence": 0.95,
+        "replicates": 200
+      },
+      "total_shots": 40000,
+      "execution_seconds": 0.9578034079986537,
+      "cost": {
+        "gate_cuts": 1,
+        "wire_cuts": 0,
+        "fragment_widths": {
+          "f0": 1,
+          "f1": 1
+        },
+        "decomposition_terms": 6,
+        "generated_experiments": 24,
+        "unique_experiments": 20,
+        "gamma": 3.0,
+        "sampling_overhead": 9.0,
+        "observable_l1": 1.0,
+        "bounded_estimator_factor": 9.0
+      }
+    },
+    {
+      "case": "wire",
+      "reference": 1.0048723336741936,
+      "exact_reconstruction": 1.0048723336741934,
+      "exact_error": 2.220446049250313e-16,
+      "shot_estimate": 1.0101564,
+      "shot_error": 0.005284066325806469,
+      "uncertainty": {
+        "standard_error": 0.007351216638592321,
+        "confidence_interval": [
+          0.992600775,
+          1.02413217625
+        ],
+        "confidence": 0.95,
+        "replicates": 200
+      },
+      "total_shots": 60000,
+      "execution_seconds": 0.08993662399916502,
+      "cost": {
+        "gate_cuts": 0,
+        "wire_cuts": 1,
+        "fragment_widths": {
+          "f0": 2,
+          "f1": 2
+        },
+        "decomposition_terms": 8,
+        "generated_experiments": 48,
+        "unique_experiments": 30,
+        "gamma": 4.0,
+        "sampling_overhead": 16.0,
+        "observable_l1": 1.1,
+        "bounded_estimator_factor": 19.360000000000003
+      }
+    },
+    {
+      "case": "mixed",
+      "reference": 1.0048723336741936,
+      "exact_reconstruction": 1.004872333674192,
+      "exact_error": 1.5543122344752192e-15,
+      "shot_estimate": 1.0012321744999992,
+      "shot_error": 0.0036401591741943573,
+      "uncertainty": {
+        "standard_error": 0.00821358449321118,
+        "confidence_interval": [
+          0.9835754456168745,
+          1.0170158848706243
+        ],
+        "confidence": 0.95,
+        "replicates": 200
+      },
+      "total_shots": 106000,
+      "execution_seconds": 0.5217618249989755,
+      "cost": {
+        "gate_cuts": 1,
+        "wire_cuts": 1,
+        "fragment_widths": {
+          "f0": 1,
+          "f1": 1,
+          "f2": 2
+        },
+        "decomposition_terms": 48,
+        "generated_experiments": 336,
+        "unique_experiments": 53,
+        "gamma": 12.0,
+        "sampling_overhead": 144.0,
+        "observable_l1": 1.1,
+        "bounded_estimator_factor": 174.24000000000004
+      }
+    },
+    {
+      "case": "T-excision",
+      "reference": 0.690063704164326,
+      "exact_reconstruction": 0.6900637041643256,
+      "exact_error": 4.440892098500626e-16,
+      "algebraic_terms": 6,
+      "physical_terms": 12,
+      "discarded_ptm_norm": 1.5700924586837752e-16,
+      "gamma": 4.82842712474619,
+      "sampling_overhead": 23.31370849898476,
+      "enumerated": {
+        "expectation": 0.7338953634196851,
+        "standard_error": 0.029671455308596925,
+        "total_shots": 24000,
+        "executed_circuits": 12,
+        "execution_mode": "enumerated",
+        "gamma": 4.82842712474619
+      },
+      "sampled_terms": {
+        "expectation": 0.6820153313703993,
+        "standard_error": 0.03085552060944184,
+        "total_shots": 24000,
+        "executed_circuits": 12,
+        "execution_mode": "sampled-terms",
+        "gamma": 4.82842712474619
+      }
+    }
+  ]
+}

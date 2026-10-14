@@ -1,0 +1,58 @@
+{
+  "case": "ghz_wire",
+  "source_qasm": "ghz.qasm",
+  "source_sha256": "8928e3ba6304814a3e25b0f178cc935915c9ae08ead1b35ba399ba44e3230fbd",
+  "circuit_fingerprint": "5dce15eaadabf63c73cdd45040860f03c88dc7a17301d4f7ec3b5a4e2e39b4b1",
+  "query_fingerprint": "653d7d6d92932513330ea9dd60dbbfa0bfd010ab050126da8085673274a75768",
+  "observable": [
+    [
+      "XXX",
+      0.3
+    ],
+    [
+      "ZIZ",
+      0.2
+    ],
+    [
+      "YXY",
+      -0.1
+    ]
+  ],
+  "analytic_expectation": 0.6,
+  "uncut_expectation": 0.5999999999999999,
+  "exact_reconstruction": 0.5999999999999996,
+  "exact_error": 3.3306690738754696e-16,
+  "shot_result": {
+    "estimate": 0.5995206500000001,
+    "absolute_error": 0.00047934999999976746,
+    "standard_error": 0.0005199226702792414,
+    "error_in_standard_errors": 0.9219640292705777,
+    "within_statistical_screen": true,
+    "bootstrap": {
+      "standard_error": 0.0005199226702792414,
+      "confidence_interval": [
+        0.59838740875,
+        0.60052487
+      ],
+      "confidence": 0.95,
+      "replicates": 200
+    },
+    "total_shots": 60000
+  },
+  "cost": {
+    "gate_cuts": 0,
+    "wire_cuts": 1,
+    "fragment_widths": {
+      "f0": 2,
+      "f1": 2
+    },
+    "decomposition_terms": 8,
+    "generated_experiments": 48,
+    "unique_experiments": 30,
+    "gamma": 4.0,
+    "sampling_overhead": 16.0,
+    "observable_l1": 0.6,
+    "bounded_estimator_factor": 5.76
+  },
+  "exact_checks_passed": true
+}

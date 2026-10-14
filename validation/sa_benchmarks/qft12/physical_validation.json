@@ -1,0 +1,14 @@
+{
+  "branch_configurations_checked": 16,
+  "widths_seen": [
+    [
+      5,
+      8
+    ]
+  ],
+  "all_widths_bounded": true,
+  "static_allocation_is_branch_independent": true,
+  "physical_gamma": 837.6926961390635,
+  "cost_matches_compiler": true,
+  "scope": "Compilation and static width check; no numerical/hardware execution of large instance."
+}

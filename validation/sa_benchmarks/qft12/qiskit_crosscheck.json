@@ -1,0 +1,14 @@
+{
+  "status": "passed",
+  "qiskit_component_widths": [
+    5,
+    8
+  ],
+  "graph_component_widths": [
+    5,
+    8
+  ],
+  "qiskit_sampling_overhead": 701729.0531647302,
+  "graph_sampling_overhead": 701729.0531647314,
+  "scope": "Structural materialization and QPD norm; no global branch enumeration."
+}

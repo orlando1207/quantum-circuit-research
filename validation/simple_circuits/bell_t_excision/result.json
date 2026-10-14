@@ -1,0 +1,45 @@
+{
+  "case": "bell_t_excision",
+  "source_qasm": "bell_t.qasm",
+  "source_sha256": "2f224a050e046fcf46b18ecaafc976e5ac1ec42b61b66ebacaf828b53d47ad91",
+  "circuit_fingerprint": "617d8dca967cfc4f4652e9f36bb83834ff27561120c39697a748b18611fc7125",
+  "query_fingerprint": "cf8e2905a250ce6c809531ba609d364d1196d5af0f9d18388bc04cf1b1e210ef",
+  "observable": [
+    [
+      "XY",
+      1.0
+    ]
+  ],
+  "analytic_expectation": 0.7071067811865475,
+  "uncut_expectation": 0.7071067811865474,
+  "exact_reconstruction": 0.7071067811865469,
+  "exact_error": 5.551115123125783e-16,
+  "shot_result": {
+    "estimate": 0.692146626078156,
+    "absolute_error": 0.014960155108391326,
+    "standard_error": 0.029581473835783578,
+    "error_in_standard_errors": 0.5057271720618125,
+    "within_statistical_screen": true,
+    "total_shots": 24000
+  },
+  "cost": {
+    "gamma": 4.82842712474619,
+    "sampling_overhead": 23.31370849898476,
+    "algebraic_terms": [
+      6
+    ],
+    "physical_terms": 12,
+    "executed_circuits": 12,
+    "execution_qubits": 2
+  },
+  "exact_checks_passed": true,
+  "sampled_terms": {
+    "estimate": 0.7540393693145299,
+    "absolute_error": 0.04693258812798251,
+    "standard_error": 0.030785603292420215,
+    "error_in_standard_errors": 1.5244979181401288,
+    "within_statistical_screen": true,
+    "total_shots": 24000,
+    "executed_circuits": 12
+  }
+}

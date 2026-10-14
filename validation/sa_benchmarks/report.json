@@ -1,0 +1,1355 @@
+{
+  "schema_version": 1,
+  "source_pdf_sha256": "b19fd9ace43ae078c1cd5d953e294ef206c4e653ea3132e49df63e2b5717a719",
+  "constraints": "two static executable blocks; M=floor(3*n/4); no grouping",
+  "comparison_scope": "QFT count/spatial-cost matched reconstructions; chain structural proxies. No claim of beating original unpublished circuit artifacts.",
+  "selection_protocol": "Instance-specific tuning; final evaluation uses fresh seeds 1000+. No cross-circuit generalization claim. Initialization time is recorded separately; per-run evaluation counts include pilot probes and greedy polishing.",
+  "packages": {
+    "qiskit": "2.5.2",
+    "qiskit-aer": "0.17.2",
+    "qiskit-addon-cutting": "0.10.0",
+    "numpy": "2.5.3",
+    "networkx": "3.7"
+  },
+  "arguments": {
+    "output": "validation/sa_benchmarks",
+    "steps": 6000,
+    "tuning_starts": 8,
+    "final_starts": 50,
+    "workers": 4,
+    "only": null
+  },
+  "profiles": {
+    "single_action": {
+      "block_probability": 0.0
+    },
+    "mixed": {
+      "block_probability": 0.3,
+      "block_size": 4
+    },
+    "wide_blocks": {
+      "block_probability": 0.6,
+      "block_size": 8
+    },
+    "colder_start": {
+      "initial_acceptance": 0.55
+    },
+    "fast_cooling": {
+      "cooling_rate": 0.85
+    },
+    "slow_cooling": {
+      "cooling_rate": 0.97
+    },
+    "no_excision_ablation": {
+      "allow_excision": false
+    }
+  },
+  "instances": {
+    "qft6": {
+      "provenance": {
+        "kind": "count-and-spatial-cost-matched-reconstruction",
+        "generator": "qiskit.synthesis.qft.synth_qft_full(do_swaps=True)",
+        "mqt_source": "https://github.com/munich-quantum-toolkit/bench/blob/2cd3f3b08d5d8866595948fbce955e701e86a5df/src/mqt/bench/benchmarks/qft.py",
+        "two_qubit_gates": 18,
+        "comparison_caveat": "Paper does not pin circuit files or MQT/Qiskit versions; matching counts and rounded spatial costs does not prove identity."
+      },
+      "fingerprint": "77987a170bb901b162a647880c020db3d03b87cd19796377c6ac3542b4f195cb",
+      "qubits": 6,
+      "max_qubits": 4,
+      "initialization_seconds": 0.015285116000086418,
+      "best_initial_overhead": 2521.7503177755666,
+      "tuning": {
+        "single_action": {
+          "runs": 8,
+          "feasible_runs": 8,
+          "best_overhead": 2521.7503177755666,
+          "median_overhead": 45298.25649013216,
+          "p90_overhead": 1061146.187263989,
+          "median_seconds": 0.23349117899988414,
+          "total_evaluations": 25609,
+          "improved_over_own_seed": 3,
+          "best_seed_overhead": 2521.7503177755666,
+          "wall_seconds": 0.78686093899978,
+          "config": {
+            "max_qubits": 4,
+            "partition_mode": "two_blocks",
+            "steps": 6000,
+            "cooling_rate": 0.93,
+            "temperature_levels": 120,
+            "initial_acceptance": 0.8,
+            "block_probability": 0.0,
+            "block_size": 4,
+            "pilot_steps": 64,
+            "penalty_multiplier": 1.0,
+            "allow_wire": true,
+            "allow_gate": true,
+            "allow_excision": true,
+            "objective": "overhead",
+            "max_components": null,
+            "cache_size": 4096
+          }
+        },
+        "mixed": {
+          "runs": 8,
+          "feasible_runs": 8,
+          "best_overhead": 2521.7503177755666,
+          "median_overhead": 17452.690143092397,
+          "p90_overhead": 42242.52710498213,
+          "median_seconds": 0.3811692000003859,
+          "total_evaluations": 30955,
+          "improved_over_own_seed": 5,
+          "best_seed_overhead": 2521.7503177755666,
+          "wall_seconds": 1.0192135730003429,
+          "config": {
+            "max_qubits": 4,
+            "partition_mode": "two_blocks",
+            "steps": 6000,
+            "cooling_rate": 0.93,
+            "temperature_levels": 120,
+            "initial_acceptance": 0.8,
+            "block_probability": 0.3,
+            "block_size": 4,
+            "pilot_steps": 64,
+            "penalty_multiplier": 1.0,
+            "allow_wire": true,
+            "allow_gate": true,
+            "allow_excision": true,
+            "objective": "overhead",
+            "max_components": null,
+            "cache_size": 4096
+          }
+        },
+        "wide_blocks": {
+          "runs": 8,
+          "feasible_runs": 8,
+          "best_overhead": 2521.7503177755666,
+          "median_overhead": 7245.507311279155,
+          "p90_overhead": 67908.8145068156,
+          "median_seconds": 0.510037245499916,
+          "total_evaluations": 36333,
+          "improved_over_own_seed": 5,
+          "best_seed_overhead": 2521.7503177755666,
+          "wall_seconds": 1.2090398810005354,
+          "config": {
+            "max_qubits": 4,
+            "partition_mode": "two_blocks",
+            "steps": 6000,
+            "cooling_rate": 0.93,
+            "temperature_levels": 120,
+            "initial_acceptance": 0.8,
+            "block_probability": 0.6,
+            "block_size": 8,
+            "pilot_steps": 64,
+            "penalty_multiplier": 1.0,
+            "allow_wire": true,
+            "allow_gate": true,
+            "allow_excision": true,
+            "objective": "overhead",
+            "max_components": null,
+            "cache_size": 4096
+          }
+        },
+        "colder_start": {
+          "runs": 8,
+          "feasible_runs": 8,
+          "best_overhead": 2521.7503177755666,
+          "median_overhead": 9445.943773935069,
+          "p90_overhead": 83084.96519846219,
+          "median_seconds": 0.3563487100000202,
+          "total_evaluations": 26891,
+          "improved_over_own_seed": 5,
+          "best_seed_overhead": 2521.7503177755666,
+          "wall_seconds": 0.9992447780005023,
+          "config": {
+            "max_qubits": 4,
+            "partition_mode": "two_blocks",
+            "steps": 6000,
+            "cooling_rate": 0.93,
+            "temperature_levels": 120,
+            "initial_acceptance": 0.55,
+            "block_probability": 0.3,
+            "block_size": 4,
+            "pilot_steps": 64,
+            "penalty_multiplier": 1.0,
+            "allow_wire": true,
+            "allow_gate": true,
+            "allow_excision": true,
+            "objective": "overhead",
+            "max_components": null,
+            "cache_size": 4096
+          }
+        },
+        "fast_cooling": {
+          "runs": 8,
+          "feasible_runs": 8,
+          "best_overhead": 2521.7503177755666,
+          "median_overhead": 104128.93332046537,
+          "p90_overhead": 691718.8579761737,
+          "median_seconds": 0.2550610575003702,
+          "total_evaluations": 18515,
+          "improved_over_own_seed": 4,
+          "best_seed_overhead": 2521.7503177755666,
+          "wall_seconds": 0.6598656989999654,
+          "config": {
+            "max_qubits": 4,
+            "partition_mode": "two_blocks",
+            "steps": 6000,
+            "cooling_rate": 0.85,
+            "temperature_levels": 120,
+            "initial_acceptance": 0.8,
+            "block_probability": 0.3,
+            "block_size": 4,
+            "pilot_steps": 64,
+            "penalty_multiplier": 1.0,
+            "allow_wire": true,
+            "allow_gate": true,
+            "allow_excision": true,
+            "objective": "overhead",
+            "max_components": null,
+            "cache_size": 4096
+          }
+        },
+        "slow_cooling": {
+          "runs": 8,
+          "feasible_runs": 8,
+          "best_overhead": 2521.7503177755666,
+          "median_overhead": 17452.690143092397,
+          "p90_overhead": 740000.946622051,
+          "median_seconds": 0.48514266799975303,
+          "total_evaluations": 41376,
+          "improved_over_own_seed": 3,
+          "best_seed_overhead": 2521.7503177755666,
+          "wall_seconds": 1.1147637300000497,
+          "config": {
+            "max_qubits": 4,
+            "partition_mode": "two_blocks",
+            "steps": 6000,
+            "cooling_rate": 0.97,
+            "temperature_levels": 120,
+            "initial_acceptance": 0.8,
+            "block_probability": 0.3,
+            "block_size": 4,
+            "pilot_steps": 64,
+            "penalty_multiplier": 1.0,
+            "allow_wire": true,
+            "allow_gate": true,
+            "allow_excision": true,
+            "objective": "overhead",
+            "max_components": null,
+            "cache_size": 4096
+          }
+        },
+        "no_excision_ablation": {
+          "runs": 8,
+          "feasible_runs": 8,
+          "best_overhead": 2521.7503177755666,
+          "median_overhead": 11969.264304782744,
+          "p90_overhead": 130185.47038535058,
+          "median_seconds": 0.3393273265000971,
+          "total_evaluations": 28230,
+          "improved_over_own_seed": 5,
+          "best_seed_overhead": 2521.7503177755666,
+          "wall_seconds": 0.9073267650001071,
+          "config": {
+            "max_qubits": 4,
+            "partition_mode": "two_blocks",
+            "steps": 6000,
+            "cooling_rate": 0.93,
+            "temperature_levels": 120,
+            "initial_acceptance": 0.8,
+            "block_probability": 0.3,
+            "block_size": 4,
+            "pilot_steps": 64,
+            "penalty_multiplier": 1.0,
+            "allow_wire": true,
+            "allow_gate": true,
+            "allow_excision": false,
+            "objective": "overhead",
+            "max_components": null,
+            "cache_size": 4096
+          }
+        }
+      },
+      "selected_profile": "wide_blocks",
+      "final": {
+        "runs": 50,
+        "feasible_runs": 50,
+        "best_overhead": 2521.7503177755666,
+        "median_overhead": 25471.7870072723,
+        "p90_overhead": 386061.62914092455,
+        "median_seconds": 0.5105198405003648,
+        "total_evaluations": 235891,
+        "improved_over_own_seed": 39,
+        "best_seed_overhead": 2521.7503177755666,
+        "wall_seconds": 6.341652551000152
+      },
+      "best_seed": 1000,
+      "best_actions": {
+        "wire": 0,
+        "gate": 8,
+        "excision": 0
+      },
+      "best_component_widths": [
+        2,
+        4
+      ],
+      "best_block_widths": [
+        2,
+        4
+      ],
+      "comparison_without_groups": {
+        "reported": 2500,
+        "rounding_interval": [
+          2450.0,
+          2550.0
+        ],
+        "ratio_to_reported": 1.0087001271102267,
+        "status": "within-reported-rounding-interval"
+      },
+      "comparison_with_groups": {
+        "reported": 42,
+        "rounding_interval": [
+          41.5,
+          42.5
+        ],
+        "ratio_to_reported": 60.04167423275159,
+        "status": "above-reported-rounding-interval"
+      },
+      "exact_reference_complete": false,
+      "exact_reference_overhead": 2521.7503177755666,
+      "physical_validation": {
+        "branch_configurations_checked": 16,
+        "widths_seen": [
+          [
+            2,
+            4
+          ]
+        ],
+        "all_widths_bounded": true,
+        "static_allocation_is_branch_independent": true,
+        "physical_gamma": 50.217032148222025,
+        "cost_matches_compiler": true,
+        "scope": "Compilation and static width check; no numerical/hardware execution of large instance."
+      },
+      "multiway_extension": {
+        "runs": 10,
+        "feasible_runs": 10,
+        "best_overhead": 2521.7503177755666,
+        "median_overhead": 84554.1354348506,
+        "p90_overhead": 1098337.4431290503,
+        "median_seconds": 0.43687560199987274,
+        "total_evaluations": 47640,
+        "improved_over_own_seed": 4,
+        "best_seed_overhead": 2521.7503177755666,
+        "scope": "Relaxed fragment-count constraint; not a direct Table-I comparison."
+      },
+      "independent_qiskit_check": {
+        "status": "passed",
+        "qiskit_component_widths": [
+          2,
+          4
+        ],
+        "graph_component_widths": [
+          2,
+          4
+        ],
+        "qiskit_sampling_overhead": 2521.750317775563,
+        "graph_sampling_overhead": 2521.7503177755666,
+        "scope": "Structural materialization and QPD norm; no global branch enumeration."
+      }
+    },
+    "qft12": {
+      "provenance": {
+        "kind": "count-and-spatial-cost-matched-reconstruction",
+        "generator": "qiskit.synthesis.qft.synth_qft_full(do_swaps=True)",
+        "mqt_source": "https://github.com/munich-quantum-toolkit/bench/blob/2cd3f3b08d5d8866595948fbce955e701e86a5df/src/mqt/bench/benchmarks/qft.py",
+        "two_qubit_gates": 72,
+        "comparison_caveat": "Paper does not pin circuit files or MQT/Qiskit versions; matching counts and rounded spatial costs does not prove identity."
+      },
+      "fingerprint": "9f997716ee2fa6c6d920a471363349eb42bf892644d0e3a53a6cc25ace18a1a7",
+      "qubits": 12,
+      "max_qubits": 9,
+      "initialization_seconds": 0.1231646020005428,
+      "best_initial_overhead": 796655.919089684,
+      "tuning": {
+        "single_action": {
+          "runs": 8,
+          "feasible_runs": 8,
+          "best_overhead": 796655.919089684,
+          "median_overhead": 12261003.534829058,
+          "p90_overhead": 23288226.126697037,
+          "median_seconds": 1.6028280635000556,
+          "total_evaluations": 46932,
+          "improved_over_own_seed": 0,
+          "best_seed_overhead": 796655.919089684,
+          "wall_seconds": 3.3436197390001325,
+          "config": {
+            "max_qubits": 9,
+            "partition_mode": "two_blocks",
+            "steps": 6000,
+            "cooling_rate": 0.93,
+            "temperature_levels": 120,
+            "initial_acceptance": 0.8,
+            "block_probability": 0.0,
+            "block_size": 4,
+            "pilot_steps": 64,
+            "penalty_multiplier": 1.0,
+            "allow_wire": true,
+            "allow_gate": true,
+            "allow_excision": true,
+            "objective": "overhead",
+            "max_components": null,
+            "cache_size": 4096
+          }
+        },
+        "mixed": {
+          "runs": 8,
+          "feasible_runs": 8,
+          "best_overhead": 796655.919089684,
+          "median_overhead": 12261003.534829058,
+          "p90_overhead": 23288226.126697037,
+          "median_seconds": 1.6121705575001215,
+          "total_evaluations": 46200,
+          "improved_over_own_seed": 0,
+          "best_seed_overhead": 796655.919089684,
+          "wall_seconds": 3.3284645519997866,
+          "config": {
+            "max_qubits": 9,
+            "partition_mode": "two_blocks",
+            "steps": 6000,
+            "cooling_rate": 0.93,
+            "temperature_levels": 120,
+            "initial_acceptance": 0.8,
+            "block_probability": 0.3,
+            "block_size": 4,
+            "pilot_steps": 64,
+            "penalty_multiplier": 1.0,
+            "allow_wire": true,
+            "allow_gate": true,
+            "allow_excision": true,
+            "objective": "overhead",
+            "max_components": null,
+            "cache_size": 4096
+          }
+        },
+        "wide_blocks": {
+          "runs": 8,
+          "feasible_runs": 8,
+          "best_overhead": 796655.919089684,
+          "median_overhead": 12261003.534829058,
+          "p90_overhead": 23288226.126697037,
+          "median_seconds": 1.597551543499776,
+          "total_evaluations": 46925,
+          "improved_over_own_seed": 0,
+          "best_seed_overhead": 796655.919089684,
+          "wall_seconds": 3.335143121999863,
+          "config": {
+            "max_qubits": 9,
+            "partition_mode": "two_blocks",
+            "steps": 6000,
+            "cooling_rate": 0.93,
+            "temperature_levels": 120,
+            "initial_acceptance": 0.8,
+            "block_probability": 0.6,
+            "block_size": 8,
+            "pilot_steps": 64,
+            "penalty_multiplier": 1.0,
+            "allow_wire": true,
+            "allow_gate": true,
+            "allow_excision": true,
+            "objective": "overhead",
+            "max_components": null,
+            "cache_size": 4096
+          }
+        },
+        "colder_start": {
+          "runs": 8,
+          "feasible_runs": 8,
+          "best_overhead": 796655.919089684,
+          "median_overhead": 12261003.534829058,
+          "p90_overhead": 23288226.126697037,
+          "median_seconds": 1.4974991344997761,
+          "total_evaluations": 45199,
+          "improved_over_own_seed": 0,
+          "best_seed_overhead": 796655.919089684,
+          "wall_seconds": 3.1471284030003517,
+          "config": {
+            "max_qubits": 9,
+            "partition_mode": "two_blocks",
+            "steps": 6000,
+            "cooling_rate": 0.93,
+            "temperature_levels": 120,
+            "initial_acceptance": 0.55,
+            "block_probability": 0.3,
+            "block_size": 4,
+            "pilot_steps": 64,
+            "penalty_multiplier": 1.0,
+            "allow_wire": true,
+            "allow_gate": true,
+            "allow_excision": true,
+            "objective": "overhead",
+            "max_components": null,
+            "cache_size": 4096
+          }
+        },
+        "fast_cooling": {
+          "runs": 8,
+          "feasible_runs": 8,
+          "best_overhead": 796655.919089684,
+          "median_overhead": 12261003.534829058,
+          "p90_overhead": 23288226.126697037,
+          "median_seconds": 1.3318690870000864,
+          "total_evaluations": 39195,
+          "improved_over_own_seed": 0,
+          "best_seed_overhead": 796655.919089684,
+          "wall_seconds": 2.7981077419999565,
+          "config": {
+            "max_qubits": 9,
+            "partition_mode": "two_blocks",
+            "steps": 6000,
+            "cooling_rate": 0.85,
+            "temperature_levels": 120,
+            "initial_acceptance": 0.8,
+            "block_probability": 0.3,
+            "block_size": 4,
+            "pilot_steps": 64,
+            "penalty_multiplier": 1.0,
+            "allow_wire": true,
+            "allow_gate": true,
+            "allow_excision": true,
+            "objective": "overhead",
+            "max_components": null,
+            "cache_size": 4096
+          }
+        },
+        "slow_cooling": {
+          "runs": 8,
+          "feasible_runs": 8,
+          "best_overhead": 796655.919089684,
+          "median_overhead": 12261003.534829058,
+          "p90_overhead": 23288226.126697037,
+          "median_seconds": 1.6100607945004413,
+          "total_evaluations": 48195,
+          "improved_over_own_seed": 0,
+          "best_seed_overhead": 796655.919089684,
+          "wall_seconds": 3.3547694019998744,
+          "config": {
+            "max_qubits": 9,
+            "partition_mode": "two_blocks",
+            "steps": 6000,
+            "cooling_rate": 0.97,
+            "temperature_levels": 120,
+            "initial_acceptance": 0.8,
+            "block_probability": 0.3,
+            "block_size": 4,
+            "pilot_steps": 64,
+            "penalty_multiplier": 1.0,
+            "allow_wire": true,
+            "allow_gate": true,
+            "allow_excision": true,
+            "objective": "overhead",
+            "max_components": null,
+            "cache_size": 4096
+          }
+        },
+        "no_excision_ablation": {
+          "runs": 8,
+          "feasible_runs": 8,
+          "best_overhead": 796655.919089684,
+          "median_overhead": 12261003.534829058,
+          "p90_overhead": 23288226.126697037,
+          "median_seconds": 1.4995697004997055,
+          "total_evaluations": 45466,
+          "improved_over_own_seed": 0,
+          "best_seed_overhead": 796655.919089684,
+          "wall_seconds": 3.143093732000125,
+          "config": {
+            "max_qubits": 9,
+            "partition_mode": "two_blocks",
+            "steps": 6000,
+            "cooling_rate": 0.93,
+            "temperature_levels": 120,
+            "initial_acceptance": 0.8,
+            "block_probability": 0.3,
+            "block_size": 4,
+            "pilot_steps": 64,
+            "penalty_multiplier": 1.0,
+            "allow_wire": true,
+            "allow_gate": true,
+            "allow_excision": false,
+            "objective": "overhead",
+            "max_components": null,
+            "cache_size": 4096
+          }
+        }
+      },
+      "selected_profile": "colder_start",
+      "final": {
+        "runs": 50,
+        "feasible_runs": 50,
+        "best_overhead": 701729.0531647314,
+        "median_overhead": 34595725.18833783,
+        "p90_overhead": 219046820.00895777,
+        "median_seconds": 1.557035543999973,
+        "total_evaluations": 278960,
+        "improved_over_own_seed": 2,
+        "best_seed_overhead": 796655.919089684,
+        "wall_seconds": 19.481439651000073
+      },
+      "best_seed": 1016,
+      "best_actions": {
+        "wire": 1,
+        "gate": 30,
+        "excision": 0
+      },
+      "best_component_widths": [
+        5,
+        8
+      ],
+      "best_block_widths": [
+        5,
+        8
+      ],
+      "comparison_without_groups": {
+        "reported": 800000,
+        "rounding_interval": [
+          795000.0,
+          805000.0
+        ],
+        "ratio_to_reported": 0.8771613164559142,
+        "status": "below-reported-rounding-interval"
+      },
+      "comparison_with_groups": null,
+      "exact_reference_complete": false,
+      "exact_reference_overhead": 701729.0531647314,
+      "physical_validation": {
+        "branch_configurations_checked": 16,
+        "widths_seen": [
+          [
+            5,
+            8
+          ]
+        ],
+        "all_widths_bounded": true,
+        "static_allocation_is_branch_independent": true,
+        "physical_gamma": 837.6926961390635,
+        "cost_matches_compiler": true,
+        "scope": "Compilation and static width check; no numerical/hardware execution of large instance."
+      },
+      "multiway_extension": {
+        "runs": 10,
+        "feasible_runs": 10,
+        "best_overhead": 796655.919089684,
+        "median_overhead": 16498435.714518227,
+        "p90_overhead": 39622295.25729355,
+        "median_seconds": 1.5760293530001945,
+        "total_evaluations": 57737,
+        "improved_over_own_seed": 0,
+        "best_seed_overhead": 796655.919089684,
+        "scope": "Relaxed fragment-count constraint; not a direct Table-I comparison."
+      },
+      "independent_qiskit_check": {
+        "status": "passed",
+        "qiskit_component_widths": [
+          5,
+          8
+        ],
+        "graph_component_widths": [
+          5,
+          8
+        ],
+        "qiskit_sampling_overhead": 701729.0531647302,
+        "graph_sampling_overhead": 701729.0531647314,
+        "scope": "Structural materialization and QPD norm; no global branch enumeration."
+      }
+    },
+    "chain10": {
+      "provenance": {
+        "kind": "structural-proxy",
+        "generator": "overlapping-four-qubit-CX-blocks-v1",
+        "windows": [
+          [
+            0,
+            1,
+            2,
+            3
+          ],
+          [
+            3,
+            4,
+            5,
+            6
+          ],
+          [
+            6,
+            7,
+            8,
+            9
+          ]
+        ],
+        "two_qubit_gates": 36,
+        "comparison_caveat": "Fig. 8b specifies block overlap but not block gates; this is not the authors' exact chain circuit."
+      },
+      "fingerprint": "54c3ce519f5c90a4b71ce788a273874fdfc5f0c0a006776e558674830cd65ce1",
+      "qubits": 10,
+      "max_qubits": 7,
+      "initialization_seconds": 0.030305663000035565,
+      "best_initial_overhead": 15.999999999999998,
+      "tuning": {
+        "single_action": {
+          "runs": 8,
+          "feasible_runs": 8,
+          "best_overhead": 15.999999999999998,
+          "median_overhead": 144.0,
+          "p90_overhead": 159611.50000000023,
+          "median_seconds": 0.3746114875002604,
+          "total_evaluations": 23257,
+          "improved_over_own_seed": 5,
+          "best_seed_overhead": 15.999999999999998,
+          "wall_seconds": 1.1288568500003748,
+          "config": {
+            "max_qubits": 7,
+            "partition_mode": "two_blocks",
+            "steps": 6000,
+            "cooling_rate": 0.93,
+            "temperature_levels": 120,
+            "initial_acceptance": 0.8,
+            "block_probability": 0.0,
+            "block_size": 4,
+            "pilot_steps": 64,
+            "penalty_multiplier": 1.0,
+            "allow_wire": true,
+            "allow_gate": true,
+            "allow_excision": true,
+            "objective": "overhead",
+            "max_components": null,
+            "cache_size": 4096
+          }
+        },
+        "mixed": {
+          "runs": 8,
+          "feasible_runs": 8,
+          "best_overhead": 15.999999999999998,
+          "median_overhead": 15.999999999999998,
+          "p90_overhead": 503896.0000000004,
+          "median_seconds": 0.48313678249996883,
+          "total_evaluations": 25021,
+          "improved_over_own_seed": 6,
+          "best_seed_overhead": 15.999999999999998,
+          "wall_seconds": 1.0016256760000033,
+          "config": {
+            "max_qubits": 7,
+            "partition_mode": "two_blocks",
+            "steps": 6000,
+            "cooling_rate": 0.93,
+            "temperature_levels": 120,
+            "initial_acceptance": 0.8,
+            "block_probability": 0.3,
+            "block_size": 4,
+            "pilot_steps": 64,
+            "penalty_multiplier": 1.0,
+            "allow_wire": true,
+            "allow_gate": true,
+            "allow_excision": true,
+            "objective": "overhead",
+            "max_components": null,
+            "cache_size": 4096
+          }
+        },
+        "wide_blocks": {
+          "runs": 8,
+          "feasible_runs": 8,
+          "best_overhead": 15.999999999999998,
+          "median_overhead": 15.999999999999998,
+          "p90_overhead": 1329.5999999999983,
+          "median_seconds": 0.673654115500085,
+          "total_evaluations": 37812,
+          "improved_over_own_seed": 6,
+          "best_seed_overhead": 15.999999999999998,
+          "wall_seconds": 1.5970244629997978,
+          "config": {
+            "max_qubits": 7,
+            "partition_mode": "two_blocks",
+            "steps": 6000,
+            "cooling_rate": 0.93,
+            "temperature_levels": 120,
+            "initial_acceptance": 0.8,
+            "block_probability": 0.6,
+            "block_size": 8,
+            "pilot_steps": 64,
+            "penalty_multiplier": 1.0,
+            "allow_wire": true,
+            "allow_gate": true,
+            "allow_excision": true,
+            "objective": "overhead",
+            "max_components": null,
+            "cache_size": 4096
+          }
+        },
+        "colder_start": {
+          "runs": 8,
+          "feasible_runs": 8,
+          "best_overhead": 15.999999999999998,
+          "median_overhead": 15.999999999999998,
+          "p90_overhead": 15004205.100000015,
+          "median_seconds": 0.3866420285003187,
+          "total_evaluations": 19908,
+          "improved_over_own_seed": 5,
+          "best_seed_overhead": 15.999999999999998,
+          "wall_seconds": 0.8726390339998034,
+          "config": {
+            "max_qubits": 7,
+            "partition_mode": "two_blocks",
+            "steps": 6000,
+            "cooling_rate": 0.93,
+            "temperature_levels": 120,
+            "initial_acceptance": 0.55,
+            "block_probability": 0.3,
+            "block_size": 4,
+            "pilot_steps": 64,
+            "penalty_multiplier": 1.0,
+            "allow_wire": true,
+            "allow_gate": true,
+            "allow_excision": true,
+            "objective": "overhead",
+            "max_components": null,
+            "cache_size": 4096
+          }
+        },
+        "fast_cooling": {
+          "runs": 8,
+          "feasible_runs": 8,
+          "best_overhead": 15.999999999999998,
+          "median_overhead": 15.999999999999998,
+          "p90_overhead": 290069.1000000004,
+          "median_seconds": 0.3454336095001054,
+          "total_evaluations": 18205,
+          "improved_over_own_seed": 6,
+          "best_seed_overhead": 15.999999999999998,
+          "wall_seconds": 0.8369702789996154,
+          "config": {
+            "max_qubits": 7,
+            "partition_mode": "two_blocks",
+            "steps": 6000,
+            "cooling_rate": 0.85,
+            "temperature_levels": 120,
+            "initial_acceptance": 0.8,
+            "block_probability": 0.3,
+            "block_size": 4,
+            "pilot_steps": 64,
+            "penalty_multiplier": 1.0,
+            "allow_wire": true,
+            "allow_gate": true,
+            "allow_excision": true,
+            "objective": "overhead",
+            "max_components": null,
+            "cache_size": 4096
+          }
+        },
+        "slow_cooling": {
+          "runs": 8,
+          "feasible_runs": 8,
+          "best_overhead": 15.999999999999998,
+          "median_overhead": 199.99999999999997,
+          "p90_overhead": 2552529.6000000047,
+          "median_seconds": 0.7282017840002482,
+          "total_evaluations": 42745,
+          "improved_over_own_seed": 6,
+          "best_seed_overhead": 15.999999999999998,
+          "wall_seconds": 1.5609679689996483,
+          "config": {
+            "max_qubits": 7,
+            "partition_mode": "two_blocks",
+            "steps": 6000,
+            "cooling_rate": 0.97,
+            "temperature_levels": 120,
+            "initial_acceptance": 0.8,
+            "block_probability": 0.3,
+            "block_size": 4,
+            "pilot_steps": 64,
+            "penalty_multiplier": 1.0,
+            "allow_wire": true,
+            "allow_gate": true,
+            "allow_excision": true,
+            "objective": "overhead",
+            "max_components": null,
+            "cache_size": 4096
+          }
+        },
+        "no_excision_ablation": {
+          "runs": 8,
+          "feasible_runs": 8,
+          "best_overhead": 15.999999999999998,
+          "median_overhead": 15.999999999999998,
+          "p90_overhead": 20736.000000000004,
+          "median_seconds": 0.40969755899959637,
+          "total_evaluations": 26811,
+          "improved_over_own_seed": 6,
+          "best_seed_overhead": 15.999999999999998,
+          "wall_seconds": 1.2014583590007533,
+          "config": {
+            "max_qubits": 7,
+            "partition_mode": "two_blocks",
+            "steps": 6000,
+            "cooling_rate": 0.93,
+            "temperature_levels": 120,
+            "initial_acceptance": 0.8,
+            "block_probability": 0.3,
+            "block_size": 4,
+            "pilot_steps": 64,
+            "penalty_multiplier": 1.0,
+            "allow_wire": true,
+            "allow_gate": true,
+            "allow_excision": false,
+            "objective": "overhead",
+            "max_components": null,
+            "cache_size": 4096
+          }
+        }
+      },
+      "selected_profile": "colder_start",
+      "final": {
+        "runs": 50,
+        "feasible_runs": 50,
+        "best_overhead": 15.999999999999998,
+        "median_overhead": 15.999999999999998,
+        "p90_overhead": 531441.000000001,
+        "median_seconds": 0.41405899600022167,
+        "total_evaluations": 143043,
+        "improved_over_own_seed": 42,
+        "best_seed_overhead": 15.999999999999998,
+        "wall_seconds": 5.919379349999872
+      },
+      "best_seed": 1000,
+      "best_actions": {
+        "wire": 1,
+        "gate": 0,
+        "excision": 0
+      },
+      "best_component_widths": [
+        7,
+        4
+      ],
+      "best_block_widths": [
+        4,
+        7
+      ],
+      "comparison_without_groups": {
+        "reported": 16,
+        "rounding_interval": [
+          15.5,
+          16.5
+        ],
+        "ratio_to_reported": 0.9999999999999999,
+        "status": "within-reported-rounding-interval"
+      },
+      "comparison_with_groups": {
+        "reported": 16,
+        "rounding_interval": [
+          15.5,
+          16.5
+        ],
+        "ratio_to_reported": 0.9999999999999999,
+        "status": "within-reported-rounding-interval"
+      },
+      "exact_reference_complete": true,
+      "exact_reference_overhead": 15.999999999999998,
+      "physical_validation": {
+        "branch_configurations_checked": 16,
+        "widths_seen": [
+          [
+            4,
+            7
+          ]
+        ],
+        "all_widths_bounded": true,
+        "static_allocation_is_branch_independent": true,
+        "physical_gamma": 4.0,
+        "cost_matches_compiler": true,
+        "scope": "Compilation and static width check; no numerical/hardware execution of large instance."
+      },
+      "independent_qiskit_check": {
+        "status": "passed",
+        "qiskit_component_widths": [
+          4,
+          7
+        ],
+        "graph_component_widths": [
+          4,
+          7
+        ],
+        "qiskit_sampling_overhead": 16.0,
+        "graph_sampling_overhead": 15.999999999999998,
+        "scope": "Structural materialization and QPD norm; no global branch enumeration."
+      }
+    },
+    "chain20": {
+      "provenance": {
+        "kind": "structural-proxy",
+        "generator": "overlapping-four-qubit-CX-blocks-v1",
+        "windows": [
+          [
+            0,
+            1,
+            2,
+            3
+          ],
+          [
+            3,
+            4,
+            5,
+            6
+          ],
+          [
+            6,
+            7,
+            8,
+            9
+          ],
+          [
+            9,
+            10,
+            11,
+            12
+          ],
+          [
+            12,
+            13,
+            14,
+            15
+          ],
+          [
+            15,
+            16,
+            17,
+            18
+          ],
+          [
+            18,
+            19
+          ]
+        ],
+        "two_qubit_gates": 73,
+        "comparison_caveat": "Fig. 8b specifies block overlap but not block gates; this is not the authors' exact chain circuit."
+      },
+      "fingerprint": "26baa091d99e7f2a7d41e031d4050987c8d51be4798874731a3b52a4b3d0a090",
+      "qubits": 20,
+      "max_qubits": 15,
+      "initialization_seconds": 0.07966173899967544,
+      "best_initial_overhead": 15.999999999999998,
+      "tuning": {
+        "single_action": {
+          "runs": 8,
+          "feasible_runs": 8,
+          "best_overhead": 15.999999999999998,
+          "median_overhead": 1223.9999999999995,
+          "p90_overhead": 653036313.5999982,
+          "median_seconds": 0.9753195495004547,
+          "total_evaluations": 27135,
+          "improved_over_own_seed": 5,
+          "best_seed_overhead": 15.999999999999998,
+          "wall_seconds": 2.066294738000579,
+          "config": {
+            "max_qubits": 15,
+            "partition_mode": "two_blocks",
+            "steps": 6000,
+            "cooling_rate": 0.93,
+            "temperature_levels": 120,
+            "initial_acceptance": 0.8,
+            "block_probability": 0.0,
+            "block_size": 4,
+            "pilot_steps": 64,
+            "penalty_multiplier": 1.0,
+            "allow_wire": true,
+            "allow_gate": true,
+            "allow_excision": true,
+            "objective": "overhead",
+            "max_components": null,
+            "cache_size": 4096
+          }
+        },
+        "mixed": {
+          "runs": 8,
+          "feasible_runs": 8,
+          "best_overhead": 15.999999999999998,
+          "median_overhead": 15.999999999999998,
+          "p90_overhead": 14385.600000000002,
+          "median_seconds": 1.1063000609997289,
+          "total_evaluations": 30906,
+          "improved_over_own_seed": 5,
+          "best_seed_overhead": 15.999999999999998,
+          "wall_seconds": 2.5111352399999305,
+          "config": {
+            "max_qubits": 15,
+            "partition_mode": "two_blocks",
+            "steps": 6000,
+            "cooling_rate": 0.93,
+            "temperature_levels": 120,
+            "initial_acceptance": 0.8,
+            "block_probability": 0.3,
+            "block_size": 4,
+            "pilot_steps": 64,
+            "penalty_multiplier": 1.0,
+            "allow_wire": true,
+            "allow_gate": true,
+            "allow_excision": true,
+            "objective": "overhead",
+            "max_components": null,
+            "cache_size": 4096
+          }
+        },
+        "wide_blocks": {
+          "runs": 8,
+          "feasible_runs": 8,
+          "best_overhead": 15.999999999999998,
+          "median_overhead": 15.999999999999998,
+          "p90_overhead": 15.999999999999998,
+          "median_seconds": 1.4428306620002331,
+          "total_evaluations": 39789,
+          "improved_over_own_seed": 5,
+          "best_seed_overhead": 15.999999999999998,
+          "wall_seconds": 2.978199508999751,
+          "config": {
+            "max_qubits": 15,
+            "partition_mode": "two_blocks",
+            "steps": 6000,
+            "cooling_rate": 0.93,
+            "temperature_levels": 120,
+            "initial_acceptance": 0.8,
+            "block_probability": 0.6,
+            "block_size": 8,
+            "pilot_steps": 64,
+            "penalty_multiplier": 1.0,
+            "allow_wire": true,
+            "allow_gate": true,
+            "allow_excision": true,
+            "objective": "overhead",
+            "max_components": null,
+            "cache_size": 4096
+          }
+        },
+        "colder_start": {
+          "runs": 8,
+          "feasible_runs": 8,
+          "best_overhead": 15.999999999999998,
+          "median_overhead": 15.999999999999998,
+          "p90_overhead": 13286025.000000013,
+          "median_seconds": 0.9220325104997755,
+          "total_evaluations": 26930,
+          "improved_over_own_seed": 4,
+          "best_seed_overhead": 15.999999999999998,
+          "wall_seconds": 2.0814911389998088,
+          "config": {
+            "max_qubits": 15,
+            "partition_mode": "two_blocks",
+            "steps": 6000,
+            "cooling_rate": 0.93,
+            "temperature_levels": 120,
+            "initial_acceptance": 0.55,
+            "block_probability": 0.3,
+            "block_size": 4,
+            "pilot_steps": 64,
+            "penalty_multiplier": 1.0,
+            "allow_wire": true,
+            "allow_gate": true,
+            "allow_excision": true,
+            "objective": "overhead",
+            "max_components": null,
+            "cache_size": 4096
+          }
+        },
+        "fast_cooling": {
+          "runs": 8,
+          "feasible_runs": 8,
+          "best_overhead": 15.999999999999998,
+          "median_overhead": 15.999999999999998,
+          "p90_overhead": 12914117.10000001,
+          "median_seconds": 0.9393247380003231,
+          "total_evaluations": 26901,
+          "improved_over_own_seed": 5,
+          "best_seed_overhead": 15.999999999999998,
+          "wall_seconds": 2.1326275629999145,
+          "config": {
+            "max_qubits": 15,
+            "partition_mode": "two_blocks",
+            "steps": 6000,
+            "cooling_rate": 0.85,
+            "temperature_levels": 120,
+            "initial_acceptance": 0.8,
+            "block_probability": 0.3,
+            "block_size": 4,
+            "pilot_steps": 64,
+            "penalty_multiplier": 1.0,
+            "allow_wire": true,
+            "allow_gate": true,
+            "allow_excision": true,
+            "objective": "overhead",
+            "max_components": null,
+            "cache_size": 4096
+          }
+        },
+        "slow_cooling": {
+          "runs": 8,
+          "feasible_runs": 8,
+          "best_overhead": 15.999999999999998,
+          "median_overhead": 15.999999999999998,
+          "p90_overhead": 12671.999999999993,
+          "median_seconds": 1.6652096954999251,
+          "total_evaluations": 47832,
+          "improved_over_own_seed": 5,
+          "best_seed_overhead": 15.999999999999998,
+          "wall_seconds": 3.393199586999799,
+          "config": {
+            "max_qubits": 15,
+            "partition_mode": "two_blocks",
+            "steps": 6000,
+            "cooling_rate": 0.97,
+            "temperature_levels": 120,
+            "initial_acceptance": 0.8,
+            "block_probability": 0.3,
+            "block_size": 4,
+            "pilot_steps": 64,
+            "penalty_multiplier": 1.0,
+            "allow_wire": true,
+            "allow_gate": true,
+            "allow_excision": true,
+            "objective": "overhead",
+            "max_components": null,
+            "cache_size": 4096
+          }
+        },
+        "no_excision_ablation": {
+          "runs": 8,
+          "feasible_runs": 8,
+          "best_overhead": 15.999999999999998,
+          "median_overhead": 15.999999999999998,
+          "p90_overhead": 54.39999999999998,
+          "median_seconds": 0.9319598219999534,
+          "total_evaluations": 27624,
+          "improved_over_own_seed": 5,
+          "best_seed_overhead": 15.999999999999998,
+          "wall_seconds": 2.0983788000003187,
+          "config": {
+            "max_qubits": 15,
+            "partition_mode": "two_blocks",
+            "steps": 6000,
+            "cooling_rate": 0.93,
+            "temperature_levels": 120,
+            "initial_acceptance": 0.8,
+            "block_probability": 0.3,
+            "block_size": 4,
+            "pilot_steps": 64,
+            "penalty_multiplier": 1.0,
+            "allow_wire": true,
+            "allow_gate": true,
+            "allow_excision": false,
+            "objective": "overhead",
+            "max_components": null,
+            "cache_size": 4096
+          }
+        }
+      },
+      "selected_profile": "colder_start",
+      "final": {
+        "runs": 50,
+        "feasible_runs": 50,
+        "best_overhead": 15.999999999999998,
+        "median_overhead": 15.999999999999998,
+        "p90_overhead": 531441.000000001,
+        "median_seconds": 1.0053916094998385,
+        "total_evaluations": 176689,
+        "improved_over_own_seed": 38,
+        "best_seed_overhead": 15.999999999999998,
+        "wall_seconds": 12.967157670000233
+      },
+      "best_seed": 1000,
+      "best_actions": {
+        "wire": 1,
+        "gate": 0,
+        "excision": 0
+      },
+      "best_component_widths": [
+        13,
+        8
+      ],
+      "best_block_widths": [
+        8,
+        13
+      ],
+      "comparison_without_groups": {
+        "reported": 16,
+        "rounding_interval": [
+          15.5,
+          16.5
+        ],
+        "ratio_to_reported": 0.9999999999999999,
+        "status": "within-reported-rounding-interval"
+      },
+      "comparison_with_groups": {
+        "reported": 16,
+        "rounding_interval": [
+          15.5,
+          16.5
+        ],
+        "ratio_to_reported": 0.9999999999999999,
+        "status": "within-reported-rounding-interval"
+      },
+      "exact_reference_complete": true,
+      "exact_reference_overhead": 15.999999999999998,
+      "physical_validation": {
+        "branch_configurations_checked": 16,
+        "widths_seen": [
+          [
+            8,
+            13
+          ]
+        ],
+        "all_widths_bounded": true,
+        "static_allocation_is_branch_independent": true,
+        "physical_gamma": 4.0,
+        "cost_matches_compiler": true,
+        "scope": "Compilation and static width check; no numerical/hardware execution of large instance."
+      },
+      "independent_qiskit_check": {
+        "status": "passed",
+        "qiskit_component_widths": [
+          8,
+          13
+        ],
+        "graph_component_widths": [
+          8,
+          13
+        ],
+        "qiskit_sampling_overhead": 16.0,
+        "graph_sampling_overhead": 15.999999999999998,
+        "scope": "Structural materialization and QPD norm; no global branch enumeration."
+      }
+    }
+  },
+  "suite_wall_seconds": 109.76622859700001,
+  "additional_verification": {
+    "tests_passed": 86,
+    "ruff_check": "passed",
+    "parallel_reproducibility": "Serial and two-worker four-start smoke check: identical states, traces, evaluation counts.",
+    "large_instance_execution": "Compilation/QPD norm cross-check only; no hardware or full numerical reconstruction."
+  },
+  "source_sha256_after_validation": {
+    "src/qpartition/__init__.py": "2acb3950f5ee4d463cdccbc92a9ff685df1ce8fc99041ae00b5ef9781f16b28f",
+    "src/qpartition/annealing.py": "3e503e6f1ba503be03ffc6089b24905e5e28a730335e120092baf16c2efeb620",
+    "src/qpartition/benchmarks.py": "7b6beda39940c91a947782e2567eec3acb63f9f7e8bed0b9364f06da0f756dc5",
+    "src/qpartition/circuits.py": "70e674fe58a6bf2cad61e14fae95c23c0b219e6acede3daa276ed0d7d0d311b0",
+    "src/qpartition/cutting.py": "773a5d8bd26daa28606a603d2db847771f44160042ef1430c2bd06560760740a",
+    "src/qpartition/exact_search.py": "d15f57f3bcaa6d97b29506185b67c34becb926d52304e95dd00a45a1355b5fdd",
+    "src/qpartition/excision.py": "c34af7527231493ddbaa4c543048be8cdb6afbaf8fda7d7e3b840d218ee439ff",
+    "src/qpartition/execution.py": "40c431efcc386d18aac53ab7621d5d75f12987790936736b9c616a2ba95c0aa2",
+    "src/qpartition/hybrid.py": "3bc83ccd3e321b13abe84d97622c1b0744b9451c386aa089542be6afb97c2fcb",
+    "src/qpartition/partition_graph.py": "5a3a0e59f548a49b6b9c4a457b4f24e0ebfe37b41bfe1861cc053087e448a75f",
+    "src/qpartition/plans.py": "afb543247f8c694517e2939218c4e0d39c592d3cde582bf25545c13cd3e39d63",
+    "src/qpartition/statistics.py": "546a3bcae96d7280daa7e0912fd271fe501dcbada85ecb6395aa532b57b241f3",
+    "src/qpartition/templates.py": "9a0ba69629bc948b1edb6f8d8ca7412d68086cffd09cb79b9b19abde388743d4",
+    "examples/run_sa_benchmarks.py": "86b7915550f441181926cd506205a80a0661c08f7a5aec47b726caae6c3df6f6",
+    "examples/check_sa_artifacts.py": "77ef58e76ed333c5045949aee664f0632868a17c544ba66968698ff6121f721e",
+    "examples/plot_sa_results.py": "44faba30b1523ee472f4d5ce346679984ffa6150c815ddd38024bfce4672ff2f",
+    "examples/visualize_qft12.py": "c8497601fbb743cd366d873a98d53a30a80020c16eb7cf344c28890e0883bc5a"
+  }
+}

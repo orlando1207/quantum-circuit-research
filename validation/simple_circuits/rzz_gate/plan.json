@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "circuit_fingerprint": "918ba50944f88766447050bafea15b219b1f329723c7fd8bc3554d6a8e35f213",
+  "gate_cuts": [
+    "op000002"
+  ],
+  "wire_cuts": [],
+  "max_fragment_qubits": 1
+}
