@@ -4,8 +4,12 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from math import exp
+from typing import TYPE_CHECKING
 
 from .templates import ActionTemplate
+
+if TYPE_CHECKING:
+    from .grouping import SelectedGroup
 
 
 @dataclass(frozen=True)
@@ -29,6 +33,9 @@ class GraphEvaluation:
     segment_components: tuple[int, ...]
     component_blocks: tuple[int, ...]
     action_counts: dict[str, int]
+    independent_log_overhead: float | None = None
+    groups: tuple[SelectedGroup, ...] = ()
+    grouping_selection_complete: bool | None = None
 
     @property
     def sampling_overhead(self) -> float:

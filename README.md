@@ -1,10 +1,12 @@
 # Quantum circuit partitioning research
 
 Partition a fixed quantum circuit using wire and gate cuts, execute smaller
-fragment families, and reconstruct observables classically. The optimizer now
+fragment families, and reconstruct observables classically. The optimizer
 supports multiway partitions, multi-start simulated annealing, temporal region
-moves, and capacity-aware graph initialization. Grouping and excision are future
-refinement techniques; manual excision remains available.
+moves, and capacity-aware graph initialization. Optional source-aware gate
+grouping now changes both the SA objective and coordinated proposals, with
+executable joint QPDs and width checks for local register bundles. Manual
+excision remains available separately.
 
 The maintained specification and complete benchmark comparison are in
 [Workflow and algorithm](docs/WORKFLOW_AND_ALGORITHM.md). It replaces six
@@ -56,7 +58,7 @@ explains import and verification with Bell, GHZ, RZZ, and T examples.
 ```python
 from qiskit import QuantumCircuit
 from qpartition import (
-    AnnealConfig, CircuitProblem, HybridPlan, PartitionGraph,
+    AnnealConfig, CircuitProblem, GroupingConfig, HybridPlan, PartitionGraph,
     compile_hybrid, multi_start,
 )
 
@@ -65,7 +67,7 @@ circuit.h(0)
 circuit.cx(0, 1)
 circuit.cx(1, 2)
 circuit.cx(2, 3)
-graph = PartitionGraph(CircuitProblem.create(circuit, "XXXX"))
+graph = PartitionGraph(CircuitProblem.create(circuit, "XXXX"), grouping=GroupingConfig())
 config = AnnealConfig(max_qubits=2, partition_mode="multiway", steps=3000)
 runs = multi_start(graph, config, seeds=tuple(range(10)), workers=1)
 best = min((r.best for r in runs if r.best), key=lambda e: e.log_overhead)
@@ -83,10 +85,11 @@ Use a main guard in scripts with `workers > 1`. Save plans with `plan.save`.
 Exact reconstruction is a small-instance correctness oracle with explicit
 branch and qubit guards; larger plans use lazy sampled execution.
 
-`multiway` executes each connected component separately. Every fragment must
+`multiway` executes each connected component separately, after any selected
+joint groups connect their required local register bundles. Every fragment must
 fit `max_qubits`; each wire cut adds one static segment. `max_components` can
-limit connected components. Disconnected components are not bundled in this
-mode. `objective="overhead"` minimizes the independent QPD overhead;
+limit these components. Unrelated computations are not packed together in this
+mode. `objective="overhead"` minimizes the selected physical QPD overhead;
 `objective="fragment_shots"` minimizes its product with the executed fragment
 count for the independent-trial model.
 
@@ -123,6 +126,40 @@ The earlier benchmark PNGs remain in
 [`validation/sa_benchmarks_v2/partition_png`](validation/sa_benchmarks_v2/partition_png).
 Regenerable template dumps and local pilot experiments are ignored by Git.
 
+For grouping-aware experiments at `M=floor(3*N/4)`:
+
+```bash
+python examples/run_grouping_benchmarks.py --output results/grouping-rerun --starts 50 --steps 1500 --workers 4
+python examples/check_grouping_artifacts.py --directory results/grouping-rerun
+python examples/summarize_grouping_results.py --directory results/grouping-rerun
+```
+
+The [grouping comparison](validation/grouping_benchmarks_v1/SUMMARY.md) includes
+previous independent results, matched independent SA, post-only grouping,
+cost-only grouping, grouped two-block SA, and grouped multiway SA. Automatic
+groups are bounded and source aware; they do not reproduce the paper's missing
+manual manifests. Omit `grouping` for the independent baseline, or use
+`GroupingConfig(group_moves=False)` for grouped costs with the original regions.
+
+The latest [grouping v2 comparison](validation/grouping_benchmarks_v2/SUMMARY.md)
+tests both anchor directions, four-gate source-wire windows, compressed physical
+joint maps, and coupled group/spatial heat baths. The
+[QFT6 audit](docs/WORKFLOW_AND_ALGORITHM.md#13-qft6-audit-what-can-explain-2500-becoming-42)
+separates an executable cost from a Choi-Schmidt lower bound that rounds to 42.
+
+```bash
+python examples/run_grouping_v2.py --output results/grouping-v2 --workers 4
+python examples/check_grouping_artifacts.py --directory results/grouping-v2
+python examples/summarize_grouping_v2.py --directory results/grouping-v2
+python examples/check_qft6_density.py --directory results/grouping-v2
+```
+
+For the enhanced search, set `group_heatbath_probability=0.4`,
+`temperature_calibration="feasible"`, and an explicit `max_evaluations` in
+`AnnealConfig`. These options remain opt-in for comparison. The new grouping
+library changes plan fingerprints; historical grouped plans must be regenerated
+from their saved masks. Independent plans are unaffected.
+
 To rerun the external comparison in the same conda environment:
 
 ```bash
@@ -143,7 +180,9 @@ reconstructed exactly or with Aer shots and `bootstrap_uncertainty`. Manual
 `compile_excision` supports bounded small gates using validated physical
 measure/prepare expansions. Automatic core search accepts only gate/wire cuts.
 
-Current plans use `temporal-incidence-v2`. The explicit legacy graph/compiler
+Independent plans use `temporal-incidence-v2`; grouped plans use
+`temporal-incidence-grouped-v3` and validate a group-LUT fingerprint.
+The explicit legacy graph/compiler
 and `migrate_legacy_plan` handle compatible historical plans; core SA does not
 silently accept old excision states.
 
@@ -153,5 +192,5 @@ python examples/verify_simple_circuits.py --shots 2000 --seed 42 --output result
 ```
 
 The [foundation validation](validation/README.md) and circuit guide describe the
-saved exact/shot verification cases. Full-distribution reconstruction, gate-group
-discovery, and IBM hardware adapters remain later milestones.
+saved exact/shot verification cases. Full-distribution reconstruction, broader
+group discovery, and IBM hardware adapters remain later milestones.

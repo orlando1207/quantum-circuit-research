@@ -19,7 +19,9 @@ class PartitionGraph:
 
     graph_schema = "temporal-incidence-v2"
 
-    def __init__(self, problem: CircuitProblem, registry: TemplateRegistry | None = None):
+    def __init__(
+        self, problem: CircuitProblem, registry: TemplateRegistry | None = None, *, grouping=None
+    ):
         problem.validate_snapshot()
         self.problem = problem
         self.registry = registry or TemplateRegistry()
@@ -105,6 +107,17 @@ class PartitionGraph:
             max(option.log_overhead if option else 0 for option in variable.options)
             for variable in self.variables
         )
+        self.grouping = None
+        self.grouping_fingerprint = None
+        self.group_regions = ()
+        if grouping is not None and grouping is not False:
+            from .grouping import GroupingConfig, GroupLibrary
+
+            config = GroupingConfig() if grouping is True else grouping
+            self.grouping = GroupLibrary(self, config)
+            self.grouping_fingerprint = self.grouping.fingerprint
+            self.group_regions = self.grouping.regions
+            self.graph_schema = "temporal-incidence-grouped-v3"
 
     def validate_state(self, state: tuple[int, ...]) -> None:
         self.problem.validate_snapshot()
@@ -194,6 +207,25 @@ class PartitionGraph:
             penalty = sum(max(0, width - max_qubits) ** 2 for width in widths)
         if max_components is not None:
             penalty += max(0, len(widths) - max_components) ** 2
+        independent_cost, groups, complete = cost, (), None
+        if self.grouping is not None:
+            node_components = tuple(segment_components[s] for s in node_segments)
+            selection = self.grouping.select(
+                state, tuple(widths), node_components, max_qubits, partition_mode, max_components
+            )
+            if selection is not None:
+                cost = max(0.0, cost - selection.savings)
+                widths, blocks, block_widths = (
+                    selection.component_widths,
+                    selection.component_blocks,
+                    selection.block_widths,
+                )
+                segment_components = [selection.old_to_new[c] for c in segment_components]
+                penalty, groups, complete = (
+                    selection.width_penalty,
+                    selection.groups,
+                    selection.complete,
+                )
         return GraphEvaluation(
             state,
             cost,
@@ -205,6 +237,9 @@ class PartitionGraph:
             tuple(segment_components),
             blocks,
             counts,
+            independent_cost if self.grouping is not None else None,
+            groups,
+            complete,
         )
 
     def networkx_graph(self, state: tuple[int, ...] | None = None) -> nx.Graph:

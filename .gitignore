@@ -44,3 +44,5 @@ validation/multiway_benchmarks_v3/
 validation/external_baselines_v1/
 validation/sa_benchmarks_v2/
 docs/
+validation/grouping_benchmarks_v1
+validation/grouping_benchmarks_v2

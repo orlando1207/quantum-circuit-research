@@ -34,6 +34,28 @@ class LabelMoves:
         self.polish_regions = tuple(
             sorted(polish | regions, key=lambda region: (len(region), region))
         )
+        self.group_orbits = tuple(
+            sorted(
+                {
+                    (expand(left), expand(right))
+                    for left, right in getattr(getattr(graph, "grouping", None), "orbits", ())
+                    if not set(expand(left)).intersection(expand(right))
+                }
+            )
+        )
+        self.spatial_orbits = ()
+        if self.group_orbits:
+            wires = graph.wire_nodes
+            qubit_pairs = {
+                tuple(sorted(graph.nodes[v]["qubit"] for v in variable.ports))
+                for variable in graph.variables
+                if variable.kind == "gate"
+            }
+            self.spatial_orbits = tuple(
+                (expand(wires[a]), expand(wires[b]))
+                for a, b in sorted(qubit_pairs)
+                if not set(expand(wires[a])).intersection(expand(wires[b]))
+            )
 
     @staticmethod
     def flip(labels, region):
@@ -71,6 +93,7 @@ class MultiwayLabelMoves(LabelMoves):
         regions.update(
             expand(variable.ports) for variable in graph.variables if variable.kind == "gate"
         )
+        regions.update(expand(region) for region in getattr(graph, "group_regions", ()))
         self.regions = tuple(sorted(regions))
         self.polish_regions = tuple(sorted(regions | set(self.units), key=lambda r: (len(r), r)))
 

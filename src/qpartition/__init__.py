@@ -5,6 +5,7 @@ from .circuits import CircuitProblem, interaction_graph, load_problem, save_prob
 from .cutting import compile_cut
 from .exact_search import exact_search
 from .excision import compile_excision, decompose_excision
+from .grouping import GroupingConfig
 from .hybrid import HybridPlan, compile_hybrid
 from .migration import migrate_legacy_plan
 from .partition_graph import PartitionGraph
@@ -16,6 +17,7 @@ __all__ = [
     "CircuitProblem",
     "CutPlan",
     "HybridPlan",
+    "GroupingConfig",
     "PartitionGraph",
     "WireCut",
     "anneal",

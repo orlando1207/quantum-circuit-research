@@ -28,7 +28,7 @@ def exact_search(
 ) -> ExactSearchResult:
     start = perf_counter()
     config.validate()
-    if graph.graph_schema != "temporal-incidence-v2":
+    if graph.graph_schema not in {"temporal-incidence-v2", "temporal-incidence-grouped-v3"}:
         raise ValueError("Core exact search requires the gate/wire graph.")
     graph.problem.validate_snapshot()
     if isinstance(max_nodes, bool) or not isinstance(max_nodes, int) or max_nodes < 1:
@@ -45,15 +45,20 @@ def exact_search(
     ):
         return ExactSearchResult(None, True, 0, 0, perf_counter() - start)
     allowed = allowed_options(graph, config)
+    grouping_costs_complete = True
 
     def evaluate(state):
-        return graph.evaluate(
+        nonlocal grouping_costs_complete
+        result = graph.evaluate(
             state,
             max_qubits=config.max_qubits,
             partition_mode=config.partition_mode,
             max_components=config.max_components,
             validate=False,
         )
+        if result.grouping_selection_complete is False:
+            grouping_costs_complete = False
+        return result
 
     def score(evaluation):
         return evaluation.log_overhead + (
@@ -118,10 +123,19 @@ def exact_search(
             increment = int(option is not None and option.kind == "wire")
             visit(
                 position + 1,
-                cost + (option.log_overhead if option else 0),
+                cost
+                + (
+                    option.log_overhead
+                    if option and (graph.grouping is None or option.kind == "wire")
+                    else 0
+                ),
                 extra_segments + increment,
             )
         state[index] = 0
 
     visit(0, 0.0, 0)
-    return ExactSearchResult(incumbent, complete, visited, evaluated, perf_counter() - start)
+    certified = complete and grouping_costs_complete
+    if graph.grouping is not None and config.objective != "overhead":
+        # The inner selector minimizes norm first, not norm times fragment count.
+        certified = False
+    return ExactSearchResult(incumbent, certified, visited, evaluated, perf_counter() - start)

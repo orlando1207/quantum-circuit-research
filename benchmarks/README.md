@@ -32,3 +32,23 @@ applicable. Full authors' GG results require their original manual manifests.
 The circuit generators and full provenance are in `src/qpartition/benchmarks.py`
 and the saved v2 report. Previous raw experiment directories are retained as
 reproducibility evidence, rather than maintained algorithm documentation.
+
+`validation/grouping_benchmarks_v1` records the subsequent grouping-aware SA
+comparison on the same frozen circuits, including the historical native-basis
+Grover candidate. It uses the paper's `floor(3*N/4)` width rule, shared initial
+masks, three tuning profiles per arm, and 50 final starts. Group costs are
+backed by physical joint QPDs and account for required local register bundles.
+The generated table keeps all eight original paper rows visible and records
+unavailable Figure 4 separately. Different candidate libraries and source
+provenance limit claims about matching the authors' grouped results.
+
+## Grouping v2
+
+`examples/run_grouping_v2.py` compares four policies on the same new source-aware
+LUT: standard SA, feasible-only temperature calibration, coupled heat baths,
+and their combination. Each policy has the same evaluation ceiling and seed
+pool. Historical v1 independent/grouped costs are references; their old plans
+are re-evaluated under the new LUT before creating executable v2 winners.
+The QFT6 audit separates the numerical 41.6666 Choi-bound signature from
+constructive group coefficients. See the maintained workflow document,
+Sections 6.4, 13, and 14, for mathematics, limitations, and recorded results.

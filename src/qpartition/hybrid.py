@@ -28,6 +28,7 @@ class HybridPlan:
     partition_mode: str = "two_blocks"
     max_components: int | None = None
     graph_schema: str = "temporal-incidence-v2"
+    grouping_fingerprint: str | None = None
 
     @classmethod
     def create(
@@ -58,6 +59,7 @@ class HybridPlan:
             partition_mode,
             max_components,
             graph.graph_schema,
+            getattr(graph, "grouping_fingerprint", None),
         )
 
     def validate(self, graph: PartitionGraph) -> GraphEvaluation:
@@ -65,6 +67,8 @@ class HybridPlan:
             raise ValueError("Plan graph schema differs; explicitly migrate historical plans.")
         if self.circuit_fingerprint != graph.problem.circuit_fingerprint:
             raise ValueError("Hybrid plan belongs to a different circuit snapshot.")
+        if self.grouping_fingerprint != getattr(graph, "grouping_fingerprint", None):
+            raise ValueError("Hybrid plan grouping LUT or selection policy differs.")
         graph.validate_state(self.state)
         expected = tuple(
             variable.options[value].template_id if value else None
@@ -86,7 +90,16 @@ class HybridPlan:
     def save(self, path: str | Path) -> None:
         Path(path).write_text(
             json.dumps(
-                {"schema_version": 1 if self.graph_schema == "four-port-v1" else 2, **asdict(self)},
+                {
+                    "schema_version": (
+                        1
+                        if self.graph_schema == "four-port-v1"
+                        else 3
+                        if self.grouping_fingerprint
+                        else 2
+                    ),
+                    **asdict(self),
+                },
                 indent=2,
             )
             + "\n"
@@ -99,6 +112,7 @@ class HybridPlan:
         if (version, data.get("graph_schema")) not in (
             (1, "four-port-v1"),
             (2, "temporal-incidence-v2"),
+            (3, "temporal-incidence-grouped-v3"),
         ):
             raise ValueError("Unsupported hybrid plan schema.")
         data["state"] = tuple(data["state"])
@@ -130,10 +144,25 @@ class CompiledHybrid:
     def __init__(self, graph: PartitionGraph, plan: HybridPlan):
         self.graph, self.plan = graph, plan
         self.evaluation = plan.validate(graph)
-        self.active_variables = tuple(index for index, value in enumerate(plan.state) if value)
-        self.templates = tuple(
-            graph.variables[i].options[plan.state[i]] for i in self.active_variables
+        library = getattr(graph, "grouping", None)
+        covered = {
+            v for group in self.evaluation.groups for v in library.by_id[group.group_id].variables
+        }
+        self.active_variables = tuple(
+            index for index, value in enumerate(plan.state) if value and index not in covered
         )
+        templates = [graph.variables[i].options[plan.state[i]] for i in self.active_variables]
+        self.group_factors = {}
+        self.group_anchors = {}
+        self.replaced_operations = set()
+        for selected in self.evaluation.groups:
+            candidate = library.by_id[selected.group_id]
+            basis = library.basis(selected)
+            self.group_factors[selected.group_id] = len(templates), selected, basis
+            self.group_anchors[candidate.anchor] = selected.group_id
+            self.replaced_operations.update((*candidate.operations, *candidate.absorbed_operations))
+            templates.append(basis)
+        self.templates = tuple(templates)
         self.factor_positions = {
             variable: position for position, variable in enumerate(self.active_variables)
         }
@@ -147,6 +176,10 @@ class CompiledHybrid:
             raise RuntimeError("Compiler and evaluator disagree on allocated segment widths.")
         self.observable_terms = tuple(graph.problem.observable.to_list())
         self.gamma = prod(template.gamma for template in self.templates)
+        if library is not None and not np.isclose(
+            np.log(self.gamma) * 2, self.evaluation.log_overhead, atol=1e-10, rtol=0
+        ):
+            raise ValueError("Grouped objective and executable sampling norm disagree.")
         self.estimator_gamma = prod(
             sum(abs(c) for c in template.coefficients) for template in self.templates
         ) * sum(abs(float(weight.real)) for _, weight in self.observable_terms)
@@ -202,6 +235,29 @@ class CompiledHybrid:
             if axis == "Y":
                 append(port, SGate())
 
+        def grouped_map(group_id):
+            position, selected, basis = self.group_factors[group_id]
+            candidate = self.graph.grouping.by_id[group_id]
+            branch = branches[position]
+            if candidate.family == "fusion":
+                for local, pin in enumerate(candidate.pins):
+                    local_map(pin, basis.basis.maps[branch][local])
+                return
+            for side in (0, 1):
+                pins = tuple(
+                    pin
+                    for i, pin in enumerate(candidate.pins)
+                    if ((selected.pattern >> i) & 1) == side
+                )
+                for step in basis.maps[branch][side]:
+                    locations = [self._location(pins[q]) for q in step.qubits]
+                    if len({block for block, _ in locations}) != 1:
+                        raise ValueError("A joint local map does not fit one allocated fragment.")
+                    block = locations[0][0]
+                    instructions[block].append(
+                        (step.operation, tuple(q for _, q in locations), step.scored)
+                    )
+
         for op_id, item in zip(self.graph.problem.operation_ids, self.graph.problem.circuit.data):
             if item.operation.name == "barrier":
                 continue
@@ -212,6 +268,10 @@ class CompiledHybrid:
                     old, new = self.graph.variables[wire].ports
                     local_map(old, maps[0])
                     local_map(new, maps[1])
+            if op_id in self.group_anchors:
+                grouped_map(self.group_anchors[op_id])
+            if op_id in self.replaced_operations:
+                continue
             variable = self.graph.gate_variables.get(op_id)
             ports = self.graph.gate_ports[op_id]
             if variable is None or not self.plan.state[variable]:

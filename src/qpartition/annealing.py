@@ -36,6 +36,9 @@ class AnnealConfig:
     max_components: int | None = None
     cache_size: int = 4096
     split_probability: float = 0.25
+    group_heatbath_probability: float = 0.0
+    temperature_calibration: str = "all"
+    max_evaluations: int | None = None
 
     def validate(self) -> None:
         if isinstance(self.max_qubits, bool) or not isinstance(self.max_qubits, int):
@@ -62,6 +65,16 @@ class AnnealConfig:
             raise ValueError("Penalty multiplier must be finite.")
         if not 0 < self.split_probability < 1:
             raise ValueError("Split probability must lie strictly in (0,1).")
+        if not 0 <= self.group_heatbath_probability <= 1:
+            raise ValueError("group_heatbath_probability must lie in [0,1].")
+        if self.temperature_calibration not in {"all", "feasible"}:
+            raise ValueError("temperature_calibration must be all or feasible.")
+        if self.max_evaluations is not None and (
+            isinstance(self.max_evaluations, bool)
+            or not isinstance(self.max_evaluations, int)
+            or self.max_evaluations < 2
+        ):
+            raise ValueError("max_evaluations must be an integer at least two.")
         if self.max_components is not None and (
             isinstance(self.max_components, bool)
             or not isinstance(self.max_components, int)
@@ -91,6 +104,10 @@ class AnnealResult:
     proposed_action_changes: dict | None = None
     accepted_action_changes: dict | None = None
     initial_feasible: bool = True
+    heatbath_proposals: int = 0
+    heatbath_improvements: int = 0
+    budget_exhausted: bool = False
+    calibration_samples: int = 0
 
     def to_dict(self) -> dict:
         result = asdict(self)
@@ -206,6 +223,15 @@ def seed_states(
                 if colors[left] != colors[right]:
                     state[index] = cut
                     cost += graph.variables[index].options[cut].log_overhead
+            if graph.grouping is not None:
+                scored = graph.evaluate(
+                    tuple(state),
+                    max_qubits=config.max_qubits,
+                    partition_mode=config.partition_mode,
+                    max_components=config.max_components,
+                    validate=False,
+                )
+                cost = scored.log_overhead
             ranked.append((cost, tuple(state)))
         ranked.sort()
     candidates = [state for _, state in ranked[: count * 2]]
@@ -286,7 +312,7 @@ def anneal(
 ) -> AnnealResult:
     start = perf_counter()
     config.validate()
-    if graph.graph_schema != "temporal-incidence-v2":
+    if graph.graph_schema not in {"temporal-incidence-v2", "temporal-incidence-grouped-v3"}:
         raise ValueError("Core SA requires the gate/wire temporal incidence graph.")
     graph.problem.validate_snapshot()
     if (
@@ -317,8 +343,18 @@ def anneal(
         upper += log(max(1, len(graph.nodes)))
     penalty_weight = config.penalty_multiplier * (upper + scale)
 
+    class BudgetExhausted(Exception):
+        pass
+
+    actual_evaluations = 0
+    budget_exhausted = False
+
     @lru_cache(maxsize=config.cache_size)
     def evaluate(candidate):
+        nonlocal actual_evaluations
+        if config.max_evaluations is not None and actual_evaluations >= config.max_evaluations:
+            raise BudgetExhausted
+        actual_evaluations += 1
         return graph.evaluate(
             candidate,
             max_qubits=config.max_qubits,
@@ -384,6 +420,7 @@ def anneal(
         return tuple(new), block, 0.0
 
     search_labels = config.search_space == "labels"
+    original_grouped_start = evaluate(state) if graph.grouping is not None else None
     if search_labels:
         from .label_moves import LabelMoves, MultiwayLabelMoves
 
@@ -406,12 +443,30 @@ def anneal(
     initial_feasible = current.feasible
     best = current if current.feasible else None
     initial_log = current.log_overhead
+    if original_grouped_start is not None:
+        initial_feasible = original_grouped_start.feasible
+        initial_log = original_grouped_start.log_overhead
+        if original_grouped_start.feasible and (
+            best is None or rank(original_grouped_start) < rank(best)
+        ):
+            # Rebuilding labels can change the inner grouping/packing heuristic.
+            # Preserve the supplied feasible incumbent even if normalization loses it.
+            best = original_grouped_start
     positive = []
+    pilot_proposals = 0
     for _ in range(config.pilot_steps if mutable else 0):
+        pilot_proposals += 1
         candidate, _, _ = proposal(state)
-        evaluation = evaluate_proposal(candidate)
+        try:
+            evaluation = evaluate_proposal(candidate)
+        except BudgetExhausted:
+            budget_exhausted = True
+            break
         difference = energy(evaluation) - energy(current)
-        if difference > 0:
+        eligible = config.temperature_calibration == "all" or (
+            current.feasible and evaluation.feasible
+        )
+        if difference > 0 and eligible:
             positive.append(difference)
         if evaluation.feasible and (best is None or rank(evaluation) < rank(best)):
             best = evaluation
@@ -425,15 +480,73 @@ def anneal(
     }
     accepted_changes = proposed_changes.copy()
     trace = []
-    steps = config.steps if mutable else 0
+    steps = config.steps if mutable and not budget_exhausted else 0
+    completed_steps = heatbath_proposals = heatbath_improvements = 0
     for step in range(steps):
         level = min(config.temperature_levels - 1, step * config.temperature_levels // steps)
+        if config.max_evaluations is not None:
+            level = max(
+                level,
+                min(
+                    config.temperature_levels - 1,
+                    actual_evaluations * config.temperature_levels // config.max_evaluations,
+                ),
+            )
         temperature = max(1e-12, initial_temperature * config.cooling_rate**level)
-        candidate, is_block, log_ratio = proposal(state)
+        completed_steps += 1
+        use_heatbath = (
+            search_labels
+            and config.group_heatbath_probability > 0
+            and bool(moves.group_orbits)
+            and rng.random() < config.group_heatbath_probability
+        )
+        if use_heatbath:
+            from .group_heatbath import choose_pair, orbit, probabilities
+
+            heatbath_proposals += 1
+            pool = (
+                moves.spatial_orbits
+                if moves.spatial_orbits and rng.random() < 0.5
+                else moves.group_orbits
+            )
+            region_pair = pool[int(rng.integers(len(pool)))]
+            palette = 2 if binary else moves.palette_size
+            pair = (0, 1) if binary else choose_pair(state, palette, rng, config.split_probability)
+            states = orbit(state, region_pair, *pair)
+            evaluations = []
+            try:
+                for proposed in states:
+                    ev = evaluate_proposal(proposed)
+                    evaluations.append(ev)
+                    if ev.feasible and (best is None or rank(ev) < rank(best)):
+                        best = ev
+                        heatbath_improvements += 1
+            except BudgetExhausted:
+                budget_exhausted = True
+                break
+            weights = probabilities(
+                states,
+                [energy(ev) for ev in evaluations],
+                temperature,
+                pair,
+                palette,
+                binary,
+                config.split_probability,
+            )
+            selected = int(rng.choice(len(states), p=weights))
+            candidate, evaluation = states[selected], evaluations[selected]
+            is_block, log_ratio = True, 0.0
+        else:
+            candidate, is_block, log_ratio = proposal(state)
         blocks += int(is_block)
         if candidate != state:
             changed += 1
-            evaluation = evaluate_proposal(candidate)
+            if not use_heatbath:
+                try:
+                    evaluation = evaluate_proposal(candidate)
+                except BudgetExhausted:
+                    budget_exhausted = True
+                    break
             changes = proposed_changes.copy()
             for key in changes:
                 changes[key] = 0
@@ -445,7 +558,7 @@ def anneal(
             if evaluation.feasible and (best is None or rank(evaluation) < rank(best)):
                 best = evaluation
             difference = energy(evaluation) - energy(current)
-            log_acceptance = -difference / temperature + log_ratio
+            log_acceptance = 0.0 if use_heatbath else -difference / temperature + log_ratio
             if log_acceptance >= 0 or rng.random() < exp(max(-745, log_acceptance)):
                 state, current = candidate, evaluation
                 accepted += 1
@@ -465,38 +578,43 @@ def anneal(
                 }
             )
     before_polish = best.sampling_overhead if best else None
-    polish_start = evaluate.cache_info().misses
-    if best and search_labels:
-        regions = moves.polish_regions if config.interval_polish else moves.units
-        improved = True
-        while improved:
-            improved = False
-            labels = graph.labels_from_evaluation(best)
-            normalized = evaluate_proposal(labels)
-            if normalized.feasible and rank(normalized) < rank(best):
-                best, improved = normalized, True
+    polish_start = actual_evaluations
+    try:
+        if best and search_labels and not budget_exhausted:
+            regions = moves.polish_regions if config.interval_polish else moves.units
+            improved = True
+            while improved:
+                improved = False
                 labels = graph.labels_from_evaluation(best)
-            for region in regions:
-                alternatives = (
-                    (moves.flip(labels, region),) if binary else moves.alternatives(labels, region)
-                )
-                for alternative in alternatives:
-                    evaluation = evaluate_proposal(alternative)
-                    if evaluation.feasible and rank(evaluation) < rank(best):
-                        best, improved = evaluation, True
-                        labels = graph.labels_from_evaluation(best)
-    elif best:
-        # Deterministic coordinate descent is reported separately from annealing moves.
-        improved = True
-        while improved:
-            improved = False
-            for index in mutable:
-                for value in allowed[index]:
-                    trial = list(best.state)
-                    trial[index] = value
-                    evaluation = evaluate(tuple(trial))
-                    if evaluation.feasible and rank(evaluation) < rank(best):
-                        best, improved = evaluation, True
+                normalized = evaluate_proposal(labels)
+                if normalized.feasible and rank(normalized) < rank(best):
+                    best, improved = normalized, True
+                    labels = graph.labels_from_evaluation(best)
+                for region in regions:
+                    alternatives = (
+                        (moves.flip(labels, region),)
+                        if binary
+                        else moves.alternatives(labels, region)
+                    )
+                    for alternative in alternatives:
+                        evaluation = evaluate_proposal(alternative)
+                        if evaluation.feasible and rank(evaluation) < rank(best):
+                            best, improved = evaluation, True
+                            labels = graph.labels_from_evaluation(best)
+        elif best and not budget_exhausted:
+            # Deterministic coordinate descent is reported separately from annealing moves.
+            improved = True
+            while improved:
+                improved = False
+                for index in mutable:
+                    for value in allowed[index]:
+                        trial = list(best.state)
+                        trial[index] = value
+                        evaluation = evaluate(tuple(trial))
+                        if evaluation.feasible and rank(evaluation) < rank(best):
+                            best, improved = evaluation, True
+    except BudgetExhausted:
+        budget_exhausted = True
     return AnnealResult(
         seed,
         config,
@@ -505,18 +623,22 @@ def anneal(
         initial_temperature,
         temperature,
         penalty_weight,
-        steps + (config.pilot_steps if mutable else 0),
-        evaluate.cache_info().misses,
+        completed_steps + pilot_proposals,
+        actual_evaluations,
         accepted,
         changed,
         blocks,
         perf_counter() - start,
         tuple(trace),
         before_polish,
-        evaluate.cache_info().misses - polish_start,
+        actual_evaluations - polish_start,
         proposed_changes,
         accepted_changes,
         initial_feasible,
+        heatbath_proposals,
+        heatbath_improvements,
+        budget_exhausted,
+        len(positive),
     )
 
 
