@@ -10,7 +10,8 @@ from pathlib import Path
 
 
 def export_data(directory: Path, output: Path) -> dict:
-    from qpartition import HybridPlan, PartitionGraph, load_problem
+    from qpartition import HybridPlan, load_problem
+    from qpartition.legacy_graph import LegacyPartitionGraph as PartitionGraph
 
     folder = directory / "qft12"
     graph = PartitionGraph(load_problem(folder))

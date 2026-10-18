@@ -35,4 +35,12 @@ artifacts/large/
 *.h5
 *.hdf5
 validation/sa_benchmarks/*/templates.json
+validation/sa_benchmarks_v2/*/templates.json
+validation/sa_benchmarks_v2/archived_controls/
+validation/multiway_benchmarks_v3/**/templates.json
+validation/multiway_benchmarks_v3_pilot*/
 .ipynb_checkpoints/
+validation/multiway_benchmarks_v3/
+validation/external_baselines_v1/
+validation/sa_benchmarks_v2/
+docs/

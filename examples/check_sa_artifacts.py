@@ -11,6 +11,7 @@ from qiskit_addon_cutting import cut_gates, cut_wires, expand_observables, parti
 from qiskit_addon_cutting.instructions import CutWire
 
 from qpartition import HybridPlan, PartitionGraph, load_problem
+from qpartition.legacy_graph import LegacyPartitionGraph
 
 
 def check_artifacts(directory: Path) -> dict:
@@ -20,10 +21,12 @@ def check_artifacts(directory: Path) -> dict:
     for name, entry in report["instances"].items():
         folder = directory / name
         problem = load_problem(folder)
-        graph = PartitionGraph(problem)
         plan = HybridPlan.load(folder / "best_plan.json")
+        graph = (LegacyPartitionGraph if plan.graph_schema == "four-port-v1" else PartitionGraph)(
+            problem
+        )
         evaluation = plan.validate(graph)
-        if evaluation.action_counts["excision"]:
+        if evaluation.action_counts.get("excision", 0):
             checks[name] = {"status": "not-applicable-to-excision"}
             continue
         cuts = set()

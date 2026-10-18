@@ -27,6 +27,7 @@ class HybridPlan:
     max_fragment_qubits: int
     partition_mode: str = "two_blocks"
     max_components: int | None = None
+    graph_schema: str = "temporal-incidence-v2"
 
     @classmethod
     def create(
@@ -56,9 +57,12 @@ class HybridPlan:
             max_qubits,
             partition_mode,
             max_components,
+            graph.graph_schema,
         )
 
     def validate(self, graph: PartitionGraph) -> GraphEvaluation:
+        if self.graph_schema != graph.graph_schema:
+            raise ValueError("Plan graph schema differs; explicitly migrate historical plans.")
         if self.circuit_fingerprint != graph.problem.circuit_fingerprint:
             raise ValueError("Hybrid plan belongs to a different circuit snapshot.")
         graph.validate_state(self.state)
@@ -82,7 +86,8 @@ class HybridPlan:
     def save(self, path: str | Path) -> None:
         Path(path).write_text(
             json.dumps(
-                {"schema_version": 1, "graph_schema": "four-port-v1", **asdict(self)}, indent=2
+                {"schema_version": 1 if self.graph_schema == "four-port-v1" else 2, **asdict(self)},
+                indent=2,
             )
             + "\n"
         )
@@ -90,9 +95,10 @@ class HybridPlan:
     @classmethod
     def load(cls, path: str | Path) -> HybridPlan:
         data = json.loads(Path(path).read_text())
-        if (
-            data.pop("schema_version", None) != 1
-            or data.pop("graph_schema", None) != "four-port-v1"
+        version = data.pop("schema_version", None)
+        if (version, data.get("graph_schema")) not in (
+            (1, "four-port-v1"),
+            (2, "temporal-incidence-v2"),
         ):
             raise ValueError("Unsupported hybrid plan schema.")
         data["state"] = tuple(data["state"])
@@ -206,9 +212,9 @@ class CompiledHybrid:
                     old, new = self.graph.variables[wire].ports
                     local_map(old, maps[0])
                     local_map(new, maps[1])
-            variable = self.graph.gate_variables[op_id]
+            variable = self.graph.gate_variables.get(op_id)
             ports = self.graph.gate_ports[op_id]
-            if not self.plan.state[variable]:
+            if variable is None or not self.plan.state[variable]:
                 locations = [self._location(pin) for pin, _ in ports]
                 if len(set(block for block, _ in locations)) != 1:
                     raise RuntimeError("A retained gate crosses executable blocks.")

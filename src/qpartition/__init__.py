@@ -1,11 +1,12 @@
 """Circuit partitioning research foundations."""
 
-from .annealing import AnnealConfig, anneal, multi_start
+from .annealing import AnnealConfig, anneal, multi_start, refine_partition
 from .circuits import CircuitProblem, interaction_graph, load_problem, save_problem, temporal_graph
 from .cutting import compile_cut
 from .exact_search import exact_search
 from .excision import compile_excision, decompose_excision
 from .hybrid import HybridPlan, compile_hybrid
+from .migration import migrate_legacy_plan
 from .partition_graph import PartitionGraph
 from .plans import CutPlan, WireCut
 from .statistics import bootstrap_uncertainty
@@ -27,6 +28,8 @@ __all__ = [
     "interaction_graph",
     "load_problem",
     "multi_start",
+    "refine_partition",
+    "migrate_legacy_plan",
     "save_problem",
     "temporal_graph",
 ]

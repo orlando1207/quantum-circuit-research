@@ -29,10 +29,13 @@ class AnnealConfig:
     penalty_multiplier: float = 1.0
     allow_wire: bool = True
     allow_gate: bool = True
-    allow_excision: bool = True
+    search_space: str = "labels"
+    interval_polish: bool = True
+    proposal_balance: str = "variables"
     objective: str = "overhead"
     max_components: int | None = None
     cache_size: int = 4096
+    split_probability: float = 0.25
 
     def validate(self) -> None:
         if isinstance(self.max_qubits, bool) or not isinstance(self.max_qubits, int):
@@ -43,16 +46,28 @@ class AnnealConfig:
                 raise ValueError(f"{name} must be a positive integer.")
         if not isinstance(self.pilot_steps, int) or self.pilot_steps < 0:
             raise ValueError("pilot_steps must be a nonnegative integer.")
-        if self.partition_mode not in ("two_blocks", "components"):
+        if self.partition_mode not in ("two_blocks", "components", "multiway"):
             raise ValueError("Unknown partition mode.")
         if self.objective not in ("overhead", "fragment_shots"):
             raise ValueError("Unknown objective.")
+        if self.search_space not in ("labels", "actions"):
+            raise ValueError("Unknown search space.")
+        if self.proposal_balance not in ("variables", "types"):
+            raise ValueError("Unknown proposal balance.")
         if not 0 < self.cooling_rate < 1 or not 0 < self.initial_acceptance < 1:
             raise ValueError("Cooling rate and initial acceptance must lie strictly in (0,1).")
         if not 0 <= self.block_probability <= 1 or self.penalty_multiplier <= 0:
             raise ValueError("Invalid proposal probability or penalty multiplier.")
         if not np.isfinite(self.penalty_multiplier):
             raise ValueError("Penalty multiplier must be finite.")
+        if not 0 < self.split_probability < 1:
+            raise ValueError("Split probability must lie strictly in (0,1).")
+        if self.max_components is not None and (
+            isinstance(self.max_components, bool)
+            or not isinstance(self.max_components, int)
+            or self.max_components < 1
+        ):
+            raise ValueError("max_components must be a positive integer.")
 
 
 @dataclass(frozen=True)
@@ -71,6 +86,11 @@ class AnnealResult:
     block_proposals: int
     elapsed_seconds: float
     trace: tuple[dict, ...]
+    best_before_polish: float | None = None
+    polish_evaluations: int = 0
+    proposed_action_changes: dict | None = None
+    accepted_action_changes: dict | None = None
+    initial_feasible: bool = True
 
     def to_dict(self) -> dict:
         result = asdict(self)
@@ -85,13 +105,12 @@ def allowed_options(graph: PartitionGraph, config: AnnealConfig) -> tuple[tuple[
     flags = {
         "wire": config.allow_wire,
         "gate": config.allow_gate,
-        "excision": config.allow_excision,
     }
     return tuple(
         tuple(
             index
             for index, option in enumerate(variable.options)
-            if option is None or flags[option.kind]
+            if option is None or flags.get(option.kind, False)
         )
         for variable in graph.variables
     )
@@ -114,7 +133,7 @@ def seed_states(
     ranked = []
     crossings = []
     for index, variable in enumerate(graph.variables):
-        if variable.kind != "gate" or len(variable.ports) != 4:
+        if variable.kind != "gate":
             continue
         cuts = [
             value
@@ -129,7 +148,7 @@ def seed_states(
             (
                 index,
                 graph.nodes[variable.ports[0]]["qubit"],
-                graph.nodes[variable.ports[2]]["qubit"],
+                graph.nodes[variable.ports[1]]["qubit"],
                 cut,
             )
         )
@@ -146,6 +165,37 @@ def seed_states(
                 for position, q in enumerate(permutation):
                     colors[int(q)] = position * groups // n
                 colors_iter.append(tuple(colors))
+            if n <= 2 * config.max_qubits:
+                colors_iter.extend(
+                    tuple(int(q >= boundary) for q in range(n))
+                    for boundary in range(
+                        max(1, n - config.max_qubits), min(n, config.max_qubits + 1)
+                    )
+                )
+                # Graph-traversal spatial seeds capture cycles/chains whose qubit
+                # indices are shuffled, without relying on a benchmark-specific order.
+                neighbors = [set() for _ in range(n)]
+                for _, left, right, _ in crossings:
+                    neighbors[left].add(right)
+                    neighbors[right].add(left)
+                for root in range(min(n, 8)):
+                    order, seen = [], set()
+                    for start in (root, *range(n)):
+                        stack = [start]
+                        while stack:
+                            q = stack.pop()
+                            if q in seen:
+                                continue
+                            seen.add(q)
+                            order.append(q)
+                            stack.extend(sorted(neighbors[q] - seen, reverse=True))
+                    for boundary in range(
+                        max(1, n - config.max_qubits), min(n, config.max_qubits + 1)
+                    ):
+                        colors = [1] * n
+                        for q in order[:boundary]:
+                            colors[q] = 0
+                        colors_iter.append(tuple(colors))
         for colors in colors_iter:
             sizes = [colors.count(color) for color in set(colors)]
             if max(sizes) > config.max_qubits:
@@ -166,12 +216,6 @@ def seed_states(
             for value in allowed[index]
             if variable.options[value] and variable.options[value].kind == "gate"
         ]
-        if variable.kind == "gate" and len(variable.ports) == 4 and not choices:
-            choices = [
-                value
-                for value in allowed[index]
-                if variable.options[value] and variable.options[value].kind == "excision"
-            ]
         all_cut.append(choices[0] if choices else 0)
     candidates.extend((tuple(all_cut), zero))
     if config.allow_wire:
@@ -186,8 +230,22 @@ def seed_states(
                 single = list(zero)
                 single[index] = 1
                 candidates.append(tuple(single))
+    if config.partition_mode != "two_blocks":
+        from .multiway import bridge_seed_state, merge_seed_states
+
+        for include_gates in (False, True):
+            bridge = bridge_seed_state(
+                graph, allowed, max_qubits=config.max_qubits, include_gates=include_gates
+            )
+            if bridge is not None:
+                candidates.append(bridge)
+        candidates.extend(
+            merge_seed_states(
+                graph, allowed, max_qubits=config.max_qubits, count=min(count, 12), seed=seed
+            )
+        )
     unique = list(dict.fromkeys(candidates))
-    feasible, infeasible = [], []
+    feasible, infeasible, diverse = [], [], {}
     for state in unique:
         evaluation = graph.evaluate(
             state,
@@ -196,10 +254,26 @@ def seed_states(
             max_components=config.max_components,
             validate=False,
         )
-        (feasible if evaluation.feasible else infeasible).append((evaluation.log_overhead, state))
+        score = evaluation.log_overhead + (
+            log(len(evaluation.block_widths)) if config.objective == "fragment_shots" else 0
+        )
+        (feasible if evaluation.feasible else infeasible).append((score, state))
+        if evaluation.feasible and config.partition_mode != "two_blocks":
+            signature = (
+                len(evaluation.block_widths),
+                bool(evaluation.action_counts["wire"]),
+                bool(evaluation.action_counts["gate"]),
+            )
+            diverse[signature] = min(diverse.get(signature, (float("inf"), ())), (score, state))
     feasible.sort()
     infeasible.sort()
-    selected = feasible[:count] or infeasible[:count] or [(0, zero)]
+    if feasible and diverse:
+        # Preserve temporal/multi-fragment seeds even when many cheap spatial
+        # partitions would otherwise occupy every slot of the initial pool.
+        ordered = feasible[: max(1, count // 2)] + sorted(diverse.values()) + feasible
+        selected = list(dict.fromkeys(ordered))[:count]
+    else:
+        selected = feasible[:count] or infeasible[:count] or [(0, zero)]
     return tuple(state for _, state in selected)
 
 
@@ -212,6 +286,8 @@ def anneal(
 ) -> AnnealResult:
     start = perf_counter()
     config.validate()
+    if graph.graph_schema != "temporal-incidence-v2":
+        raise ValueError("Core SA requires the gate/wire temporal incidence graph.")
     graph.problem.validate_snapshot()
     if (
         config.partition_mode == "two_blocks"
@@ -272,7 +348,7 @@ def anneal(
 
     def proposal(current):
         if not mutable:
-            return current, False
+            return current, False, 0.0
         new = list(current)
         block = rng.random() < config.block_probability and config.block_size > 1
         if block:
@@ -293,18 +369,47 @@ def anneal(
                 choices = allowed[index]
                 new[index] = choices[int(rng.integers(len(choices)))]
         else:
-            index = mutable[int(rng.integers(len(mutable)))]
+            if config.proposal_balance == "types":
+                groups = [
+                    tuple(v for v in mutable if graph.variables[v].kind == kind)
+                    for kind in ("gate", "wire")
+                ]
+                groups = [group for group in groups if group]
+                group = groups[int(rng.integers(len(groups)))]
+                index = group[int(rng.integers(len(group)))]
+            else:
+                index = mutable[int(rng.integers(len(mutable)))]
             choices = [v for v in allowed[index] if v != current[index]]
             new[index] = choices[int(rng.integers(len(choices)))]
-        return tuple(new), block
+        return tuple(new), block, 0.0
 
-    current = evaluate(state)
+    search_labels = config.search_space == "labels"
+    if search_labels:
+        from .label_moves import LabelMoves, MultiwayLabelMoves
+
+        binary = config.partition_mode == "two_blocks"
+        moves = (
+            LabelMoves(graph, allowed, config.block_size)
+            if binary
+            else MultiwayLabelMoves(graph, allowed, config.block_size, config.split_probability)
+        )
+        state = graph.labels_from_evaluation(evaluate(state))
+
+        def proposal(current):
+            result = moves.propose(current, rng, config.block_probability)
+            return (*result, 0.0) if binary else result
+
+    def evaluate_proposal(candidate):
+        return evaluate(graph.state_from_labels(candidate) if search_labels else candidate)
+
+    current = evaluate_proposal(state)
+    initial_feasible = current.feasible
     best = current if current.feasible else None
     initial_log = current.log_overhead
     positive = []
     for _ in range(config.pilot_steps if mutable else 0):
-        candidate, _ = proposal(state)
-        evaluation = evaluate(candidate)
+        candidate, _, _ = proposal(state)
+        evaluation = evaluate_proposal(candidate)
         difference = energy(evaluation) - energy(current)
         if difference > 0:
             positive.append(difference)
@@ -315,22 +420,37 @@ def anneal(
     )
     temperature = initial_temperature
     accepted = changed = blocks = 0
+    proposed_changes = {
+        f"{kind}_{action}": 0 for kind in ("gate", "wire") for action in ("added", "removed")
+    }
+    accepted_changes = proposed_changes.copy()
     trace = []
     steps = config.steps if mutable else 0
     for step in range(steps):
         level = min(config.temperature_levels - 1, step * config.temperature_levels // steps)
         temperature = max(1e-12, initial_temperature * config.cooling_rate**level)
-        candidate, is_block = proposal(state)
+        candidate, is_block, log_ratio = proposal(state)
         blocks += int(is_block)
         if candidate != state:
             changed += 1
-            evaluation = evaluate(candidate)
+            evaluation = evaluate_proposal(candidate)
+            changes = proposed_changes.copy()
+            for key in changes:
+                changes[key] = 0
+            for variable, before, after in zip(graph.variables, current.state, evaluation.state):
+                if before != after:
+                    changes[f"{variable.kind}_{'added' if after else 'removed'}"] += 1
+            for key, value in changes.items():
+                proposed_changes[key] += value
             if evaluation.feasible and (best is None or rank(evaluation) < rank(best)):
                 best = evaluation
             difference = energy(evaluation) - energy(current)
-            if difference <= 0 or rng.random() < exp(-min(745, difference / temperature)):
+            log_acceptance = -difference / temperature + log_ratio
+            if log_acceptance >= 0 or rng.random() < exp(max(-745, log_acceptance)):
                 state, current = candidate, evaluation
                 accepted += 1
+                for key, value in changes.items():
+                    accepted_changes[key] += value
         if step == 0 or (step + 1) % max(1, steps // 20) == 0:
             trace.append(
                 {
@@ -339,9 +459,33 @@ def anneal(
                     "current_feasible": current.feasible,
                     "current_log_overhead": current.log_overhead,
                     "best_log_overhead": best.log_overhead if best else None,
+                    "current_action_counts": current.action_counts,
+                    "current_fragments": len(current.block_widths),
+                    "best_fragments": len(best.block_widths) if best else None,
                 }
             )
-    if best:
+    before_polish = best.sampling_overhead if best else None
+    polish_start = evaluate.cache_info().misses
+    if best and search_labels:
+        regions = moves.polish_regions if config.interval_polish else moves.units
+        improved = True
+        while improved:
+            improved = False
+            labels = graph.labels_from_evaluation(best)
+            normalized = evaluate_proposal(labels)
+            if normalized.feasible and rank(normalized) < rank(best):
+                best, improved = normalized, True
+                labels = graph.labels_from_evaluation(best)
+            for region in regions:
+                alternatives = (
+                    (moves.flip(labels, region),) if binary else moves.alternatives(labels, region)
+                )
+                for alternative in alternatives:
+                    evaluation = evaluate_proposal(alternative)
+                    if evaluation.feasible and rank(evaluation) < rank(best):
+                        best, improved = evaluation, True
+                        labels = graph.labels_from_evaluation(best)
+    elif best:
         # Deterministic coordinate descent is reported separately from annealing moves.
         improved = True
         while improved:
@@ -368,12 +512,80 @@ def anneal(
         blocks,
         perf_counter() - start,
         tuple(trace),
+        before_polish,
+        evaluate.cache_info().misses - polish_start,
+        proposed_changes,
+        accepted_changes,
+        initial_feasible,
     )
 
 
 def _run_one(arguments):
     graph, config, seed, state = arguments
     return anneal(graph, config, seed=seed, initial_state=state)
+
+
+@dataclass(frozen=True)
+class RefinementResult:
+    best: GraphEvaluation
+    evaluations: int
+    elapsed_seconds: float
+
+
+def refine_partition(graph, config, initial_state) -> RefinementResult:
+    """Deterministic feasible interval descent; report separately from SA gains."""
+    from .label_moves import LabelMoves, MultiwayLabelMoves
+
+    started = perf_counter()
+    config.validate()
+    graph.validate_state(initial_state)
+    allowed = allowed_options(graph, config)
+    if any(value not in choices for value, choices in zip(initial_state, allowed)):
+        raise ValueError("Initial state uses a disabled action.")
+
+    @lru_cache(maxsize=config.cache_size)
+    def evaluate(state):
+        return graph.evaluate(
+            state,
+            max_qubits=config.max_qubits,
+            partition_mode=config.partition_mode,
+            max_components=config.max_components,
+            validate=False,
+        )
+
+    def rank(evaluation):
+        cost = evaluation.log_overhead
+        if config.objective == "fragment_shots":
+            cost += log(len(evaluation.block_widths))
+        return cost, len(evaluation.block_widths), evaluation.state
+
+    best = evaluate(initial_state)
+    if not best.feasible:
+        raise ValueError("Refinement needs a feasible initial plan.")
+    binary = config.partition_mode == "two_blocks"
+    moves = (
+        LabelMoves(graph, allowed, config.block_size)
+        if binary
+        else MultiwayLabelMoves(graph, allowed, config.block_size, config.split_probability)
+    )
+    improved = True
+    while improved:
+        improved = False
+        labels = graph.labels_from_evaluation(best)
+        normalized = evaluate(graph.state_from_labels(labels))
+        if normalized.feasible and rank(normalized) < rank(best):
+            best, improved = normalized, True
+            labels = graph.labels_from_evaluation(best)
+        for region in moves.polish_regions:
+            alternatives = (
+                (moves.flip(labels, region),) if binary else moves.alternatives(labels, region)
+            )
+            for alternative in alternatives:
+                evaluation = evaluate(graph.state_from_labels(alternative))
+                if evaluation.feasible and rank(evaluation) < rank(best):
+                    best, improved = evaluation, True
+                    labels = graph.labels_from_evaluation(best)
+    return RefinementResult(best, evaluate.cache_info().misses, perf_counter() - started)
 
 
 def multi_start(

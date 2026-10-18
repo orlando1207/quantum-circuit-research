@@ -28,12 +28,20 @@ def exact_search(
 ) -> ExactSearchResult:
     start = perf_counter()
     config.validate()
+    if graph.graph_schema != "temporal-incidence-v2":
+        raise ValueError("Core exact search requires the gate/wire graph.")
     graph.problem.validate_snapshot()
     if isinstance(max_nodes, bool) or not isinstance(max_nodes, int) or max_nodes < 1:
         raise ValueError("max_nodes must be a positive integer.")
     if (
         config.partition_mode == "two_blocks"
         and graph.problem.circuit.num_qubits > 2 * config.max_qubits
+    ):
+        return ExactSearchResult(None, True, 0, 0, perf_counter() - start)
+    if (
+        config.partition_mode != "two_blocks"
+        and config.max_components is not None
+        and graph.problem.circuit.num_qubits > config.max_components * config.max_qubits
     ):
         return ExactSearchResult(None, True, 0, 0, perf_counter() - start)
     allowed = allowed_options(graph, config)
@@ -88,6 +96,13 @@ def exact_search(
             and graph.problem.circuit.num_qubits + extra_segments > 2 * config.max_qubits
         ):
             return
+        if (
+            config.partition_mode != "two_blocks"
+            and config.max_components is not None
+            and graph.problem.circuit.num_qubits + extra_segments
+            > config.max_components * config.max_qubits
+        ):
+            return
         if position == len(variables):
             evaluated += 1
             candidate = evaluate(tuple(state))
@@ -100,13 +115,7 @@ def exact_search(
                 break
             state[index] = value
             option = graph.variables[index].options[value]
-            increment = (
-                1
-                if option and option.kind == "wire"
-                else option.arity
-                if option and option.kind == "excision"
-                else 0
-            )
+            increment = int(option is not None and option.kind == "wire")
             visit(
                 position + 1,
                 cost + (option.log_overhead if option else 0),

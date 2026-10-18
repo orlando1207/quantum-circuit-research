@@ -11,6 +11,7 @@ from qpartition import CircuitProblem
 from qpartition.annealing import AnnealConfig, anneal, multi_start
 from qpartition.exact_search import exact_search
 from qpartition.hybrid import HybridPlan, compile_hybrid
+from qpartition.legacy_graph import LegacyPartitionGraph
 from qpartition.partition_graph import PartitionGraph, pack_two
 from qpartition.templates import TemplateRegistry
 
@@ -30,7 +31,7 @@ def test_cx_modes_and_two_block_packing():
     circuit = QuantumCircuit(2)
     circuit.cx(0, 1)
     problem = CircuitProblem.create(circuit, "ZZ")
-    graph = PartitionGraph(problem)
+    graph = LegacyPartitionGraph(problem)
     variable = graph.gate_variables[problem.operation_ids[0]]
     expected = {"gate": ([1, 1], 9), "excision": ([1, 1, 1, 1], 256)}
     for kind, (widths, overhead) in expected.items():
@@ -70,7 +71,7 @@ def test_wire_cut_rejoining_does_not_reuse_original_qubit():
     wire = next(
         i
         for i, variable in enumerate(graph.variables)
-        if variable.kind == "wire" and variable.operation_id == problem.operation_ids[2]
+        if variable.kind == "wire" and variable.operation_id == problem.operation_ids[3]
     )
     state = select(graph, {wire: "wire"})
     evaluation = graph.evaluate(state, max_qubits=2)
@@ -88,7 +89,7 @@ def test_two_qubit_channel_reconstruction(kind, pauli):
     circuit.cx(0, 1)
     circuit.t(0)
     problem = CircuitProblem.create(circuit, pauli)
-    graph = PartitionGraph(problem)
+    graph = (LegacyPartitionGraph if kind == "excision" else PartitionGraph)(problem)
     state = select(graph, {graph.gate_variables[problem.operation_ids[2]]: kind})
     plan = HybridPlan.create(graph, state, max_qubits=3)
     result = compile_hybrid(graph, plan).run_exact()
@@ -104,7 +105,7 @@ def test_all_three_actions_with_correlations_and_pauli_sum(tmp_path):
     circuit.cx(1, 2)
     query = SparsePauliOp.from_list([("XXX", 0.4), ("YXY", -0.2), ("ZIZ", 0.3)])
     problem = CircuitProblem.create(circuit, query)
-    graph = PartitionGraph(problem)
+    graph = LegacyPartitionGraph(problem)
     wire = next(
         i
         for i, variable in enumerate(graph.variables)
@@ -203,7 +204,7 @@ def test_general_gate_and_entangled_spectator(gate, kind):
     circuit.t(1)
     query = SparsePauliOp.from_list([("XZX", 0.4), ("IZI", -0.2), ("ZZI", 0.3)])
     problem = CircuitProblem.create(circuit, query)
-    graph = PartitionGraph(problem)
+    graph = (LegacyPartitionGraph if kind == "excision" else PartitionGraph)(problem)
     state = select(graph, {graph.gate_variables[problem.operation_ids[3]]: kind})
     plan = HybridPlan.create(graph, state, max_qubits=4)
     result = compile_hybrid(graph, plan).run_exact(max_experiments=20000)
@@ -211,7 +212,7 @@ def test_general_gate_and_entangled_spectator(gate, kind):
 
 
 def test_custom_gate_name_cannot_corrupt_lookup(tmp_path):
-    registry = TemplateRegistry()
+    registry = TemplateRegistry(include_excision=True)
     gate = UnitaryGate(SwapGate().to_matrix())
     gate.name = "cx"
     cut, excision = registry.for_gate(gate)

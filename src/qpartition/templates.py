@@ -79,13 +79,14 @@ class ActionTemplate:
 class TemplateRegistry:
     """One template per supported action; costs never depend on circuit query.
 
-    PTMs retain all floating-point coefficients (tolerance=0). Their numerical
-    channel residual is checked and recorded. Qiskit supplies gate/move QPDs.
+    Qiskit supplies gate/move QPDs. Excision is excluded by default; only the
+    historical/refinement path can opt in to checked PTMs with tolerance zero.
     """
 
-    def __init__(self) -> None:
+    def __init__(self, *, include_excision: bool = False) -> None:
+        self.include_excision = include_excision
         self.entries: dict[str, ActionTemplate] = {}
-        self.gate_cache: dict[str, tuple[str | None, str]] = {}
+        self.gate_cache: dict[str, tuple[str | None, str | None]] = {}
         basis = QPDBasis.from_instruction(Move())
         self.wire = self._qpd_template("wire:peng-v1", "wire", basis, 1, np.eye(2))
 
@@ -107,7 +108,7 @@ class TemplateRegistry:
         self.entries[key] = entry
         return entry
 
-    def for_gate(self, gate: Instruction) -> tuple[ActionTemplate | None, ActionTemplate]:
+    def for_gate(self, gate: Instruction) -> tuple[ActionTemplate | None, ActionTemplate | None]:
         if gate.num_qubits not in (1, 2):
             raise ValueError("Hybrid partitioning supports one-/two-qubit unitary gates.")
         matrix = Operator(gate).data
@@ -116,13 +117,13 @@ class TemplateRegistry:
         ).hexdigest()
         if digest in self.gate_cache:
             cut_key, exc_key = self.gate_cache[digest]
-            return self.entries.get(cut_key), self.entries[exc_key]
+            return self.entries.get(cut_key), self.entries.get(exc_key)
         cut = None
         if gate.num_qubits == 2:
             try:
                 basis = QPDBasis.from_instruction(gate)
             except ValueError:
-                basis = None
+                basis = QPDBasis.from_instruction(UnitaryGate(matrix))
             if basis is not None:
                 try:
                     cut = self._qpd_template(f"gate:{digest}", "gate", basis, 2, matrix)
@@ -130,6 +131,9 @@ class TemplateRegistry:
                     # A custom instruction may reuse a standard gate's name.
                     basis = QPDBasis.from_instruction(UnitaryGate(matrix))
                     cut = self._qpd_template(f"gate:{digest}", "gate", basis, 2, matrix)
+        if not self.include_excision:
+            self.gate_cache[digest] = (cut.template_id if cut else None, None)
+            return cut, None
         excision = decompose_excision(gate, max_qubits=2, tolerance=0)
         paulis = [Pauli(label).to_matrix() for label in excision.pauli_labels]
         residual = max(
