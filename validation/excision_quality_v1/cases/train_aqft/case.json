@@ -1,0 +1,25 @@
+{
+  "name": "train_aqft",
+  "family": "aqft",
+  "qubits": 64,
+  "max_qubits": 22,
+  "two_qubit_gates": 305,
+  "vertices": 610,
+  "variables": 851,
+  "depth": 128,
+  "source_fingerprint": "a14a39515d44b95672924589f436c12da94c72df480554ee95beef6ceb6ee243",
+  "provenance": {
+    "kind": "synthetic-scalable-control",
+    "family": "aqft",
+    "seed": 17,
+    "layers": 1,
+    "cutoff": 5,
+    "approximation": "Omitted CP gates beyond distance five; no final swaps",
+    "two_qubit_gates": 305,
+    "source_identity": "Frozen generator; not an original paper Table-I circuit"
+  },
+  "preprocessing_seconds": 0.3940102829992611,
+  "seed_pool_seconds": 1.9011379180001313,
+  "pool_size": 5,
+  "pool_policy": "Original seed_states on wire/gate graph; identical pool for both methods. No known separators or baseline winners supplied."
+}

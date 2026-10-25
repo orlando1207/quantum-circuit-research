@@ -36,6 +36,7 @@ class GraphEvaluation:
     independent_log_overhead: float | None = None
     groups: tuple[SelectedGroup, ...] = ()
     grouping_selection_complete: bool | None = None
+    excision_wire_cuts: int = 0
 
     @property
     def sampling_overhead(self) -> float:

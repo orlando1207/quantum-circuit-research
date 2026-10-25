@@ -1,0 +1,24 @@
+{
+  "name": "train_random_brickwork",
+  "family": "random_brickwork",
+  "qubits": 64,
+  "max_qubits": 48,
+  "two_qubit_gates": 192,
+  "vertices": 384,
+  "variables": 512,
+  "depth": 13,
+  "source_fingerprint": "7211e1a23ad41e7cf4c7e05b37a2993e1329f97ed3401d824f6a56cc9999ab62",
+  "provenance": {
+    "kind": "synthetic-scalable-control",
+    "family": "random_brickwork",
+    "seed": 17,
+    "layers": 6,
+    "interpretation": "Fixed-angle random-matching CX layers; own stress test",
+    "two_qubit_gates": 192,
+    "source_identity": "Frozen generator; not an original paper Table-I circuit"
+  },
+  "preprocessing_seconds": 0.19918795299963676,
+  "seed_pool_seconds": 0.875963700000284,
+  "pool_size": 5,
+  "pool_policy": "Original seed_states on wire/gate graph; identical pool for both methods. No known separators or baseline winners supplied."
+}

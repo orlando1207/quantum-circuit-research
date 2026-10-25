@@ -225,13 +225,15 @@ class PaperTopology:
         marked, _ = cut_gates(marked, gate_indices)
         expanded = cut_wires(marked)
         partitioned = partition_problem(expanded)
-        from math import prod
-
-        individual_overhead = float(prod(b.kappa for b in partitioned.bases) ** 2)
+        individual_log_overhead = 2 * sum(log(b.kappa) for b in partitioned.bases)
+        individual_overhead = (
+            exp(individual_log_overhead) if individual_log_overhead < 709 else float("inf")
+        )
         widths = [c.num_qubits for c in partitioned.subcircuits.values()]
         return marked, {
             "sdk_component_widths": widths,
             "sdk_individual_sampling_overhead": individual_overhead,
+            "sdk_individual_log_sampling_overhead": individual_log_overhead,
             "labeled_block_widths": self.widths(labels).tolist(),
             "grouped_physical_compilation": False if self.groups else None,
         }
@@ -452,11 +454,14 @@ def run_paper_reconstruction(problem, config: PaperConfig, groups=()):
         "config": asdict(config),
         "labels": labels.tolist(),
         "spatial_qubit_labels": colors,
-        "stage_one_sampling_overhead": exp(2 * stage_one),
+        "stage_one_sampling_overhead": exp(2 * stage_one) if 2 * stage_one < 709 else float("inf"),
         "stage_one_cut_gate_count": sum(
             colors[g["qubits"][0]] != colors[g["qubits"][1]] for g in topology.gates.values()
         ),
-        "sampling_overhead": exp(2 * topology.cost(labels)),
+        "sampling_overhead": exp(2 * topology.cost(labels))
+        if 2 * topology.cost(labels) < 709
+        else float("inf"),
+        "log_sampling_overhead": 2 * topology.cost(labels),
         "widths": [int(w) for w in widths if w],
         "fragments": int(sum(widths > 0)),
         "gate_cuts": gate_cuts,

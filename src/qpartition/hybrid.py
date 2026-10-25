@@ -29,6 +29,7 @@ class HybridPlan:
     max_components: int | None = None
     graph_schema: str = "temporal-incidence-v2"
     grouping_fingerprint: str | None = None
+    forced_groups: tuple[str, ...] | None = None
 
     @classmethod
     def create(
@@ -39,12 +40,14 @@ class HybridPlan:
         max_qubits: int,
         partition_mode: str = "two_blocks",
         max_components: int | None = None,
+        forced_groups: tuple[str, ...] | None = None,
     ) -> HybridPlan:
         evaluation = graph.evaluate(
             state,
             max_qubits=max_qubits,
             partition_mode=partition_mode,
             max_components=max_components,
+            forced_groups=forced_groups,
         )
         if not evaluation.feasible:
             raise ValueError("Cannot create an executable plan from an infeasible state.")
@@ -60,6 +63,7 @@ class HybridPlan:
             max_components,
             graph.graph_schema,
             getattr(graph, "grouping_fingerprint", None),
+            forced_groups,
         )
 
     def validate(self, graph: PartitionGraph) -> GraphEvaluation:
@@ -82,6 +86,7 @@ class HybridPlan:
             partition_mode=self.partition_mode,
             max_components=self.max_components,
             validate=False,
+            forced_groups=self.forced_groups,
         )
         if not evaluation.feasible:
             raise ValueError("Hybrid plan violates physical static allocation constraints.")
@@ -117,6 +122,8 @@ class HybridPlan:
             raise ValueError("Unsupported hybrid plan schema.")
         data["state"] = tuple(data["state"])
         data["template_ids"] = tuple(data["template_ids"])
+        if data.get("forced_groups") is not None:
+            data["forced_groups"] = tuple(data["forced_groups"])
         return cls(**data)
 
 
@@ -148,6 +155,7 @@ class CompiledHybrid:
         covered = {
             v for group in self.evaluation.groups for v in library.by_id[group.group_id].variables
         }
+        self.covered_variables = covered
         self.active_variables = tuple(
             index for index, value in enumerate(plan.state) if value and index not in covered
         )
@@ -155,6 +163,8 @@ class CompiledHybrid:
         self.group_factors = {}
         self.group_anchors = {}
         self.replaced_operations = set()
+        self.local_operation_ports = {}
+        source_positions = {op: i for i, op in enumerate(graph.problem.operation_ids)}
         for selected in self.evaluation.groups:
             candidate = library.by_id[selected.group_id]
             basis = library.basis(selected)
@@ -162,7 +172,38 @@ class CompiledHybrid:
             self.group_anchors[candidate.anchor] = selected.group_id
             self.replaced_operations.update((*candidate.operations, *candidate.absorbed_operations))
             templates.append(basis)
+            if candidate.family == "excision":
+                # An outgoing canonical boundary lies after any intervening
+                # one-qubit chain. That chain must act on the prepared output,
+                # not on the input register that has just been measured.
+                for operand, (pin, pout) in enumerate(candidate.excision_ports):
+                    if pin == pout or pout == candidate.pins[operand]:
+                        continue
+                    wire = next(
+                        v
+                        for v in candidate.excision_wires
+                        if graph.variables[v].ports == (pin, pout)
+                    )
+                    first = source_positions[candidate.anchor] + 1
+                    last = source_positions[graph.variables[wire].operation_id]
+                    q = candidate.qubits[operand]
+                    for pos in range(first, last):
+                        op = graph.problem.operation_ids[pos]
+                        item = graph.problem.circuit.data[pos]
+                        if (
+                            item.operation.num_qubits == 1
+                            and graph.problem.circuit.qubits[q] in item.qubits
+                        ):
+                            self.local_operation_ports[op] = ((pout, pout),)
         self.templates = tuple(templates)
+        if any(
+            getattr(t, "assumed_gamma", None) is not None
+            and not np.isclose(t.assumed_gamma, t.gamma, atol=1e-10, rtol=1e-12)
+            for t in self.templates
+        ):
+            raise ValueError(
+                "Assumed excision cost has no matching physical recipe; cost study only."
+            )
         self.factor_positions = {
             variable: position for position, variable in enumerate(self.active_variables)
         }
@@ -239,6 +280,14 @@ class CompiledHybrid:
             position, selected, basis = self.group_factors[group_id]
             candidate = self.graph.grouping.by_id[group_id]
             branch = branches[position]
+            if candidate.family == "excision":
+                term = basis.excision.terms[branch]
+                for local, (pin, pout) in enumerate(candidate.excision_ports):
+                    axis = term.input_pauli[-local - 1]
+                    if axis != "I":
+                        measure_axis(pin, axis, True)
+                    prepare(pout, term.output_pauli[-local - 1], term.eigenbits[local])
+                return
             if candidate.family == "fusion":
                 for local, pin in enumerate(candidate.pins):
                     local_map(pin, basis.basis.maps[branch][local])
@@ -262,7 +311,11 @@ class CompiledHybrid:
             if item.operation.name == "barrier":
                 continue
             for wire in self.graph.incoming_wires[op_id]:
-                if wire is not None and self.plan.state[wire]:
+                if (
+                    wire is not None
+                    and self.plan.state[wire]
+                    and wire not in self.covered_variables
+                ):
                     factor = self.factor_positions[wire]
                     maps = self.templates[factor].basis.maps[branches[factor]]
                     old, new = self.graph.variables[wire].ports
@@ -273,7 +326,7 @@ class CompiledHybrid:
             if op_id in self.replaced_operations:
                 continue
             variable = self.graph.gate_variables.get(op_id)
-            ports = self.graph.gate_ports[op_id]
+            ports = self.local_operation_ports.get(op_id, self.graph.gate_ports[op_id])
             if variable is None or not self.plan.state[variable]:
                 locations = [self._location(pin) for pin, _ in ports]
                 if len(set(block for block, _ in locations)) != 1:

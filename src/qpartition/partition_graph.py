@@ -1,6 +1,8 @@
-"""Contracted temporal incidence graph for gate/wire cutting only."""
+"""Contracted temporal incidence graph with optional cut-realization factors."""
 
 from __future__ import annotations
+
+from dataclasses import replace
 
 import networkx as nx
 
@@ -20,13 +22,40 @@ class PartitionGraph:
     graph_schema = "temporal-incidence-v2"
 
     def __init__(
-        self, problem: CircuitProblem, registry: TemplateRegistry | None = None, *, grouping=None
+        self,
+        problem: CircuitProblem,
+        registry: TemplateRegistry | None = None,
+        *,
+        grouping=None,
+        excision: bool = False,
+        excision_gamma: float | None = None,
     ):
         problem.validate_snapshot()
         self.problem = problem
-        self.registry = registry or TemplateRegistry()
-        if self.registry.include_excision:
-            raise ValueError("Core partitioning accepts gate and wire templates only.")
+        from .grouping import GroupingConfig, GroupLibrary
+
+        if not isinstance(excision, bool):
+            raise ValueError("excision must be boolean.")
+        config = GroupingConfig() if grouping is True else grouping
+        config = config if config is not False else None
+        if config is not None and "excision" in config.families:
+            excision = True
+        if excision:
+            config = (
+                GroupingConfig(families=("excision",))
+                if config is None
+                else replace(config, families=tuple(dict.fromkeys((*config.families, "excision"))))
+            )
+        if excision_gamma is not None and not excision:
+            raise ValueError("excision_gamma requires excision=True.")
+        self.registry = registry or TemplateRegistry(
+            include_excision=excision, excision_gamma=excision_gamma
+        )
+        if self.registry.include_excision != excision:
+            raise ValueError("Registry excision policy must match the graph's excision setting.")
+        if registry is not None and excision_gamma is not None:
+            if registry.excision_gamma != excision_gamma:
+                raise ValueError("Registry and graph excision cost assumptions differ.")
         self.variables: list[ActionVariable] = []
         self.nodes: list[dict] = []
         self.edges: list[tuple[int, int, str, int]] = []
@@ -110,10 +139,7 @@ class PartitionGraph:
         self.grouping = None
         self.grouping_fingerprint = None
         self.group_regions = ()
-        if grouping is not None and grouping is not False:
-            from .grouping import GroupingConfig, GroupLibrary
-
-            config = GroupingConfig() if grouping is True else grouping
+        if config is not None:
             self.grouping = GroupLibrary(self, config)
             self.grouping_fingerprint = self.grouping.fingerprint
             self.group_regions = self.grouping.regions
@@ -156,6 +182,7 @@ class PartitionGraph:
         partition_mode: str = "two_blocks",
         max_components: int | None = None,
         validate: bool = True,
+        forced_groups: tuple[str, ...] | None = None,
     ) -> GraphEvaluation:
         if validate:
             self.validate_state(state)
@@ -208,11 +235,24 @@ class PartitionGraph:
         if max_components is not None:
             penalty += max(0, len(widths) - max_components) ** 2
         independent_cost, groups, complete = cost, (), None
+        excision_wires = 0
+        if self.grouping is not None and "excision" in self.grouping.config.families:
+            counts["excision"] = 0
         if self.grouping is not None:
             node_components = tuple(segment_components[s] for s in node_segments)
-            selection = self.grouping.select(
-                state, tuple(widths), node_components, max_qubits, partition_mode, max_components
-            )
+            if forced_groups is not None:
+                selection = self.grouping.forced_selection(
+                    state, forced_groups, tuple(widths), max_qubits, partition_mode, max_components
+                )
+            else:
+                selection = self.grouping.select(
+                    state,
+                    tuple(widths),
+                    node_components,
+                    max_qubits,
+                    partition_mode,
+                    max_components,
+                )
             if selection is not None:
                 cost = max(0.0, cost - selection.savings)
                 widths, blocks, block_widths = (
@@ -226,6 +266,13 @@ class PartitionGraph:
                     selection.groups,
                     selection.complete,
                 )
+                for selected in groups:
+                    candidate = self.grouping.by_id[selected.group_id]
+                    if candidate.family == "excision":
+                        counts["excision"] = counts.get("excision", 0) + 1
+                        counts["gate"] -= state[self.gate_variables[candidate.anchor]]
+                        counts["wire"] -= len(candidate.excision_wires)
+                        excision_wires += len(candidate.excision_wires)
         return GraphEvaluation(
             state,
             cost,
@@ -240,6 +287,7 @@ class PartitionGraph:
             independent_cost if self.grouping is not None else None,
             groups,
             complete,
+            excision_wires,
         )
 
     def networkx_graph(self, state: tuple[int, ...] | None = None) -> nx.Graph:

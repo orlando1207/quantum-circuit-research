@@ -1,0 +1,25 @@
+{
+  "name": "aqft_150_M112",
+  "family": "aqft",
+  "qubits": 150,
+  "max_qubits": 112,
+  "two_qubit_gates": 735,
+  "vertices": 1470,
+  "variables": 2055,
+  "depth": 300,
+  "source_fingerprint": "351620c40d2c3e8452c6ea140ff787b9c37c5d39e4b6bcb288cec2ab7a7b2726",
+  "provenance": {
+    "kind": "synthetic-scalable-control",
+    "family": "aqft",
+    "seed": 53,
+    "layers": 1,
+    "cutoff": 5,
+    "approximation": "Omitted CP gates beyond distance five; no final swaps",
+    "two_qubit_gates": 735,
+    "source_identity": "Frozen generator; not an original paper Table-I circuit"
+  },
+  "preprocessing_seconds": 0.5579186820004907,
+  "seed_pool_seconds": 9.773485366999921,
+  "pool_size": 5,
+  "pool_policy": "Original seed_states on wire/gate graph; identical pool for both methods. No known separators or baseline winners supplied."
+}

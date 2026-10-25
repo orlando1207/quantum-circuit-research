@@ -126,7 +126,14 @@ def exact_search(
                 cost
                 + (
                     option.log_overhead
-                    if option and (graph.grouping is None or option.kind == "wire")
+                    if option
+                    and (
+                        graph.grouping is None
+                        or (
+                            option.kind == "wire"
+                            and index not in graph.grouping.discounted_wire_variables
+                        )
+                    )
                     else 0
                 ),
                 extra_segments + increment,

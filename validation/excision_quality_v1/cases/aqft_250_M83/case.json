@@ -1,0 +1,25 @@
+{
+  "name": "aqft_250_M83",
+  "family": "aqft",
+  "qubits": 250,
+  "max_qubits": 83,
+  "two_qubit_gates": 1235,
+  "vertices": 2470,
+  "variables": 3455,
+  "depth": 500,
+  "source_fingerprint": "6ff9a56df8f195f35a375a5fc839404f5f9fd9bfbccb5b80b114cecb822da36c",
+  "provenance": {
+    "kind": "synthetic-scalable-control",
+    "family": "aqft",
+    "seed": 53,
+    "layers": 1,
+    "cutoff": 5,
+    "approximation": "Omitted CP gates beyond distance five; no final swaps",
+    "two_qubit_gates": 1235,
+    "source_identity": "Frozen generator; not an original paper Table-I circuit"
+  },
+  "preprocessing_seconds": 0.69948330599982,
+  "seed_pool_seconds": 43.35656600400034,
+  "pool_size": 5,
+  "pool_policy": "Original seed_states on wire/gate graph; identical pool for both methods. No known separators or baseline winners supplied."
+}

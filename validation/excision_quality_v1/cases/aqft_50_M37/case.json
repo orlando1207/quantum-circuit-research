@@ -1,0 +1,25 @@
+{
+  "name": "aqft_50_M37",
+  "family": "aqft",
+  "qubits": 50,
+  "max_qubits": 37,
+  "two_qubit_gates": 235,
+  "vertices": 470,
+  "variables": 655,
+  "depth": 100,
+  "source_fingerprint": "34a3c5dff6ead6e89c3bdf6b7a971e00527daad4279bfcf53a4f735c10336de5",
+  "provenance": {
+    "kind": "synthetic-scalable-control",
+    "family": "aqft",
+    "seed": 53,
+    "layers": 1,
+    "cutoff": 5,
+    "approximation": "Omitted CP gates beyond distance five; no final swaps",
+    "two_qubit_gates": 235,
+    "source_identity": "Frozen generator; not an original paper Table-I circuit"
+  },
+  "preprocessing_seconds": 0.2575640420000127,
+  "seed_pool_seconds": 1.098427496000113,
+  "pool_size": 5,
+  "pool_policy": "Original seed_states on wire/gate graph; identical pool for both methods. No known separators or baseline winners supplied."
+}

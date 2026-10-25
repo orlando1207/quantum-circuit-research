@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
-from math import isclose, prod
+from math import exp, isclose, log
 from time import perf_counter
 
 from qiskit_addon_cutting import cut_wires, expand_observables, partition_problem
@@ -64,7 +64,8 @@ def run_qiskit_baseline(problem, config: QiskitBaselineConfig):
     observable = expand_observables(problem.observable.paulis, marked, expanded)
     partitioned = partition_problem(expanded, observables=observable)
     widths = tuple(c.num_qubits for c in partitioned.subcircuits.values())
-    overhead = float(prod(b.kappa for b in partitioned.bases) ** 2)
+    log_overhead = 2 * sum(log(b.kappa) for b in partitioned.bases)
+    overhead = exp(log_overhead) if log_overhead < 709 else float("inf")
     if not widths or max(widths) > config.max_qubits:
         raise RuntimeError("SDK winner violates the materialized fragment-width constraint.")
     if sum(widths) != problem.circuit.num_qubits + len(wires):
@@ -76,6 +77,7 @@ def run_qiskit_baseline(problem, config: QiskitBaselineConfig):
         "implementation": "installed official package, not a reimplementation",
         "config": asdict(config),
         "sampling_overhead": overhead,
+        "log_sampling_overhead": log_overhead,
         "metadata_sampling_overhead": float(metadata["sampling_overhead"]),
         "minimum_reached": bool(metadata["minimum_reached"]),
         "widths": widths,

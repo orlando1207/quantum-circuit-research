@@ -1,0 +1,43 @@
+{
+  "config": {
+    "output": "/home/orlando/quantum-circuit-research/validation/excision_quality_v1",
+    "phase": "summarize",
+    "workers": 8,
+    "tuning_starts": 3,
+    "starts": 5,
+    "tuning_evaluations": 1600,
+    "evaluations": 4000,
+    "baseline_starts": 50,
+    "baseline_timeout": 60,
+    "case": null,
+    "method": null
+  },
+  "source_hashes": {
+    "src/qpartition/plans.py": "afb543247f8c694517e2939218c4e0d39c592d3cde582bf25545c13cd3e39d63",
+    "src/qpartition/annealing.py": "8c36bef64b517173b53d5e7b58b4c0f5633a08ef0456e323a66168fd14f2b73d",
+    "src/qpartition/__init__.py": "d37bc8457ca35dd8c6c2b669d342e4015a5b0534c49fa977eee1d80e20404954",
+    "src/qpartition/group_heatbath.py": "706ad5d2c3ea1eb1467ade9c9e9a25b5c47698b9ed5d0201a196f6cfc20ad5f2",
+    "src/qpartition/partition_graph.py": "904d581999ae6b3b1b3835b276c30a4ca77a40d5bf49390e410ec1927fcf5c9d",
+    "src/qpartition/large_benchmarks.py": "f4cef3e2193bf1d0de936942056d4705d53cc76284e1e6c5616c62e84a571a78",
+    "src/qpartition/paper_baseline.py": "c17642d95e7c0a25eecda5c26c464ac209424b989b8f0b5b3b0d0ec4e44bc3f6",
+    "src/qpartition/cutting.py": "773a5d8bd26daa28606a603d2db847771f44160042ef1430c2bd06560760740a",
+    "src/qpartition/multiway.py": "e94a6fa92027199f99831ceb2e976c2395cddd0c3c8521f8cac9ced56ef5ed54",
+    "src/qpartition/label_moves.py": "eb775e38a581b5bb05aa5826b1561cf843615537ed96adc265c1a52718119f50",
+    "src/qpartition/templates.py": "05ee37fb686128db6c228a366fd07f2b78489f88eaa50fe5eea1c0742bb3aff6",
+    "src/qpartition/excision.py": "c34af7527231493ddbaa4c543048be8cdb6afbaf8fda7d7e3b840d218ee439ff",
+    "src/qpartition/execution.py": "40c431efcc386d18aac53ab7621d5d75f12987790936736b9c616a2ba95c0aa2",
+    "src/qpartition/circuits.py": "70e674fe58a6bf2cad61e14fae95c23c0b219e6acede3daa276ed0d7d0d311b0",
+    "src/qpartition/graph_common.py": "473195e8d79da3b796ced96e83a2197b480dedbf9d3e9c133caf8c6312ab6f27",
+    "src/qpartition/migration.py": "638d204f7de4cf6b7ebfd1079f42ed27d76fe8657a330e268eb7768af532eb6e",
+    "src/qpartition/legacy_graph.py": "bcbab54f4893fb5db207adca5a713fd458e7c971e05c3219c675d5cf04b2e8a2",
+    "src/qpartition/grouping.py": "3d79c0062cf08b22c958f5aee2a5c3c0737d141438b2da221203b690f0ee9751",
+    "src/qpartition/benchmarks.py": "097b132ae91f66efbacfaae2b872a289322b640ab8d699d88aa0f6f6538220e5",
+    "src/qpartition/statistics.py": "546a3bcae96d7280daa7e0912fd271fe501dcbada85ecb6395aa532b57b241f3",
+    "src/qpartition/baseline_circuits.py": "b966a82a401ee6406860a122ae544e36367f3b7726334b0c383d10b7c512a1d0",
+    "src/qpartition/group_qpd.py": "4a9d5acb067c9a97abfdfd82e007069388f4a237e9eb88e086dc4762df3d9494",
+    "src/qpartition/exact_search.py": "0f59c297524fa2224e84e20ec78b78dcf72bcf321353e81e082e2db20efec61b",
+    "src/qpartition/hybrid.py": "bde30439bdbcbadb347bd8d1f022a64f5a4ba8110ac2d0852ec630d96cb8a547",
+    "src/qpartition/qiskit_baseline.py": "76567d6c4631f5d4859a2a729c076a4deb056511cf6f08812c9e4b111fbaf8a2",
+    "examples/run_excision_quality.py": "1a2a8581bb886ce882b2433eca1eec4151ee647dddd7c480b4033462eb783e51"
+  }
+}

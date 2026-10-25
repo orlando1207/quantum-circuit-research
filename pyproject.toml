@@ -19,6 +19,10 @@ dependencies = [
 [project.optional-dependencies]
 dev = ["pytest>=8,<10", "ruff>=0.12,<1"]
 plots = ["matplotlib>=3.9,<4"]
+# Commercial solver, requires a separate license (e.g. Gurobi WLS); optional
+# MILP verification backend (src/qpartition/milp.py) -- scipy.optimize.milp
+# (HiGHS) is the dependency-free default and needs nothing extra installed.
+milp-gurobi = ["gurobipy>=12,<14"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

@@ -1,0 +1,26 @@
+{
+  "name": "graphstate_100_M75",
+  "family": "graphstate",
+  "qubits": 100,
+  "max_qubits": 75,
+  "two_qubit_gates": 150,
+  "vertices": 300,
+  "variables": 350,
+  "depth": 10,
+  "source_fingerprint": "0812f3929d46baf8dca2a2fef71f7f08d48a518ebff0147cfd910749aa50e77c",
+  "provenance": {
+    "kind": "attributed-generator-adaptation",
+    "family": "graphstate",
+    "seed": 53,
+    "layers": null,
+    "degree": 3,
+    "source": "https://github.com/munich-quantum-toolkit/bench/blob/v2.3.0/src/mqt/bench/benchmarks/graphstate.py",
+    "changes": "Degree three; remove final measurements. Not a paper Table-I artifact.",
+    "two_qubit_gates": 150,
+    "source_identity": "Frozen generator; not an original paper Table-I circuit"
+  },
+  "preprocessing_seconds": 0.10342417100036982,
+  "seed_pool_seconds": 0.3393669460001547,
+  "pool_size": 5,
+  "pool_policy": "Original seed_states on wire/gate graph; identical pool for both methods. No known separators or baseline winners supplied."
+}

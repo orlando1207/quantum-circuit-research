@@ -3,6 +3,7 @@
 The source circuit, including one-qubit operations, is the authority. A group
 can replace its gates only if moving them to its anchor preserves the unitary,
 its interior wires are uncut, and its local parties fit physical fragments.
+Excision factors reprice existing gate/wire cuts without expanding the graph.
 """
 
 from __future__ import annotations
@@ -10,7 +11,7 @@ from __future__ import annotations
 import hashlib
 import json
 from dataclasses import asdict, dataclass
-from itertools import combinations
+from itertools import combinations, product
 from math import log, prod
 
 import numpy as np
@@ -77,6 +78,7 @@ class GroupingConfig:
             "rotations",
             "clifford",
             "generic",
+            "excision",
         }:
             raise ValueError("Unknown grouping family.")
 
@@ -97,6 +99,8 @@ class GroupCandidate:
     anchor: str
     template_id: str | None = None
     pattern_gammas: tuple[tuple[int, float], ...] = ()
+    excision_ports: tuple[tuple[int, int], ...] = ()
+    excision_wires: tuple[int, ...] = ()
 
     def gamma_for(self, pattern):
         return dict(self.pattern_gammas).get(pattern, self.gamma)
@@ -177,16 +181,64 @@ class GroupLibrary:
         self._native_cache = {}
         self.candidates = self._discover()
         self.by_id = {c.group_id: c for c in self.candidates}
+        self._temporal_masks, temporal_pairs = {}, []
+        excisions = {}
+        for candidate in self.candidates:
+            if candidate.family == "excision":
+                excisions.setdefault(candidate.anchor, []).append(candidate.group_id)
+        for candidate in self.candidates if excisions else ():
+            if candidate.family == "excision":
+                continue
+            anchor = self.positions[candidate.anchor]
+            packet = (*candidate.operations, *candidate.absorbed_operations)
+            for gate, realizations in excisions.items():
+                if gate in candidate.operations:
+                    continue  # Already excluded by source-operation ownership.
+                position = self.positions[gate]
+                support = set(self.operands[position])
+                crosses = any(
+                    (i < position <= anchor or anchor <= position < i)
+                    and support.intersection(self.operands[i])
+                    for i in (self.positions[op] for op in packet)
+                )
+                if not crosses:
+                    continue
+                # Commutation with the source unitary is not commutation with
+                # each measure/prepare branch. Keep existing packet execution
+                # bindings valid by rejecting this particular co-selection.
+                bit = 1 << (len(self.ids) + len(graph.variables) + len(temporal_pairs))
+                temporal_pairs.append((candidate.group_id, gate))
+                for group_id in (candidate.group_id, *realizations):
+                    self._temporal_masks[group_id] = self._temporal_masks.get(group_id, 0) | bit
+        self.discounted_wire_variables = frozenset(
+            v for c in self.candidates if c.family == "excision" for v in c.excision_wires
+        )
+
+        def fingerprint_candidate(c):
+            data = asdict(c)
+            if c.family != "excision":
+                # Preserve all pre-extension grouping fingerprints.
+                data.pop("excision_ports")
+                data.pop("excision_wires")
+            return data
+
         payload = {
             "schema": self.schema,
             "source": graph.problem.circuit_fingerprint,
             "config": asdict(config),
-            "candidates": [asdict(c) for c in self.candidates],
+            "candidates": [fingerprint_candidate(c) for c in self.candidates],
         }
+        if "excision" in config.families:
+            payload["excision_gamma"] = graph.registry.excision_gamma
+        if temporal_pairs:
+            payload["excision_temporal_conflicts"] = temporal_pairs
+        self.excision_temporal_conflicts = tuple(temporal_pairs)
         self.fingerprint = hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()
         regions, orbits = set(), set()
         if config.group_moves:
             for c in self.candidates:
+                if c.family == "excision":
+                    continue  # Existing region pools and heat-bath orbits are unchanged.
                 for pattern in c.patterns:
                     party_regions = []
                     for side in (0, 1):
@@ -320,7 +372,10 @@ class GroupLibrary:
 
     def _discover(self):
         graph, config = self.graph, self.config
-        candidates, generic_examined, seen = [], 0, set()
+        candidates = self._discover_excision() if "excision" in config.families else []
+        if set(config.families) <= {"excision"}:
+            return tuple(sorted(candidates, key=lambda c: c.group_id))
+        generic_examined, seen = 0, set()
         for indices in self._index_windows():
             original_family = self._family(indices)
             if original_family not in config.families:
@@ -496,6 +551,70 @@ class GroupLibrary:
                     seen.add(semantic_key)
         return tuple(sorted(candidates, key=lambda c: c.group_id))
 
+    def _discover_excision(self):
+        """Alternative implementations of gate + adjacent cut-wire factors.
+
+        Every operand chooses local measure/reset, an incoming cut, or an
+        outgoing cut. Pins are existing incidence vertices; no auxiliary
+        state, vertex, graph edge, or proposal region is introduced.
+        """
+        graph = self.graph
+        outgoing = {v.ports[0]: i for i, v in enumerate(graph.variables) if v.kind == "wire"}
+        candidates = []
+        for op, gate in graph.gate_variables.items():
+            pins = graph.variables[gate].ports
+            index = self.positions[op]
+            _, template = graph.registry.for_gate(self.items[index].operation)
+            if len(graph.variables[gate].options) < 2:
+                continue
+            choices = []
+            for operand, pin in enumerate(pins):
+                side = [(None, pin, pin)]
+                incoming = graph.incoming_wires[op][operand]
+                if incoming is not None:
+                    before, after = graph.variables[incoming].ports
+                    side.append((incoming, before, after))
+                following = outgoing.get(pin)
+                if following is not None:
+                    before, after = graph.variables[following].ports
+                    side.append((following, before, after))
+                choices.append(side)
+            for legs in product(*choices):
+                wires = tuple(sorted(leg[0] for leg in legs if leg[0] is not None))
+                gamma = template.gamma if template.assumed_gamma is None else template.assumed_gamma
+                ports = tuple((leg[1], leg[2]) for leg in legs)
+                for gate_cut in (False, True):
+                    variables = (gate, *wires) if gate_cut else wires
+                    guards = () if gate_cut else (gate,)
+                    base = sum(graph.variables[v].options[1].log_overhead for v in variables)
+                    if 2 * log(gamma) >= base - 1e-10:
+                        continue
+                    key = hashlib.sha256(
+                        json.dumps(
+                            ["excision", op, ports, wires, gate_cut, template.template_id]
+                        ).encode()
+                    ).hexdigest()
+                    candidates.append(
+                        GroupCandidate(
+                            key,
+                            "excision",
+                            (op,),
+                            (),
+                            variables,
+                            guards,
+                            self.operands[index],
+                            pins,
+                            (0,),
+                            gamma,
+                            base,
+                            op,
+                            template.template_id,
+                            excision_ports=ports,
+                            excision_wires=wires,
+                        )
+                    )
+        return candidates
+
     def _allocate(self, widths, parent, separations, limit, mode, max_components):
         roots = [_root(parent, i) for i in range(len(widths))]
         ids = {root: i for i, root in enumerate(dict.fromkeys(roots))}
@@ -542,6 +661,16 @@ class GroupLibrary:
             occupied = sum(
                 1 << self.positions[op] for op in (*c.operations, *c.absorbed_operations)
             )
+            if self.discounted_wire_variables:
+                # Source-operation conflicts alone do not catch neighboring
+                # excisions claiming the same wire-cut cost twice.
+                occupied |= sum(1 << (len(self.ids) + v) for v in c.variables)
+            occupied |= self._temporal_masks.get(c.group_id, 0)
+            if c.family == "excision":
+                eligible.append(
+                    (c.independent_log_overhead - 2 * log(c.gamma), c.group_id, 0, occupied, ())
+                )
+                continue
             for pattern in c.patterns:
                 sides = tuple(
                     tuple(
@@ -583,14 +712,18 @@ class GroupLibrary:
             for side in sides:
                 for v in side[1:]:
                     _union(candidate_parent, side[0], v)
-            next_seps = (*seps, (sides[0][0], sides[1][0]))
+            next_seps = (*seps, (sides[0][0], sides[1][0])) if sides else seps
             allocation = self._allocate(
                 widths, candidate_parent, next_seps, limit, mode, max_components
             )
             return candidate_parent, next_seps, allocation
 
         # Greedy incumbent(s) also bound the small exact selection search.
-        orders = [eligible, sorted(eligible, key=lambda r: (-r[0] / r[3].bit_count(), r[1], r[2]))]
+        source_mask = (1 << len(self.ids)) - 1
+        orders = [
+            eligible,
+            sorted(eligible, key=lambda r: (-r[0] / (r[3] & source_mask).bit_count(), r[1], r[2])),
+        ]
         for order in orders:
             parent, seps, used, groups, savings = initial_parent.copy(), (), 0, (), 0.0
             for row in order:
@@ -650,12 +783,60 @@ class GroupLibrary:
             complete,
         )
 
+    def forced_selection(self, state, group_ids, widths, limit, mode, max_components):
+        """Apply an externally chosen, conflict-free excision set verbatim.
+
+        Used to reconstruct a plan from an independently solved (e.g. MILP)
+        selection without relying on `select`'s own search, which is only
+        exact up to `exact_selection_limit` eligible candidates. Validates
+        the same eligibility/non-overlap conditions `select` enforces so a
+        bad external selection cannot silently produce a wrong evaluation.
+        """
+        if not group_ids:
+            return None
+        occupied_total = 0
+        savings = 0.0
+        groups = []
+        for group_id in group_ids:
+            c = self.by_id[group_id]
+            if c.family != "excision":
+                raise ValueError("forced_selection only supports excision candidates.")
+            if not all(state[v] for v in c.variables) or any(state[v] for v in c.guards):
+                raise ValueError(f"Forced candidate {group_id} is inconsistent with the state.")
+            occupied = sum(
+                1 << self.positions[op] for op in (*c.operations, *c.absorbed_operations)
+            )
+            if self.discounted_wire_variables:
+                occupied |= sum(1 << (len(self.ids) + v) for v in c.variables)
+            occupied |= self._temporal_masks.get(group_id, 0)
+            if occupied_total & occupied:
+                raise ValueError(f"Forced candidate {group_id} conflicts with another selection.")
+            occupied_total |= occupied
+            savings += c.independent_log_overhead - 2 * log(c.gamma)
+            groups.append(SelectedGroup(group_id, 0, c.gamma))
+        allocation = self._allocate(
+            widths, list(range(len(widths))), (), limit, mode, max_components
+        )
+        if allocation is None:
+            return None
+        merged, mapping, blocks, block_widths, penalty = allocation
+        return GroupSelection(
+            tuple(sorted(groups, key=lambda g: g.group_id)),
+            savings,
+            merged,
+            mapping,
+            blocks,
+            block_widths,
+            penalty,
+            True,
+        )
+
     def basis(self, selected):
         key = (selected.group_id, selected.pattern)
         if key in self._basis_cache:
             return self._basis_cache[key]
         c = self.by_id[selected.group_id]
-        if c.family == "fusion":
+        if c.family in {"fusion", "excision"}:
             return self.graph.registry.entries[c.template_id]
         if c.family == "generic":
             coefficients, left, right, sides = self._general_lcu(c, selected.pattern)
@@ -811,6 +992,18 @@ class GroupLibrary:
                     "candidates": [asdict(c) for c in self.candidates],
                     "region_count": len(self.regions),
                     "cost_model": "Executable LO joint QPD; no live communication or ancillas",
+                    **(
+                        {
+                            "excision_cost_policy": {
+                                "assumed_gamma": self.graph.registry.excision_gamma,
+                                "recipe": "checked product-measure/prepare PTM construction",
+                                "optimality_claimed": False,
+                                "physical_compilation_requires_matching_norm": True,
+                            }
+                        }
+                        if "excision" in self.config.families
+                        else {}
+                    ),
                 },
                 indent=2,
             )

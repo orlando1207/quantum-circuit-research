@@ -1,0 +1,101 @@
+{
+  "families": [
+    {
+      "family": "adder",
+      "instances": 8,
+      "proven_improvement": 0,
+      "proven_no_gain": 4,
+      "inconclusive": 4,
+      "omega_ratio_min": null,
+      "omega_ratio_max": null,
+      "omega_ratio_median": null,
+      "mean_runtime_seconds": 1916.6301177352498,
+      "max_runtime_seconds": 3601.4296056409985
+    },
+    {
+      "family": "aqft",
+      "instances": 4,
+      "proven_improvement": 0,
+      "proven_no_gain": 4,
+      "inconclusive": 0,
+      "omega_ratio_min": null,
+      "omega_ratio_max": null,
+      "omega_ratio_median": null,
+      "mean_runtime_seconds": 40.81442284249988,
+      "max_runtime_seconds": 123.09251873999528
+    },
+    {
+      "family": "brickwork",
+      "instances": 16,
+      "proven_improvement": 0,
+      "proven_no_gain": 16,
+      "inconclusive": 0,
+      "omega_ratio_min": null,
+      "omega_ratio_max": null,
+      "omega_ratio_median": null,
+      "mean_runtime_seconds": 26.918734347500276,
+      "max_runtime_seconds": 139.52244806999806
+    },
+    {
+      "family": "chain",
+      "instances": 8,
+      "proven_improvement": 0,
+      "proven_no_gain": 7,
+      "inconclusive": 1,
+      "omega_ratio_min": null,
+      "omega_ratio_max": null,
+      "omega_ratio_median": null,
+      "mean_runtime_seconds": 466.7072456913734,
+      "max_runtime_seconds": 3600.2604490079975
+    },
+    {
+      "family": "qcnn",
+      "instances": 12,
+      "proven_improvement": 0,
+      "proven_no_gain": 12,
+      "inconclusive": 0,
+      "omega_ratio_min": null,
+      "omega_ratio_max": null,
+      "omega_ratio_median": null,
+      "mean_runtime_seconds": 405.39203568216635,
+      "max_runtime_seconds": 1949.1933613990004
+    },
+    {
+      "family": "separator",
+      "instances": 24,
+      "proven_improvement": 12,
+      "proven_no_gain": 12,
+      "inconclusive": 0,
+      "omega_ratio_min": 8.99999999999999,
+      "omega_ratio_max": 8.999999999999998,
+      "omega_ratio_median": 8.99999999999999,
+      "mean_runtime_seconds": 1.5608075696665462,
+      "max_runtime_seconds": 8.119267158999719
+    },
+    {
+      "family": "trotter_grid",
+      "instances": 4,
+      "proven_improvement": 0,
+      "proven_no_gain": 4,
+      "inconclusive": 0,
+      "omega_ratio_min": null,
+      "omega_ratio_max": null,
+      "omega_ratio_median": null,
+      "mean_runtime_seconds": 207.57974284974898,
+      "max_runtime_seconds": 691.0022079159971
+    },
+    {
+      "family": "ttn",
+      "instances": 16,
+      "proven_improvement": 0,
+      "proven_no_gain": 16,
+      "inconclusive": 0,
+      "omega_ratio_min": null,
+      "omega_ratio_max": null,
+      "omega_ratio_median": null,
+      "mean_runtime_seconds": 1.7558317102507317,
+      "max_runtime_seconds": 12.03100797800289
+    }
+  ],
+  "total_instances": 92
+}

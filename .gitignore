@@ -19,6 +19,8 @@ credentials.json
 **/credentials.json
 secrets/
 *.pem
+*.lic
+About_Gurobi.txt
 *.key
 *.p12
 *.pfx
@@ -43,6 +45,13 @@ validation/multiway_benchmarks_v3_pilot*/
 validation/multiway_benchmarks_v3/
 validation/external_baselines_v1/
 validation/sa_benchmarks_v2/
-docs/
+docs/*
+!docs/WORKFLOW_AND_ALGORITHM.md
 validation/grouping_benchmarks_v1
 validation/grouping_benchmarks_v2
+validation/incidence_excision_*/executed_source/
+validation/incidence_excision_*/**/input/
+validation/excision_quality_*/cases/**/input/
+validation/excision_quality_*/cases/**/*.log
+validation/excision_quality_*/cases/**/*.plan.json
+CLAUDE.md

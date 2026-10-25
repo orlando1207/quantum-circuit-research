@@ -1,0 +1,490 @@
+{
+  "stats": {
+    "completed_cases": 22,
+    "natural_wge_vs_wg": {
+      "better": 2,
+      "equal": 18,
+      "worse": 0
+    },
+    "natural_winners_with_excision": 2,
+    "co_optimization_beats_post_only": 1
+  },
+  "external_comparisons": {
+    "qiskit": {
+      "comparable": 14,
+      "better": 7,
+      "equal": 7,
+      "worse": 0
+    },
+    "paper": {
+      "comparable": 11,
+      "better": 6,
+      "equal": 2,
+      "worse": 3
+    }
+  },
+  "cases": [
+    {
+      "case": "graphstate_50_M37",
+      "control": false,
+      "wg_log10": 6.679697566075275,
+      "wge_log10": 6.679697566075275,
+      "post_excision_log10": 6.679697566075275,
+      "post_counts": {
+        "wire": 0,
+        "gate": 7,
+        "excision": 0
+      },
+      "search_gain_log10": {
+        "wg": 1.9084850188786486,
+        "wge": 1.9084850188786486
+      },
+      "best_initial_log10": {
+        "wg": 8.588182584953923,
+        "wge": 8.588182584953923
+      },
+      "excisions": 0
+    },
+    {
+      "case": "graphstate_100_M75",
+      "control": false,
+      "wg_log10": 15.267880151029194,
+      "wge_log10": 15.267880151029194,
+      "post_excision_log10": 15.267880151029194,
+      "post_counts": {
+        "wire": 0,
+        "gate": 16,
+        "excision": 0
+      },
+      "search_gain_log10": {
+        "wg": 4.77121254719663,
+        "wge": 4.77121254719663
+      },
+      "best_initial_log10": {
+        "wg": 20.039092698225822,
+        "wge": 20.039092698225822
+      },
+      "excisions": 0
+    },
+    {
+      "case": "graphstate_150_M112",
+      "control": false,
+      "wg_log10": 22.9018202265438,
+      "wge_log10": 22.9018202265438,
+      "post_excision_log10": 22.9018202265438,
+      "post_counts": {
+        "wire": 0,
+        "gate": 24,
+        "excision": 0
+      },
+      "search_gain_log10": {
+        "wg": 5.725455056635955,
+        "wge": 5.725455056635955
+      },
+      "best_initial_log10": {
+        "wg": 28.627275283179756,
+        "wge": 28.627275283179756
+      },
+      "excisions": 0
+    },
+    {
+      "case": "graphstate_250_M187",
+      "control": false,
+      "wg_log10": 45.80364045308757,
+      "wge_log10": 45.80364045308757,
+      "post_excision_log10": 45.80364045308757,
+      "post_counts": {
+        "wire": 0,
+        "gate": 48,
+        "excision": 0
+      },
+      "search_gain_log10": {
+        "wg": 6.6796975660752596,
+        "wge": 6.6796975660752596
+      },
+      "best_initial_log10": {
+        "wg": 52.48333801916282,
+        "wge": 52.48333801916282
+      },
+      "excisions": 0
+    },
+    {
+      "case": "aqft_50_M37",
+      "control": false,
+      "wg_log10": 3.061783611719431,
+      "wge_log10": 3.061783611719431,
+      "post_excision_log10": 3.061783611719431,
+      "post_counts": {
+        "wire": 1,
+        "gate": 10,
+        "excision": 0
+      },
+      "search_gain_log10": {
+        "wg": 0.5780428026209006,
+        "wge": 0.5780428026209006
+      },
+      "best_initial_log10": {
+        "wg": 3.639826414340331,
+        "wge": 3.639826414340331
+      },
+      "excisions": 0
+    },
+    {
+      "case": "aqft_100_M75",
+      "control": false,
+      "wg_log10": 3.639826414340331,
+      "wge_log10": 3.639826414340331,
+      "post_excision_log10": 3.639826414340331,
+      "post_counts": {
+        "wire": 0,
+        "gate": 15,
+        "excision": 0
+      },
+      "search_gain_log10": {
+        "wg": 0.0,
+        "wge": 0.0
+      },
+      "best_initial_log10": {
+        "wg": 3.639826414340331,
+        "wge": 3.639826414340331
+      },
+      "excisions": 0
+    },
+    {
+      "case": "aqft_150_M112",
+      "control": false,
+      "wg_log10": 3.639826414340331,
+      "wge_log10": 3.639826414340331,
+      "post_excision_log10": 3.639826414340331,
+      "post_counts": {
+        "wire": 0,
+        "gate": 15,
+        "excision": 0
+      },
+      "search_gain_log10": {
+        "wg": 0.0,
+        "wge": 0.0
+      },
+      "best_initial_log10": {
+        "wg": 3.639826414340331,
+        "wge": 3.639826414340331
+      },
+      "excisions": 0
+    },
+    {
+      "case": "aqft_250_M187",
+      "control": false,
+      "wg_log10": 3.639826414340331,
+      "wge_log10": 3.639826414340331,
+      "post_excision_log10": 3.639826414340331,
+      "post_counts": {
+        "wire": 0,
+        "gate": 15,
+        "excision": 0
+      },
+      "search_gain_log10": {
+        "wg": 0.0,
+        "wge": 0.0
+      },
+      "best_initial_log10": {
+        "wg": 3.639826414340331,
+        "wge": 3.639826414340331
+      },
+      "excisions": 0
+    },
+    {
+      "case": "trotter_grid_50_M37",
+      "control": false,
+      "wg_log10": 9.926425507142513,
+      "wge_log10": 9.926425507142513,
+      "post_excision_log10": 9.926425507142513,
+      "post_counts": {
+        "wire": 0,
+        "gate": 21,
+        "excision": 0
+      },
+      "search_gain_log10": {
+        "wg": 0.0,
+        "wge": 0.0
+      },
+      "best_initial_log10": {
+        "wg": 9.926425507142513,
+        "wge": 9.926425507142513
+      },
+      "excisions": 0
+    },
+    {
+      "case": "trotter_grid_100_M75",
+      "control": false,
+      "wg_log10": 14.180607867346446,
+      "wge_log10": 14.180607867346446,
+      "post_excision_log10": 14.180607867346446,
+      "post_counts": {
+        "wire": 0,
+        "gate": 30,
+        "excision": 0
+      },
+      "search_gain_log10": {
+        "wg": 0.0,
+        "wge": 0.0
+      },
+      "best_initial_log10": {
+        "wg": 14.180607867346446,
+        "wge": 14.180607867346446
+      },
+      "excisions": 0
+    },
+    {
+      "case": "trotter_grid_150_M112",
+      "control": false,
+      "wg_log10": 17.01672944081573,
+      "wge_log10": 17.01672944081573,
+      "post_excision_log10": 17.01672944081573,
+      "post_counts": {
+        "wire": 0,
+        "gate": 36,
+        "excision": 0
+      },
+      "search_gain_log10": {
+        "wg": 0.0,
+        "wge": 0.0
+      },
+      "best_initial_log10": {
+        "wg": 17.01672944081573,
+        "wge": 17.01672944081573
+      },
+      "excisions": 0
+    },
+    {
+      "case": "trotter_grid_250_M187",
+      "control": false,
+      "wg_log10": 21.27091180101966,
+      "wge_log10": 21.27091180101966,
+      "post_excision_log10": 21.27091180101966,
+      "post_counts": {
+        "wire": 0,
+        "gate": 45,
+        "excision": 0
+      },
+      "search_gain_log10": {
+        "wg": 0.0,
+        "wge": 0.0
+      },
+      "best_initial_log10": {
+        "wg": 21.27091180101966,
+        "wge": 21.27091180101966
+      },
+      "excisions": 0
+    },
+    {
+      "case": "random_brickwork_50_M37",
+      "control": false,
+      "wg_log10": 36.0566052689048,
+      "wge_log10": 36.0566052689048,
+      "post_excision_log10": 36.0566052689048,
+      "post_counts": {
+        "wire": 3,
+        "gate": 34,
+        "excision": 0
+      },
+      "search_gain_log10": {
+        "wg": 4.021580127546823,
+        "wge": 4.021580127546823
+      },
+      "best_initial_log10": {
+        "wg": 40.07818539645163,
+        "wge": 40.07818539645163
+      },
+      "excisions": 0
+    },
+    {
+      "case": "random_brickwork_100_M75",
+      "control": false,
+      "wg_log10": 74.5214505031214,
+      "wge_log10": 74.5214505031214,
+      "post_excision_log10": 74.5214505031214,
+      "post_counts": {
+        "wire": 8,
+        "gate": 68,
+        "excision": 0
+      },
+      "search_gain_log10": {
+        "wg": 7.543405308660423,
+        "wge": 7.543405308660423
+      },
+      "best_initial_log10": {
+        "wg": 82.06485581178183,
+        "wge": 82.06485581178183
+      },
+      "excisions": 0
+    },
+    {
+      "case": "random_brickwork_150_M112",
+      "control": false,
+      "wg_log10": 110.78266586181569,
+      "wge_log10": 109.82842335237636,
+      "post_excision_log10": 109.82842335237636,
+      "post_counts": {
+        "wire": 6,
+        "gate": 105,
+        "excision": 1
+      },
+      "search_gain_log10": {
+        "wg": 5.634920289781765,
+        "wge": 6.589162799221088
+      },
+      "best_initial_log10": {
+        "wg": 116.41758615159745,
+        "wge": 116.41758615159745
+      },
+      "excisions": 1
+    },
+    {
+      "case": "random_brickwork_250_M187",
+      "control": false,
+      "wg_log10": 197.66400160422117,
+      "wge_log10": 197.66400160422117,
+      "post_excision_log10": 197.66400160422117,
+      "post_counts": {
+        "wire": 12,
+        "gate": 192,
+        "excision": 0
+      },
+      "search_gain_log10": {
+        "wg": 8.45238043467261,
+        "wge": 8.45238043467261
+      },
+      "best_initial_log10": {
+        "wg": 206.1163820388938,
+        "wge": 206.1163820388938
+      },
+      "excisions": 0
+    },
+    {
+      "case": "aqft_100_M33",
+      "control": false,
+      "wg_log10": 9.061815613957485,
+      "wge_log10": 9.061815613957485,
+      "post_excision_log10": 9.061815613957485,
+      "post_counts": {
+        "wire": 0,
+        "gate": 35,
+        "excision": 0
+      },
+      "search_gain_log10": {
+        "wg": 0.0,
+        "wge": 0.0
+      },
+      "best_initial_log10": {
+        "wg": 9.061815613957485,
+        "wge": 9.061815613957485
+      },
+      "excisions": 0
+    },
+    {
+      "case": "aqft_250_M83",
+      "control": false,
+      "wg_log10": 9.061815613957485,
+      "wge_log10": 9.061815613957485,
+      "post_excision_log10": 9.061815613957485,
+      "post_counts": {
+        "wire": 0,
+        "gate": 35,
+        "excision": 0
+      },
+      "search_gain_log10": {
+        "wg": 0.0,
+        "wge": 0.0
+      },
+      "best_initial_log10": {
+        "wg": 9.061815613957485,
+        "wge": 9.061815613957485
+      },
+      "excisions": 0
+    },
+    {
+      "case": "random_brickwork_100_M33",
+      "control": false,
+      "wg_log10": 129.20841839780655,
+      "wge_log10": 128.50405336158383,
+      "post_excision_log10": 129.20841839780655,
+      "post_counts": {
+        "wire": 13,
+        "gate": 119,
+        "excision": 0
+      },
+      "search_gain_log10": {
+        "wg": 9.156745470895329,
+        "wge": 9.861110507118045
+      },
+      "best_initial_log10": {
+        "wg": 138.36516386870187,
+        "wge": 138.36516386870187
+      },
+      "excisions": 3
+    },
+    {
+      "case": "random_brickwork_250_M83",
+      "control": false,
+      "wg_log10": 356.88669853030683,
+      "wge_log10": 356.88669853030683,
+      "post_excision_log10": 356.88669853030683,
+      "post_counts": {
+        "wire": 0,
+        "gate": 374,
+        "excision": 0
+      },
+      "search_gain_log10": {
+        "wg": 0.0,
+        "wge": 0.0
+      },
+      "best_initial_log10": {
+        "wg": 356.88669853030683,
+        "wge": 356.88669853030683
+      },
+      "excisions": 0
+    },
+    {
+      "case": "control_100_M26",
+      "control": true,
+      "wg_log10": 3.362482474751174,
+      "wge_log10": 2.408239965311849,
+      "post_excision_log10": 2.408239965311849,
+      "post_counts": {
+        "wire": 0,
+        "gate": 0,
+        "excision": 1
+      },
+      "search_gain_log10": {
+        "wg": 0.0,
+        "wge": 0.0
+      },
+      "best_initial_log10": {
+        "wg": 3.362482474751174,
+        "wge": 2.408239965311849
+      },
+      "excisions": 1
+    },
+    {
+      "case": "control_250_M63",
+      "control": true,
+      "wg_log10": 3.362482474751174,
+      "wge_log10": 2.408239965311849,
+      "post_excision_log10": 2.408239965311849,
+      "post_counts": {
+        "wire": 0,
+        "gate": 0,
+        "excision": 1
+      },
+      "search_gain_log10": {
+        "wg": 0.0,
+        "wge": 0.0
+      },
+      "best_initial_log10": {
+        "wg": 3.362482474751174,
+        "wge": 2.408239965311849
+      },
+      "excisions": 1
+    }
+  ]
+}

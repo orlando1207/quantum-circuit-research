@@ -1,0 +1,1641 @@
+[
+  {
+    "name": "excision_butterfly_6_L3_s19",
+    "qubits": 6,
+    "max_qubits": 2,
+    "depth": 14,
+    "vertices": 26,
+    "variables": 33,
+    "preprocessing_seconds": 0.06155233099980251,
+    "start_kind": "unchanged independent seed_states pool, shared by both models",
+    "source_fingerprint": "0e1383c10b5c92466197296f35e54521b8e36d767cfde95b4251356f998e935c",
+    "anneal_config": {
+      "max_qubits": 2,
+      "partition_mode": "multiway",
+      "steps": 240,
+      "cooling_rate": 0.93,
+      "temperature_levels": 120,
+      "initial_acceptance": 0.8,
+      "block_probability": 0.3,
+      "block_size": 4,
+      "pilot_steps": 16,
+      "penalty_multiplier": 1.0,
+      "allow_wire": true,
+      "allow_gate": true,
+      "search_space": "labels",
+      "interval_polish": true,
+      "proposal_balance": "variables",
+      "objective": "overhead",
+      "max_components": null,
+      "cache_size": 64,
+      "split_probability": 0.25,
+      "group_heatbath_probability": 0.0,
+      "temperature_calibration": "all",
+      "max_evaluations": 80
+    },
+    "methods": {
+      "wire_gate": {
+        "log_overhead": 7.742402021815781,
+        "overhead": 2303.999999999999,
+        "counts": {
+          "wire": 2,
+          "gate": 1
+        },
+        "widths": [
+          2,
+          2,
+          2,
+          2
+        ],
+        "segments": 8,
+        "excision_wire_cuts": 0,
+        "runs": [
+          {
+            "seed": 0,
+            "initial_log_overhead": 7.742402021815781,
+            "log_overhead": 7.742402021815781,
+            "counts": {
+              "wire": 2,
+              "gate": 1
+            },
+            "widths": [
+              2,
+              2,
+              2,
+              2
+            ],
+            "evaluations": 80,
+            "accepted": 18,
+            "seconds": 0.03131342799997583
+          },
+          {
+            "seed": 1,
+            "initial_log_overhead": 11.090354888959125,
+            "log_overhead": 10.514990744055563,
+            "counts": {
+              "wire": 3,
+              "gate": 1
+            },
+            "widths": [
+              2,
+              2,
+              1,
+              2,
+              2
+            ],
+            "evaluations": 80,
+            "accepted": 5,
+            "seconds": 0.01926772099977825
+          },
+          {
+            "seed": 2,
+            "initial_log_overhead": 15.380572041353538,
+            "log_overhead": 15.380572041353538,
+            "counts": {
+              "wire": 0,
+              "gate": 7
+            },
+            "widths": [
+              2,
+              2,
+              1,
+              1
+            ],
+            "evaluations": 80,
+            "accepted": 31,
+            "seconds": 0.02456298600009177
+          }
+        ]
+      },
+      "wire_gate_excision": {
+        "log_overhead": 5.545177444479562,
+        "overhead": 255.99999999999994,
+        "counts": {
+          "wire": 0,
+          "gate": 0,
+          "excision": 1
+        },
+        "widths": [
+          2,
+          2,
+          2,
+          2
+        ],
+        "segments": 8,
+        "excision_wire_cuts": 2,
+        "runs": [
+          {
+            "seed": 0,
+            "initial_log_overhead": 5.545177444479562,
+            "log_overhead": 5.545177444479562,
+            "counts": {
+              "wire": 0,
+              "gate": 0,
+              "excision": 1
+            },
+            "widths": [
+              2,
+              2,
+              2,
+              2
+            ],
+            "evaluations": 80,
+            "accepted": 14,
+            "seconds": 0.016780274000211648
+          },
+          {
+            "seed": 1,
+            "initial_log_overhead": 11.090354888959125,
+            "log_overhead": 8.317766166719345,
+            "counts": {
+              "wire": 1,
+              "gate": 0,
+              "excision": 1
+            },
+            "widths": [
+              2,
+              2,
+              1,
+              2,
+              2
+            ],
+            "evaluations": 80,
+            "accepted": 7,
+            "seconds": 0.011245016999964719
+          },
+          {
+            "seed": 2,
+            "initial_log_overhead": 15.380572041353538,
+            "log_overhead": 15.380572041353538,
+            "counts": {
+              "wire": 0,
+              "gate": 7,
+              "excision": 0
+            },
+            "widths": [
+              2,
+              2,
+              1,
+              1
+            ],
+            "evaluations": 80,
+            "accepted": 32,
+            "seconds": 0.024006917999940924
+          }
+        ]
+      },
+      "qiskit": {
+        "status": "feasible",
+        "log_sampling_overhead": 7.742402021815781,
+        "sampling_overhead": 2303.999999999999,
+        "widths": [
+          2,
+          2,
+          2,
+          2
+        ]
+      },
+      "paper": {
+        "status": "infeasible-two-way"
+      }
+    }
+  },
+  {
+    "name": "excision_butterfly_18_L3_s19",
+    "qubits": 18,
+    "max_qubits": 5,
+    "depth": 32,
+    "vertices": 98,
+    "variables": 129,
+    "preprocessing_seconds": 0.09171431999993729,
+    "start_kind": "unchanged independent seed_states pool, shared by both models",
+    "source_fingerprint": "9f38c697d4c3b3c96de8de68a371b6f4feb56b90a314da1c8d0c9fe72d010461",
+    "anneal_config": {
+      "max_qubits": 5,
+      "partition_mode": "multiway",
+      "steps": 240,
+      "cooling_rate": 0.93,
+      "temperature_levels": 120,
+      "initial_acceptance": 0.8,
+      "block_probability": 0.3,
+      "block_size": 4,
+      "pilot_steps": 16,
+      "penalty_multiplier": 1.0,
+      "allow_wire": true,
+      "allow_gate": true,
+      "search_space": "labels",
+      "interval_polish": true,
+      "proposal_balance": "variables",
+      "objective": "overhead",
+      "max_components": null,
+      "cache_size": 64,
+      "split_probability": 0.25,
+      "group_heatbath_probability": 0.0,
+      "temperature_calibration": "all",
+      "max_evaluations": 80
+    },
+    "methods": {
+      "wire_gate": {
+        "log_overhead": 7.742402021815781,
+        "overhead": 2303.999999999999,
+        "counts": {
+          "wire": 2,
+          "gate": 1
+        },
+        "widths": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "segments": 20,
+        "excision_wire_cuts": 0,
+        "runs": [
+          {
+            "seed": 0,
+            "initial_log_overhead": 7.742402021815781,
+            "log_overhead": 7.742402021815781,
+            "counts": {
+              "wire": 2,
+              "gate": 1
+            },
+            "widths": [
+              5,
+              5,
+              5,
+              5
+            ],
+            "evaluations": 80,
+            "accepted": 26,
+            "seconds": 0.014760848000150872
+          },
+          {
+            "seed": 1,
+            "initial_log_overhead": 11.090354888959125,
+            "log_overhead": 11.090354888959125,
+            "counts": {
+              "wire": 4,
+              "gate": 0
+            },
+            "widths": [
+              5,
+              5,
+              2,
+              5,
+              5
+            ],
+            "evaluations": 80,
+            "accepted": 67,
+            "seconds": 0.014132045000224025
+          },
+          {
+            "seed": 2,
+            "initial_log_overhead": 54.9306144334055,
+            "log_overhead": 54.9306144334055,
+            "counts": {
+              "wire": 0,
+              "gate": 25
+            },
+            "widths": [
+              5,
+              5,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            "evaluations": 80,
+            "accepted": 4,
+            "seconds": 0.012770905000252242
+          }
+        ]
+      },
+      "wire_gate_excision": {
+        "log_overhead": 5.545177444479562,
+        "overhead": 255.99999999999994,
+        "counts": {
+          "wire": 0,
+          "gate": 0,
+          "excision": 1
+        },
+        "widths": [
+          5,
+          5,
+          5,
+          5
+        ],
+        "segments": 20,
+        "excision_wire_cuts": 2,
+        "runs": [
+          {
+            "seed": 0,
+            "initial_log_overhead": 5.545177444479562,
+            "log_overhead": 5.545177444479562,
+            "counts": {
+              "wire": 0,
+              "gate": 0,
+              "excision": 1
+            },
+            "widths": [
+              5,
+              5,
+              5,
+              5
+            ],
+            "evaluations": 80,
+            "accepted": 30,
+            "seconds": 0.05161859999998342
+          },
+          {
+            "seed": 1,
+            "initial_log_overhead": 11.090354888959125,
+            "log_overhead": 11.090354888959125,
+            "counts": {
+              "wire": 4,
+              "gate": 0,
+              "excision": 0
+            },
+            "widths": [
+              5,
+              5,
+              2,
+              5,
+              5
+            ],
+            "evaluations": 80,
+            "accepted": 67,
+            "seconds": 0.043699730999833264
+          },
+          {
+            "seed": 2,
+            "initial_log_overhead": 54.9306144334055,
+            "log_overhead": 54.9306144334055,
+            "counts": {
+              "wire": 0,
+              "gate": 25,
+              "excision": 0
+            },
+            "widths": [
+              5,
+              5,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            "evaluations": 80,
+            "accepted": 4,
+            "seconds": 0.11735886999986178
+          }
+        ]
+      },
+      "qiskit": {
+        "status": "feasible",
+        "log_sampling_overhead": 54.93061443340549,
+        "sampling_overhead": 7.178979876918549e+23,
+        "widths": [
+          5,
+          5,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "paper": {
+        "status": "infeasible-two-way"
+      }
+    }
+  },
+  {
+    "name": "excision_butterfly_100_L3_s19",
+    "qubits": 100,
+    "max_qubits": 26,
+    "depth": 158,
+    "vertices": 590,
+    "variables": 785,
+    "preprocessing_seconds": 0.10676363199991101,
+    "start_kind": "known separator edge mask, identical for both models",
+    "source_fingerprint": "010c8fd2cffd084b0981d38657d2a26800275f5745b6233d5a5f848543c59bf4",
+    "anneal_config": {
+      "max_qubits": 26,
+      "partition_mode": "multiway",
+      "steps": 240,
+      "cooling_rate": 0.93,
+      "temperature_levels": 120,
+      "initial_acceptance": 0.8,
+      "block_probability": 0.3,
+      "block_size": 4,
+      "pilot_steps": 16,
+      "penalty_multiplier": 1.0,
+      "allow_wire": true,
+      "allow_gate": true,
+      "search_space": "labels",
+      "interval_polish": true,
+      "proposal_balance": "variables",
+      "objective": "overhead",
+      "max_components": null,
+      "cache_size": 64,
+      "split_probability": 0.25,
+      "group_heatbath_probability": 0.0,
+      "temperature_calibration": "all",
+      "max_evaluations": 80
+    },
+    "methods": {
+      "wire_gate": {
+        "log_overhead": 7.742402021815781,
+        "overhead": 2303.999999999999,
+        "counts": {
+          "wire": 2,
+          "gate": 1
+        },
+        "widths": [
+          25,
+          26,
+          25,
+          26
+        ],
+        "segments": 102,
+        "excision_wire_cuts": 0,
+        "runs": [
+          {
+            "seed": 0,
+            "initial_log_overhead": 7.742402021815781,
+            "log_overhead": 7.742402021815781,
+            "counts": {
+              "wire": 2,
+              "gate": 1
+            },
+            "widths": [
+              25,
+              26,
+              25,
+              26
+            ],
+            "evaluations": 80,
+            "accepted": 5,
+            "seconds": 0.07254961499984347
+          },
+          {
+            "seed": 1,
+            "initial_log_overhead": 7.742402021815781,
+            "log_overhead": 7.742402021815781,
+            "counts": {
+              "wire": 2,
+              "gate": 1
+            },
+            "widths": [
+              25,
+              26,
+              25,
+              26
+            ],
+            "evaluations": 80,
+            "accepted": 3,
+            "seconds": 0.09586998299982952
+          },
+          {
+            "seed": 2,
+            "initial_log_overhead": 7.742402021815781,
+            "log_overhead": 7.742402021815781,
+            "counts": {
+              "wire": 2,
+              "gate": 1
+            },
+            "widths": [
+              25,
+              26,
+              25,
+              26
+            ],
+            "evaluations": 80,
+            "accepted": 2,
+            "seconds": 0.0683533679998618
+          }
+        ]
+      },
+      "wire_gate_excision": {
+        "log_overhead": 5.545177444479562,
+        "overhead": 255.99999999999994,
+        "counts": {
+          "wire": 0,
+          "gate": 0,
+          "excision": 1
+        },
+        "widths": [
+          25,
+          26,
+          25,
+          26
+        ],
+        "segments": 102,
+        "excision_wire_cuts": 2,
+        "runs": [
+          {
+            "seed": 0,
+            "initial_log_overhead": 5.545177444479562,
+            "log_overhead": 5.545177444479562,
+            "counts": {
+              "wire": 0,
+              "gate": 0,
+              "excision": 1
+            },
+            "widths": [
+              25,
+              26,
+              25,
+              26
+            ],
+            "evaluations": 80,
+            "accepted": 5,
+            "seconds": 0.09559639500002959
+          },
+          {
+            "seed": 1,
+            "initial_log_overhead": 5.545177444479562,
+            "log_overhead": 5.545177444479562,
+            "counts": {
+              "wire": 0,
+              "gate": 0,
+              "excision": 1
+            },
+            "widths": [
+              25,
+              26,
+              25,
+              26
+            ],
+            "evaluations": 80,
+            "accepted": 3,
+            "seconds": 0.1245272909995947
+          },
+          {
+            "seed": 2,
+            "initial_log_overhead": 5.545177444479562,
+            "log_overhead": 5.545177444479562,
+            "counts": {
+              "wire": 0,
+              "gate": 0,
+              "excision": 1
+            },
+            "widths": [
+              25,
+              26,
+              25,
+              26
+            ],
+            "evaluations": 80,
+            "accepted": 2,
+            "seconds": 0.0954573789999813
+          }
+        ]
+      },
+      "qiskit": {
+        "status": "feasible",
+        "log_sampling_overhead": 318.5975637137518,
+        "sampling_overhead": 2.31826921808309e+138,
+        "widths": [
+          26,
+          26,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ]
+      },
+      "paper": {
+        "status": "infeasible-two-way"
+      }
+    }
+  },
+  {
+    "name": "excision_butterfly_1000_L3_s19",
+    "qubits": 1000,
+    "max_qubits": 251,
+    "depth": 1508,
+    "vertices": 5990,
+    "variables": 7985,
+    "preprocessing_seconds": 0.9984544539997842,
+    "start_kind": "known separator edge mask, identical for both models",
+    "source_fingerprint": "47be580ea8e5660af64e1944e659b72a76776a970df61948b00e80165a5e1745",
+    "anneal_config": {
+      "max_qubits": 251,
+      "partition_mode": "multiway",
+      "steps": 240,
+      "cooling_rate": 0.93,
+      "temperature_levels": 120,
+      "initial_acceptance": 0.8,
+      "block_probability": 0.3,
+      "block_size": 4,
+      "pilot_steps": 16,
+      "penalty_multiplier": 1.0,
+      "allow_wire": true,
+      "allow_gate": true,
+      "search_space": "labels",
+      "interval_polish": true,
+      "proposal_balance": "variables",
+      "objective": "overhead",
+      "max_components": null,
+      "cache_size": 64,
+      "split_probability": 0.25,
+      "group_heatbath_probability": 0.0,
+      "temperature_calibration": "all",
+      "max_evaluations": 80
+    },
+    "methods": {
+      "wire_gate": {
+        "log_overhead": 7.742402021815781,
+        "overhead": 2303.999999999999,
+        "counts": {
+          "wire": 2,
+          "gate": 1
+        },
+        "widths": [
+          250,
+          251,
+          250,
+          251
+        ],
+        "segments": 1002,
+        "excision_wire_cuts": 0,
+        "runs": [
+          {
+            "seed": 0,
+            "initial_log_overhead": 7.742402021815781,
+            "log_overhead": 7.742402021815781,
+            "counts": {
+              "wire": 2,
+              "gate": 1
+            },
+            "widths": [
+              250,
+              251,
+              250,
+              251
+            ],
+            "evaluations": 80,
+            "accepted": 7,
+            "seconds": 1.1553351549996478
+          },
+          {
+            "seed": 1,
+            "initial_log_overhead": 7.742402021815781,
+            "log_overhead": 7.742402021815781,
+            "counts": {
+              "wire": 2,
+              "gate": 1
+            },
+            "widths": [
+              250,
+              251,
+              250,
+              251
+            ],
+            "evaluations": 80,
+            "accepted": 3,
+            "seconds": 1.1772870899999361
+          },
+          {
+            "seed": 2,
+            "initial_log_overhead": 7.742402021815781,
+            "log_overhead": 7.742402021815781,
+            "counts": {
+              "wire": 2,
+              "gate": 1
+            },
+            "widths": [
+              250,
+              251,
+              250,
+              251
+            ],
+            "evaluations": 80,
+            "accepted": 3,
+            "seconds": 1.1240102130000196
+          }
+        ]
+      },
+      "wire_gate_excision": {
+        "log_overhead": 5.545177444479562,
+        "overhead": 255.99999999999994,
+        "counts": {
+          "wire": 0,
+          "gate": 0,
+          "excision": 1
+        },
+        "widths": [
+          250,
+          251,
+          250,
+          251
+        ],
+        "segments": 1002,
+        "excision_wire_cuts": 2,
+        "runs": [
+          {
+            "seed": 0,
+            "initial_log_overhead": 5.545177444479562,
+            "log_overhead": 5.545177444479562,
+            "counts": {
+              "wire": 0,
+              "gate": 0,
+              "excision": 1
+            },
+            "widths": [
+              250,
+              251,
+              250,
+              251
+            ],
+            "evaluations": 80,
+            "accepted": 7,
+            "seconds": 1.535359304999929
+          },
+          {
+            "seed": 1,
+            "initial_log_overhead": 5.545177444479562,
+            "log_overhead": 5.545177444479562,
+            "counts": {
+              "wire": 0,
+              "gate": 0,
+              "excision": 1
+            },
+            "widths": [
+              250,
+              251,
+              250,
+              251
+            ],
+            "evaluations": 80,
+            "accepted": 3,
+            "seconds": 1.5560383270003513
+          },
+          {
+            "seed": 2,
+            "initial_log_overhead": 5.545177444479562,
+            "log_overhead": 5.545177444479562,
+            "counts": {
+              "wire": 0,
+              "gate": 0,
+              "excision": 1
+            },
+            "widths": [
+              250,
+              251,
+              250,
+              251
+            ],
+            "evaluations": 80,
+            "accepted": 3,
+            "seconds": 1.762758942000346
+          }
+        ]
+      },
+      "qiskit": {
+        "status": "error",
+        "error": "OverflowError: cannot convert float infinity to integer"
+      },
+      "paper": {
+        "status": "infeasible-two-way"
+      }
+    }
+  },
+  {
+    "name": "qft6",
+    "qubits": 6,
+    "max_qubits": 4,
+    "depth": 12,
+    "vertices": 36,
+    "variables": 48,
+    "preprocessing_seconds": 0.3683779759999197,
+    "start_kind": "unchanged independent seed_states pool, shared by both models",
+    "source_fingerprint": "77987a170bb901b162a647880c020db3d03b87cd19796377c6ac3542b4f195cb",
+    "anneal_config": {
+      "max_qubits": 4,
+      "partition_mode": "multiway",
+      "steps": 240,
+      "cooling_rate": 0.93,
+      "temperature_levels": 120,
+      "initial_acceptance": 0.8,
+      "block_probability": 0.3,
+      "block_size": 4,
+      "pilot_steps": 16,
+      "penalty_multiplier": 1.0,
+      "allow_wire": true,
+      "allow_gate": true,
+      "search_space": "labels",
+      "interval_polish": true,
+      "proposal_balance": "variables",
+      "objective": "overhead",
+      "max_components": null,
+      "cache_size": 64,
+      "split_probability": 0.25,
+      "group_heatbath_probability": 0.0,
+      "temperature_calibration": "all",
+      "max_evaluations": 80
+    },
+    "methods": {
+      "wire_gate": {
+        "log_overhead": 7.8327085099488425,
+        "overhead": 2521.7503177755666,
+        "counts": {
+          "wire": 0,
+          "gate": 8
+        },
+        "widths": [
+          2,
+          4
+        ],
+        "segments": 6,
+        "excision_wire_cuts": 0,
+        "runs": [
+          {
+            "seed": 0,
+            "initial_log_overhead": 7.8327085099488425,
+            "log_overhead": 7.8327085099488425,
+            "counts": {
+              "wire": 0,
+              "gate": 8
+            },
+            "widths": [
+              2,
+              4
+            ],
+            "evaluations": 80,
+            "accepted": 60,
+            "seconds": 0.010186447999785742
+          },
+          {
+            "seed": 1,
+            "initial_log_overhead": 27.915939627588855,
+            "log_overhead": 26.609480844025263,
+            "counts": {
+              "wire": 1,
+              "gate": 16
+            },
+            "widths": [
+              1,
+              1,
+              1,
+              1,
+              2,
+              1
+            ],
+            "evaluations": 80,
+            "accepted": 20,
+            "seconds": 0.009212876999754371
+          },
+          {
+            "seed": 2,
+            "initial_log_overhead": 44.3614195558365,
+            "log_overhead": 44.3614195558365,
+            "counts": {
+              "wire": 16,
+              "gate": 0
+            },
+            "widths": [
+              4,
+              4,
+              4,
+              3,
+              3,
+              4
+            ],
+            "evaluations": 80,
+            "accepted": 25,
+            "seconds": 0.008828012999856583
+          }
+        ]
+      },
+      "wire_gate_excision": {
+        "log_overhead": 7.8327085099488425,
+        "overhead": 2521.7503177755666,
+        "counts": {
+          "wire": 0,
+          "gate": 8,
+          "excision": 0
+        },
+        "widths": [
+          2,
+          4
+        ],
+        "segments": 6,
+        "excision_wire_cuts": 0,
+        "runs": [
+          {
+            "seed": 0,
+            "initial_log_overhead": 7.8327085099488425,
+            "log_overhead": 7.8327085099488425,
+            "counts": {
+              "wire": 0,
+              "gate": 8,
+              "excision": 0
+            },
+            "widths": [
+              2,
+              4
+            ],
+            "evaluations": 80,
+            "accepted": 71,
+            "seconds": 0.021174346999941918
+          },
+          {
+            "seed": 1,
+            "initial_log_overhead": 27.915939627588855,
+            "log_overhead": 26.609480844025263,
+            "counts": {
+              "wire": 1,
+              "gate": 16,
+              "excision": 0
+            },
+            "widths": [
+              1,
+              1,
+              1,
+              1,
+              2,
+              1
+            ],
+            "evaluations": 80,
+            "accepted": 23,
+            "seconds": 0.023760077000133606
+          },
+          {
+            "seed": 2,
+            "initial_log_overhead": 44.3614195558365,
+            "log_overhead": 44.3614195558365,
+            "counts": {
+              "wire": 16,
+              "gate": 0,
+              "excision": 0
+            },
+            "widths": [
+              4,
+              4,
+              4,
+              3,
+              3,
+              4
+            ],
+            "evaluations": 80,
+            "accepted": 25,
+            "seconds": 0.02977771699988807
+          }
+        ]
+      },
+      "qiskit": {
+        "status": "feasible",
+        "log_sampling_overhead": 11.80236598808206,
+        "sampling_overhead": 133567.99968547246,
+        "widths": [
+          4,
+          4
+        ]
+      },
+      "paper": {
+        "status": "feasible",
+        "log_sampling_overhead": 11.802365988082062,
+        "sampling_overhead": 133567.99968547272,
+        "widths": [
+          4,
+          4
+        ]
+      }
+    }
+  },
+  {
+    "name": "qft12",
+    "qubits": 12,
+    "max_qubits": 9,
+    "depth": 24,
+    "vertices": 144,
+    "variables": 204,
+    "preprocessing_seconds": 0.5051420159998088,
+    "start_kind": "unchanged independent seed_states pool, shared by both models",
+    "source_fingerprint": "9f997716ee2fa6c6d920a471363349eb42bf892644d0e3a53a6cc25ace18a1a7",
+    "anneal_config": {
+      "max_qubits": 9,
+      "partition_mode": "multiway",
+      "steps": 240,
+      "cooling_rate": 0.93,
+      "temperature_levels": 120,
+      "initial_acceptance": 0.8,
+      "block_probability": 0.3,
+      "block_size": 4,
+      "pilot_steps": 16,
+      "penalty_multiplier": 1.0,
+      "allow_wire": true,
+      "allow_gate": true,
+      "search_space": "labels",
+      "interval_polish": true,
+      "proposal_balance": "variables",
+      "objective": "overhead",
+      "max_components": null,
+      "cache_size": 64,
+      "split_probability": 0.25,
+      "group_heatbath_probability": 0.0,
+      "temperature_calibration": "all",
+      "max_evaluations": 80
+    },
+    "methods": {
+      "wire_gate": {
+        "log_overhead": 13.588178144466179,
+        "overhead": 796655.919089684,
+        "counts": {
+          "wire": 0,
+          "gate": 32
+        },
+        "widths": [
+          4,
+          8
+        ],
+        "segments": 12,
+        "excision_wire_cuts": 0,
+        "runs": [
+          {
+            "seed": 0,
+            "initial_log_overhead": 13.588178144466179,
+            "log_overhead": 13.588178144466179,
+            "counts": {
+              "wire": 0,
+              "gate": 32
+            },
+            "widths": [
+              4,
+              8
+            ],
+            "evaluations": 80,
+            "accepted": 11,
+            "seconds": 0.017031917000167596
+          },
+          {
+            "seed": 1,
+            "initial_log_overhead": 65.17994613176641,
+            "log_overhead": 65.17994613176641,
+            "counts": {
+              "wire": 0,
+              "gate": 72
+            },
+            "widths": [
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            "evaluations": 80,
+            "accepted": 8,
+            "seconds": 0.017281843000091612
+          },
+          {
+            "seed": 2,
+            "initial_log_overhead": 130.31166994526956,
+            "log_overhead": 127.56347538613082,
+            "counts": {
+              "wire": 46,
+              "gate": 1
+            },
+            "widths": [
+              9,
+              8,
+              8,
+              9,
+              9,
+              9,
+              2,
+              2,
+              2
+            ],
+            "evaluations": 80,
+            "accepted": 1,
+            "seconds": 0.017602154000087467
+          }
+        ]
+      },
+      "wire_gate_excision": {
+        "log_overhead": 13.588178144466179,
+        "overhead": 796655.919089684,
+        "counts": {
+          "wire": 0,
+          "gate": 32,
+          "excision": 0
+        },
+        "widths": [
+          4,
+          8
+        ],
+        "segments": 12,
+        "excision_wire_cuts": 0,
+        "runs": [
+          {
+            "seed": 0,
+            "initial_log_overhead": 13.588178144466179,
+            "log_overhead": 13.588178144466179,
+            "counts": {
+              "wire": 0,
+              "gate": 32,
+              "excision": 0
+            },
+            "widths": [
+              4,
+              8
+            ],
+            "evaluations": 80,
+            "accepted": 9,
+            "seconds": 0.026736334999895917
+          },
+          {
+            "seed": 1,
+            "initial_log_overhead": 65.17994613176641,
+            "log_overhead": 65.17994613176641,
+            "counts": {
+              "wire": 0,
+              "gate": 72,
+              "excision": 0
+            },
+            "widths": [
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1,
+              1
+            ],
+            "evaluations": 80,
+            "accepted": 8,
+            "seconds": 0.07246553699997094
+          },
+          {
+            "seed": 2,
+            "initial_log_overhead": 130.31166994526956,
+            "log_overhead": 127.55740433939931,
+            "counts": {
+              "wire": 44,
+              "gate": 0,
+              "excision": 1
+            },
+            "widths": [
+              9,
+              8,
+              8,
+              9,
+              9,
+              9,
+              2,
+              2,
+              2
+            ],
+            "evaluations": 80,
+            "accepted": 5,
+            "seconds": 0.03807641999992484
+          }
+        ]
+      },
+      "qiskit": {
+        "status": "feasible",
+        "log_sampling_overhead": 16.524479301840362,
+        "sampling_overhead": 15013784.471452301,
+        "widths": [
+          6,
+          9
+        ]
+      },
+      "paper": {
+        "status": "feasible",
+        "log_sampling_overhead": 26.345476064654537,
+        "sampling_overhead": 276499835965.2449,
+        "widths": [
+          6,
+          6
+        ]
+      }
+    }
+  },
+  {
+    "name": "trotter_chain_100_L3_s19",
+    "qubits": 100,
+    "max_qubits": 75,
+    "depth": 107,
+    "vertices": 594,
+    "variables": 791,
+    "preprocessing_seconds": 0.10932692999995197,
+    "start_kind": "contiguous spatial labels, identical for both models",
+    "source_fingerprint": "b0c56fa5f1e3a9c04a553f0297b2edd538222b1a30858661e8e84d860fbfab62",
+    "anneal_config": {
+      "max_qubits": 75,
+      "partition_mode": "multiway",
+      "steps": 240,
+      "cooling_rate": 0.93,
+      "temperature_levels": 120,
+      "initial_acceptance": 0.8,
+      "block_probability": 0.3,
+      "block_size": 4,
+      "pilot_steps": 16,
+      "penalty_multiplier": 1.0,
+      "allow_wire": true,
+      "allow_gate": true,
+      "search_space": "labels",
+      "interval_polish": true,
+      "proposal_balance": "variables",
+      "objective": "overhead",
+      "max_components": null,
+      "cache_size": 64,
+      "split_probability": 0.25,
+      "group_heatbath_probability": 0.0,
+      "temperature_calibration": "all",
+      "max_evaluations": 80
+    },
+    "methods": {
+      "wire_gate": {
+        "log_overhead": 3.2652056284946025,
+        "overhead": 26.185494921160302,
+        "counts": {
+          "wire": 0,
+          "gate": 3
+        },
+        "widths": [
+          75,
+          25
+        ],
+        "segments": 100,
+        "excision_wire_cuts": 0,
+        "runs": [
+          {
+            "seed": 0,
+            "initial_log_overhead": 3.2652056284946025,
+            "log_overhead": 3.2652056284946025,
+            "counts": {
+              "wire": 0,
+              "gate": 3
+            },
+            "widths": [
+              75,
+              25
+            ],
+            "evaluations": 80,
+            "accepted": 6,
+            "seconds": 0.06876496200038673
+          },
+          {
+            "seed": 1,
+            "initial_log_overhead": 3.2652056284946025,
+            "log_overhead": 3.2652056284946025,
+            "counts": {
+              "wire": 0,
+              "gate": 3
+            },
+            "widths": [
+              75,
+              25
+            ],
+            "evaluations": 80,
+            "accepted": 30,
+            "seconds": 0.09525951700015867
+          },
+          {
+            "seed": 2,
+            "initial_log_overhead": 3.2652056284946025,
+            "log_overhead": 3.2652056284946025,
+            "counts": {
+              "wire": 0,
+              "gate": 3
+            },
+            "widths": [
+              75,
+              25
+            ],
+            "evaluations": 80,
+            "accepted": 38,
+            "seconds": 0.07190429899992523
+          }
+        ]
+      },
+      "wire_gate_excision": {
+        "log_overhead": 3.2652056284946025,
+        "overhead": 26.185494921160302,
+        "counts": {
+          "wire": 0,
+          "gate": 3,
+          "excision": 0
+        },
+        "widths": [
+          75,
+          25
+        ],
+        "segments": 100,
+        "excision_wire_cuts": 0,
+        "runs": [
+          {
+            "seed": 0,
+            "initial_log_overhead": 3.2652056284946025,
+            "log_overhead": 3.2652056284946025,
+            "counts": {
+              "wire": 0,
+              "gate": 3,
+              "excision": 0
+            },
+            "widths": [
+              75,
+              25
+            ],
+            "evaluations": 80,
+            "accepted": 6,
+            "seconds": 0.08942551899963291
+          },
+          {
+            "seed": 1,
+            "initial_log_overhead": 3.2652056284946025,
+            "log_overhead": 3.2652056284946025,
+            "counts": {
+              "wire": 0,
+              "gate": 3,
+              "excision": 0
+            },
+            "widths": [
+              75,
+              25
+            ],
+            "evaluations": 80,
+            "accepted": 30,
+            "seconds": 0.13446688600015477
+          },
+          {
+            "seed": 2,
+            "initial_log_overhead": 3.2652056284946025,
+            "log_overhead": 3.2652056284946025,
+            "counts": {
+              "wire": 0,
+              "gate": 3,
+              "excision": 0
+            },
+            "widths": [
+              75,
+              25
+            ],
+            "evaluations": 80,
+            "accepted": 38,
+            "seconds": 0.12906279799972253
+          }
+        ]
+      },
+      "qiskit": {
+        "status": "feasible",
+        "log_sampling_overhead": 3.2652056284946025,
+        "sampling_overhead": 26.185494921160302,
+        "widths": [
+          75,
+          25
+        ]
+      },
+      "paper": {
+        "status": "timeout",
+        "seconds": 5.0
+      }
+    }
+  },
+  {
+    "name": "trotter_chain_1000_L3_s19",
+    "qubits": 1000,
+    "max_qubits": 750,
+    "depth": 1007,
+    "vertices": 5994,
+    "variables": 7991,
+    "preprocessing_seconds": 1.0687944870001047,
+    "start_kind": "contiguous spatial labels, identical for both models",
+    "source_fingerprint": "a58a9812518284e8bba62b28cf5e8ccb56322cddef05bc0ee5265f8717c7969d",
+    "anneal_config": {
+      "max_qubits": 750,
+      "partition_mode": "multiway",
+      "steps": 240,
+      "cooling_rate": 0.93,
+      "temperature_levels": 120,
+      "initial_acceptance": 0.8,
+      "block_probability": 0.3,
+      "block_size": 4,
+      "pilot_steps": 16,
+      "penalty_multiplier": 1.0,
+      "allow_wire": true,
+      "allow_gate": true,
+      "search_space": "labels",
+      "interval_polish": true,
+      "proposal_balance": "variables",
+      "objective": "overhead",
+      "max_components": null,
+      "cache_size": 64,
+      "split_probability": 0.25,
+      "group_heatbath_probability": 0.0,
+      "temperature_calibration": "all",
+      "max_evaluations": 80
+    },
+    "methods": {
+      "wire_gate": {
+        "log_overhead": 3.2652056284946025,
+        "overhead": 26.185494921160302,
+        "counts": {
+          "wire": 0,
+          "gate": 3
+        },
+        "widths": [
+          750,
+          250
+        ],
+        "segments": 1000,
+        "excision_wire_cuts": 0,
+        "runs": [
+          {
+            "seed": 0,
+            "initial_log_overhead": 3.2652056284946025,
+            "log_overhead": 3.2652056284946025,
+            "counts": {
+              "wire": 0,
+              "gate": 3
+            },
+            "widths": [
+              750,
+              250
+            ],
+            "evaluations": 80,
+            "accepted": 9,
+            "seconds": 0.8583224839999275
+          },
+          {
+            "seed": 1,
+            "initial_log_overhead": 3.2652056284946025,
+            "log_overhead": 3.2652056284946025,
+            "counts": {
+              "wire": 0,
+              "gate": 3
+            },
+            "widths": [
+              750,
+              250
+            ],
+            "evaluations": 80,
+            "accepted": 4,
+            "seconds": 1.04224176300022
+          },
+          {
+            "seed": 2,
+            "initial_log_overhead": 3.2652056284946025,
+            "log_overhead": 3.2652056284946025,
+            "counts": {
+              "wire": 0,
+              "gate": 3
+            },
+            "widths": [
+              750,
+              250
+            ],
+            "evaluations": 80,
+            "accepted": 3,
+            "seconds": 0.8732646260000365
+          }
+        ]
+      },
+      "wire_gate_excision": {
+        "log_overhead": 3.2652056284946025,
+        "overhead": 26.185494921160302,
+        "counts": {
+          "wire": 0,
+          "gate": 3,
+          "excision": 0
+        },
+        "widths": [
+          750,
+          250
+        ],
+        "segments": 1000,
+        "excision_wire_cuts": 0,
+        "runs": [
+          {
+            "seed": 0,
+            "initial_log_overhead": 3.2652056284946025,
+            "log_overhead": 3.2652056284946025,
+            "counts": {
+              "wire": 0,
+              "gate": 3,
+              "excision": 0
+            },
+            "widths": [
+              750,
+              250
+            ],
+            "evaluations": 80,
+            "accepted": 9,
+            "seconds": 1.321565135000128
+          },
+          {
+            "seed": 1,
+            "initial_log_overhead": 3.2652056284946025,
+            "log_overhead": 3.2652056284946025,
+            "counts": {
+              "wire": 0,
+              "gate": 3,
+              "excision": 0
+            },
+            "widths": [
+              750,
+              250
+            ],
+            "evaluations": 80,
+            "accepted": 4,
+            "seconds": 1.322277559000213
+          },
+          {
+            "seed": 2,
+            "initial_log_overhead": 3.2652056284946025,
+            "log_overhead": 3.2652056284946025,
+            "counts": {
+              "wire": 0,
+              "gate": 3,
+              "excision": 0
+            },
+            "widths": [
+              750,
+              250
+            ],
+            "evaluations": 80,
+            "accepted": 3,
+            "seconds": 1.315810570999929
+          }
+        ]
+      },
+      "qiskit": {
+        "status": "timeout",
+        "seconds": 5.0
+      },
+      "paper": {
+        "status": "local-dense-reconstruction-resource-limit"
+      }
+    }
+  }
+]

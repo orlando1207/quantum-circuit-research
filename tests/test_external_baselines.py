@@ -1,4 +1,4 @@
-from math import exp, log
+from math import exp, isinf, log
 
 import networkx as nx
 import numpy as np
@@ -35,6 +35,17 @@ def test_direct_qiskit_gate_and_wire_baselines():
     assert result["sampling_overhead"] == pytest.approx(16)
     assert sum(result["widths"]) == 4
     assert result["wire_cuts"] == [{"qubit": 1, "before_operation_id": problem.operation_ids[1]}]
+
+
+def test_large_paper_plan_materialization_keeps_finite_log_cost():
+    circuit = QuantumCircuit(2)
+    for _ in range(350):
+        circuit.cx(0, 1)
+    topology = PaperTopology(CircuitProblem.create(circuit, "ZZ"))
+    _, result = topology.materialize(topology.spatial_labels((0, 1)))
+    assert result["sdk_component_widths"] == [1, 1]
+    assert isinf(result["sdk_individual_sampling_overhead"])
+    assert result["sdk_individual_log_sampling_overhead"] == pytest.approx(700 * log(3))
 
 
 def test_paper_graph_static_widths_and_swap_updates_against_connectivity():

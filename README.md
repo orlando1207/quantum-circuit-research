@@ -1,26 +1,21 @@
 # Quantum circuit partitioning research
 
-Partition a fixed quantum circuit using wire and gate cuts, execute smaller
-fragment families, and reconstruct observables classically. The optimizer
-supports multiway partitions, multi-start simulated annealing, temporal region
-moves, and capacity-aware graph initialization. Optional source-aware gate
-grouping now changes both the SA objective and coordinated proposals, with
-executable joint QPDs and width checks for local register bundles. Manual
-excision remains available separately.
+Partition fixed quantum circuits using wire cutting, gate cutting, and
+individual two-qubit gate excision. The optimizer keeps the contracted
+temporal incidence graph and label-based multiway simulated annealing, with
+structural seeding, temporal region moves, Hastings correction, multistart,
+and deterministic polishing. The current research and experiments disable
+gate grouping.
 
-The maintained specification and complete benchmark comparison are in
-[Workflow and algorithm](docs/WORKFLOW_AND_ALGORITHM.md). It replaces six
-superseded implementation/result notes. Original research plans and literature
-surveys remain background material.
+The maintained specification is
+[Workflow and algorithm](docs/WORKFLOW_AND_ALGORITHM.md). It explains physical
+sampling costs, excision realization patterns, resource accounting, accepted
+moves, and the experimental protocol. The
+[large-circuit study](validation/excision_quality_v1/SUMMARY.md) compares
+50–250-qubit cases against official Qiskit and an explicit reconstruction of
+arXiv:2608.05287 without GG, with a separate hyperparameter sweep.
 
-The [external-baseline reproduction](docs/BASELINE_REPRODUCTION.md) documents
-the directly usable official Qiskit optimizer, an explicitly labeled
-reconstruction of the paper's two-stage KL method, grouped-cost checks, and
-the limits preventing an exact authors' reproduction. Its
-[recorded results](validation/external_baselines_v1/SUMMARY.md) compare the
-same frozen inputs under the paper's width limits and tighter capacities.
-
-## Environment and checks
+## Environment
 
 ```bash
 conda activate quantum-partition
@@ -28,7 +23,7 @@ python -m pytest -q
 ruff check src tests examples
 ```
 
-The project uses an isolated Python 3.12 conda environment. To reproduce it:
+To recreate the environment:
 
 ```bash
 conda env create -f environment.yml
@@ -36,29 +31,30 @@ conda activate quantum-partition
 pip install -e . --no-deps
 ```
 
-`requirements.lock.txt` pins Python packages; `conda-linux-64.lock.txt` records
-the tested platform. No IBM account or quantum hardware is required.
+The project uses Python 3.12 in the isolated `quantum-partition` conda
+environment. Package/platform pins are in `requirements.lock.txt` and
+`conda-linux-64.lock.txt`. No IBM account or quantum device is needed for the
+current partition-quality experiments.
 
-## Prepare a circuit
+## Circuit inputs
 
-Inputs contain bound one-/two-qubit unitary gates and start in the all-zero
-state; put other preparations in the circuit. Decompose wider gates first.
-Original measurements, resets, classical registers, and adaptive control are
-outside the optimizer input format. Queries are Hermitian `SparsePauliOp` sums;
-Qiskit's rightmost Pauli character acts on qubit 0.
+Use bound one-/two-qubit unitary gates starting from the all-zero state; put
+other preparations in the circuit. Decompose wider gates first. Original
+measurements, resets, classical registers, and adaptive control are outside
+the optimizer input contract. Observables are Hermitian `SparsePauliOp` sums;
+Qiskit's rightmost Pauli character acts on qubit zero.
 
-Use `save_problem(problem, directory)` and `load_problem(directory)` for the
-canonical `circuit.qpy` + `problem.json` snapshot. Saved plans reference this
-snapshot and reject incompatible circuits or template libraries. OpenQASM is
-an editable exchange format. The [circuit guide](examples/circuits/README.md)
-explains import and verification with Bell, GHZ, RZZ, and T examples.
+`save_problem(problem, directory)` writes the canonical `circuit.qpy` and
+`problem.json` snapshot. `load_problem(directory)` restores and validates it.
+OpenQASM is an editable interchange format. See the
+[circuit guide](examples/circuits/README.md) for small verification inputs.
 
-## Optimize and execute
+## Optimize and reconstruct
 
 ```python
 from qiskit import QuantumCircuit
 from qpartition import (
-    AnnealConfig, CircuitProblem, GroupingConfig, HybridPlan, PartitionGraph,
+    AnnealConfig, CircuitProblem, HybridPlan, PartitionGraph,
     compile_hybrid, multi_start,
 )
 
@@ -67,130 +63,80 @@ circuit.h(0)
 circuit.cx(0, 1)
 circuit.cx(1, 2)
 circuit.cx(2, 3)
-graph = PartitionGraph(CircuitProblem.create(circuit, "XXXX"), grouping=GroupingConfig())
-config = AnnealConfig(max_qubits=2, partition_mode="multiway", steps=3000)
-runs = multi_start(graph, config, seeds=tuple(range(10)), workers=1)
-best = min((r.best for r in runs if r.best), key=lambda e: e.log_overhead)
-plan = HybridPlan.create(
-    graph, best.state, max_qubits=config.max_qubits,
-    partition_mode=config.partition_mode,
+problem = CircuitProblem.create(circuit, "XXXX")
+graph = PartitionGraph(problem, excision=True)
+config = AnnealConfig(
+    max_qubits=2, partition_mode="multiway", steps=2400,
+    max_evaluations=4000, pilot_steps=48,
+    temperature_calibration="feasible", cooling_rate=0.98,
 )
+runs = multi_start(graph, config, seeds=tuple(range(5)), workers=1)
+best = min((r.best for r in runs if r.best), key=lambda e: e.log_overhead)
+plan = HybridPlan.create(graph, best.state, max_qubits=2, partition_mode="multiway")
 compiled = compile_hybrid(graph, plan)
-print(best.block_widths, best.action_counts, best.sampling_overhead)
+print(best.block_widths, best.action_counts, best.log_overhead)
 print(compiled.run_exact().expectation)
 print(compiled.run_sampled(trials=1000, seed=42))
 ```
 
-Use a main guard in scripts with `workers > 1`. Save plans with `plan.save`.
-Exact reconstruction is a small-instance correctness oracle with explicit
-branch and qubit guards; larger plans use lazy sampled execution.
+`PartitionGraph(problem)` supplies the wire/gate ablation. Adding
+`excision=True` enables physical measure-and-prepare alternatives for certain
+single-gate/adjacent-wire cut patterns, with no new graph or search encoding.
+For CX the available excision recipe has norm 16 and overhead 256; other gate
+recipes can cost more. `excision_gamma` records an explicit cost assumption,
+and a mismatching recipe cannot be compiled at that assumed price. The
+quality study uses actual recipe norms throughout.
 
-`multiway` executes each connected component separately, after any selected
-joint groups connect their required local register bundles. Every fragment must
-fit `max_qubits`; each wire cut adds one static segment. `max_components` can
-limit these components. Unrelated computations are not packed together in this
-mode. `objective="overhead"` minimizes the selected physical QPD overhead;
-`objective="fragment_shots"` minimizes its product with the executed fragment
-count for the independent-trial model.
+Each retained-wire segment needs one static register. In `multiway` mode each
+connected component executes separately and must fit `max_qubits`. Segment
+conservation is N plus the number of structural wire cuts, including those
+absorbed by excision. `two_blocks` remains the compatibility default; select
+`multiway` explicitly. Automatic depth constraints, scheduling of register
+reuse, and hardware noise optimization are future work.
 
-`partition_mode="two_blocks"` retains the previous exact two-bin packing
-behavior and remains the constructor default for compatibility. Select
-`multiway` explicitly for the new workflow. `components` is its compatibility
-alias. Automatic depth constraints, register reuse, noise optimization, and
-runtime communication are not implemented.
+Large reconstruction uses lazy sampled branches. Exact reconstruction is a
+small-instance correctness oracle with explicit branch/qubit guards. Put
+multiprocess calls under a main guard when `workers > 1`.
 
-## Benchmarks and artifacts
-
-```bash
-python examples/run_multiway_benchmarks.py --workers 4 --output results/multiway-rerun
-python examples/check_sa_artifacts.py --directory results/multiway-rerun
-python examples/check_sa_artifacts.py --directory results/multiway-rerun/capacity_sweep
-```
-
-The runner preserves previous results and requires a fresh output directory.
-It uses the frozen source circuits in `validation/sa_benchmarks_v2`, five tuning
-profiles, 50 fresh final starts per main case, gate-only/wire-only ablations,
-and an additional capacity sweep. Main runs explicitly warm-start from the
-historical two-way winners; the tighter-capacity comparison uses fresh pools
-and matched tuning/trajectory budgets for both modes.
-
-Current results are in
-[`validation/multiway_benchmarks_v3`](validation/multiway_benchmarks_v3), including
-plans, QPY circuits, raw trajectories, physical compilation checks, and independent
-Qiskit width/norm checks. The [maintained document](docs/WORKFLOW_AND_ALGORITHM.md)
-lists all eight original Table-I baselines, all implemented benchmark results,
-missing-reproduction cases, and the capacity sweep. Matching counts or rounded
-costs does not establish identity with the paper's unpinned circuit artifacts.
-
-The earlier benchmark PNGs remain in
-[`validation/sa_benchmarks_v2/partition_png`](validation/sa_benchmarks_v2/partition_png).
-Regenerable template dumps and local pilot experiments are ignored by Git.
-
-For grouping-aware experiments at `M=floor(3*N/4)`:
+## Quality experiments
 
 ```bash
-python examples/run_grouping_benchmarks.py --output results/grouping-rerun --starts 50 --steps 1500 --workers 4
-python examples/check_grouping_artifacts.py --directory results/grouping-rerun
-python examples/summarize_grouping_results.py --directory results/grouping-rerun
+python examples/run_excision_quality.py --output results/excision-quality-rerun --workers 6
+python examples/check_excision_quality.py --directory results/excision-quality-rerun
 ```
 
-The [grouping comparison](validation/grouping_benchmarks_v1/SUMMARY.md) includes
-previous independent results, matched independent SA, post-only grouping,
-cost-only grouping, grouped two-block SA, and grouped multiway SA. Automatic
-groups are bounded and source aware; they do not reproduce the paper's missing
-manual manifests. Omit `grouping` for the independent baseline, or use
-`GroupingConfig(group_moves=False)` for grouped costs with the original regions.
+This runs ten profiles on separate 64-qubit tuning cases, then five matched
+starts with and without excision on 22 held-out cases. It includes graph
+states, explicitly approximate QFT, fixed-angle Hamiltonian simulation,
+random brickwork, and labeled synthetic controls. The original generic seed
+pool is shared between methods; no known separators or baseline winners are
+supplied. Baselines request 50 restarts with explicit per-case deadlines;
+completed counts and failures remain visible.
 
-The latest [grouping v2 comparison](validation/grouping_benchmarks_v2/SUMMARY.md)
-tests both anchor directions, four-gate source-wire windows, compressed physical
-joint maps, and coupled group/spatial heat baths. The
-[QFT6 audit](docs/WORKFLOW_AND_ALGORITHM.md#13-qft6-audit-what-can-explain-2500-becoming-42)
-separates an executable cost from a Choi-Schmidt lower bound that rounds to 42.
+The runner supports `--phase prepare`, `tune`, `final`, `baselines`,
+`confirmation`, and `summarize` for staged execution. Use the same configuration to resume, or a
+fresh directory for changed settings. Results retain source identities,
+per-start diagnostics, widths, recipe audits, budgets, and timing. Frozen
+inputs and regenerable plan dumps stay local and are ignored by Git.
 
-```bash
-python examples/run_grouping_v2.py --output results/grouping-v2 --workers 4
-python examples/check_grouping_artifacts.py --directory results/grouping-v2
-python examples/summarize_grouping_v2.py --directory results/grouping-v2
-python examples/check_qft6_density.py --directory results/grouping-v2
-```
-
-For the enhanced search, set `group_heatbath_probability=0.4`,
-`temperature_calibration="feasible"`, and an explicit `max_evaluations` in
-`AnnealConfig`. These options remain opt-in for comparison. The new grouping
-library changes plan fingerprints; historical grouped plans must be regenerated
-from their saved masks. Independent plans are unaffected.
-
-To rerun the external comparison in the same conda environment:
-
-```bash
-python examples/run_external_baselines.py --output results/external-rerun --starts 50 --workers 4 --sa-steps 2000
-python examples/summarize_external_baselines.py --directory results/external-rerun
-python examples/check_qiskit_search_budget.py --directory results/external-rerun
-```
-
-The SDK is called directly; it is not replaced with our optimizer. The paper
-reconstruction records its missing-detail assumptions, and grouped diagnostics
-use explicit manifests. A new source-derived historical Grover candidate has
-24 CX + 14 CP gates; the old 38-CX control remains a separate circuit.
+The earlier [integration checks](validation/incidence_excision_v3/SUMMARY.md)
+include known-witness 100/1000-qubit controls. Those validate the excision
+integration; they are distinct from the new optimizer-quality experiment.
+Historical benchmark artifacts remain available, but the linked workflow and
+large-circuit study describe the current active methodology.
 
 ## Foundation APIs
 
-Manual standard cuts use `CutPlan`, `WireCut`, and `compile_cut`; queries can be
-reconstructed exactly or with Aer shots and `bootstrap_uncertainty`. Manual
-`compile_excision` supports bounded small gates using validated physical
-measure/prepare expansions. Automatic core search accepts only gate/wire cuts.
-
-Independent plans use `temporal-incidence-v2`; grouped plans use
-`temporal-incidence-grouped-v3` and validate a group-LUT fingerprint.
-The explicit legacy graph/compiler
-and `migrate_legacy_plan` handle compatible historical plans; core SA does not
-silently accept old excision states.
+Manual standard cuts use `CutPlan`, `WireCut`, and `compile_cut`. Manual
+`compile_excision` supports small gates through physical measure/prepare
+expansions. `HybridPlan` and `compile_hybrid` handle the automatic core's
+wire/gate/excision plans and validate source/recipe fingerprints.
 
 ```bash
 python examples/foundation_demo.py --shots 2000 --seed 42 --output results/foundation.json
 python examples/verify_simple_circuits.py --shots 2000 --seed 42 --output results/simple_verification
 ```
 
-The [foundation validation](validation/README.md) and circuit guide describe the
-saved exact/shot verification cases. Full-distribution reconstruction, broader
-group discovery, and IBM hardware adapters remain later milestones.
+The [foundation validation](validation/README.md) records saved small exact
+and shot-based checks. Full-distribution reconstruction and IBM hardware
+adapters remain later milestones.

@@ -1,0 +1,62 @@
+[
+  {
+    "case": "graphstate_100_M75",
+    "original": {
+      "starts": 5,
+      "feasible": 5,
+      "best_log10": 15.267880151029194,
+      "median_log10": 19.084850188786497
+    },
+    "slow_cooling": {
+      "starts": 5,
+      "feasible": 5,
+      "best_log10": 15.267880151029194,
+      "median_log10": 19.084850188786497
+    }
+  },
+  {
+    "case": "aqft_100_M75",
+    "original": {
+      "starts": 5,
+      "feasible": 5,
+      "best_log10": 3.249292179774257,
+      "median_log10": 3.639826414340331
+    },
+    "slow_cooling": {
+      "starts": 5,
+      "feasible": 5,
+      "best_log10": 3.639826414340331,
+      "median_log10": 3.9304706893976675
+    }
+  },
+  {
+    "case": "trotter_grid_100_M75",
+    "original": {
+      "starts": 5,
+      "feasible": 5,
+      "best_log10": 14.180607867346446,
+      "median_log10": 106.6726928693827
+    },
+    "slow_cooling": {
+      "starts": 5,
+      "feasible": 5,
+      "best_log10": 14.180607867346446,
+      "median_log10": 102.92069196569314
+    }
+  },
+  {
+    "case": "random_brickwork_100_M75",
+    "original": {
+      "starts": 5,
+      "feasible": 5,
+      "best_log10": 74.5214505031214,
+      "median_log10": 108.64603019706635
+    },
+    "slow_cooling": {
+      "starts": 5,
+      "feasible": 5,
+      "best_log10": 74.5214505031214,
+      "median_log10": 102.42082019399719
+    }
+  }
+]

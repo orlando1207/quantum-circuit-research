@@ -1,0 +1,370 @@
+{
+  "case": "train_aqft",
+  "method": "wge",
+  "profile": "combined",
+  "seed": 1001,
+  "seed_pool_index": 1,
+  "config": {
+    "max_qubits": 22,
+    "partition_mode": "multiway",
+    "steps": 960,
+    "cooling_rate": 0.95,
+    "temperature_levels": 120,
+    "initial_acceptance": 0.6,
+    "block_probability": 0.6,
+    "block_size": 8,
+    "pilot_steps": 48,
+    "penalty_multiplier": 1.0,
+    "allow_wire": true,
+    "allow_gate": true,
+    "search_space": "labels",
+    "interval_polish": true,
+    "proposal_balance": "variables",
+    "objective": "overhead",
+    "max_components": null,
+    "cache_size": 4096,
+    "split_probability": 0.12,
+    "group_heatbath_probability": 0.0,
+    "temperature_calibration": "feasible",
+    "max_evaluations": 1600
+  },
+  "status": "feasible",
+  "initial_log_overhead": 41.58883083359672,
+  "initial_feasible": true,
+  "initial_temperature": 6.495051170739034,
+  "final_temperature": 0.014510808353443034,
+  "seconds": 3.9260058840000056,
+  "evaluations": 1600,
+  "accepted": 96,
+  "changed": 960,
+  "proposals": 1008,
+  "polish_evaluations": 684,
+  "before_polish": 1.1529215046068448e+18,
+  "budget_exhausted": true,
+  "proposed_action_changes": {
+    "gate_added": 1833,
+    "gate_removed": 15,
+    "wire_added": 1428,
+    "wire_removed": 3
+  },
+  "accepted_action_changes": {
+    "gate_added": 90,
+    "gate_removed": 5,
+    "wire_added": 58,
+    "wire_removed": 2
+  },
+  "trace": [
+    {
+      "step": 1,
+      "temperature": 5.568694497512379,
+      "current_feasible": true,
+      "current_log_overhead": 41.58883083359672,
+      "best_log_overhead": 41.58883083359672,
+      "current_action_counts": {
+        "wire": 15,
+        "gate": 0,
+        "excision": 0
+      },
+      "current_fragments": 4,
+      "best_fragments": 4
+    },
+    {
+      "step": 48,
+      "temperature": 4.53573647256444,
+      "current_feasible": true,
+      "current_log_overhead": 60.19060980749659,
+      "best_log_overhead": 41.58883083359672,
+      "current_action_counts": {
+        "wire": 17,
+        "gate": 14,
+        "excision": 0
+      },
+      "current_fragments": 7,
+      "best_fragments": 4
+    },
+    {
+      "step": 96,
+      "temperature": 3.69438570525669,
+      "current_feasible": true,
+      "current_log_overhead": 114.0207486612563,
+      "best_log_overhead": 41.58883083359672,
+      "current_action_counts": {
+        "wire": 28,
+        "gate": 38,
+        "excision": 1
+      },
+      "current_fragments": 20,
+      "best_fragments": 4
+    },
+    {
+      "step": 144,
+      "temperature": 2.7157129727751133,
+      "current_feasible": true,
+      "current_log_overhead": 149.61827966675514,
+      "best_log_overhead": 41.58883083359672,
+      "current_action_counts": {
+        "wire": 32,
+        "gate": 47,
+        "excision": 4
+      },
+      "current_fragments": 31,
+      "best_fragments": 4
+    },
+    {
+      "step": 192,
+      "temperature": 1.9962985835520968,
+      "current_feasible": true,
+      "current_log_overhead": 192.30980248026975,
+      "best_log_overhead": 41.58883083359672,
+      "current_action_counts": {
+        "wire": 38,
+        "gate": 60,
+        "excision": 7
+      },
+      "current_fragments": 42,
+      "best_fragments": 4
+    },
+    {
+      "step": 240,
+      "temperature": 1.4674629000353199,
+      "current_feasible": true,
+      "current_log_overhead": 224.18128370275568,
+      "best_log_overhead": 41.58883083359672,
+      "current_action_counts": {
+        "wire": 42,
+        "gate": 63,
+        "excision": 10
+      },
+      "current_fragments": 49,
+      "best_fragments": 4
+    },
+    {
+      "step": 288,
+      "temperature": 1.0787200776090085,
+      "current_feasible": true,
+      "current_log_overhead": 244.43432352659434,
+      "best_log_overhead": 41.58883083359672,
+      "current_action_counts": {
+        "wire": 46,
+        "gate": 72,
+        "excision": 11
+      },
+      "current_fragments": 57,
+      "best_fragments": 4
+    },
+    {
+      "step": 336,
+      "temperature": 0.7929583813047525,
+      "current_feasible": true,
+      "current_log_overhead": 246.92116210961305,
+      "best_log_overhead": 41.58883083359672,
+      "current_action_counts": {
+        "wire": 45,
+        "gate": 71,
+        "excision": 12
+      },
+      "current_fragments": 58,
+      "best_fragments": 4
+    },
+    {
+      "step": 384,
+      "temperature": 0.58289727570025,
+      "current_feasible": true,
+      "current_log_overhead": 252.82436218984483,
+      "best_log_overhead": 41.58883083359672,
+      "current_action_counts": {
+        "wire": 47,
+        "gate": 72,
+        "excision": 12
+      },
+      "current_fragments": 59,
+      "best_fragments": 4
+    },
+    {
+      "step": 432,
+      "temperature": 0.42848306043465856,
+      "current_feasible": true,
+      "current_log_overhead": 253.5114846599776,
+      "best_log_overhead": 41.58883083359672,
+      "current_action_counts": {
+        "wire": 45,
+        "gate": 74,
+        "excision": 13
+      },
+      "current_fragments": 62,
+      "best_fragments": 4
+    },
+    {
+      "step": 480,
+      "temperature": 0.31497442299569917,
+      "current_feasible": true,
+      "current_log_overhead": 253.5114846599776,
+      "best_log_overhead": 41.58883083359672,
+      "current_action_counts": {
+        "wire": 45,
+        "gate": 74,
+        "excision": 13
+      },
+      "current_fragments": 62,
+      "best_fragments": 4
+    },
+    {
+      "step": 528,
+      "temperature": 0.2315351440984269,
+      "current_feasible": true,
+      "current_log_overhead": 253.5114846599776,
+      "best_log_overhead": 41.58883083359672,
+      "current_action_counts": {
+        "wire": 45,
+        "gate": 74,
+        "excision": 13
+      },
+      "current_fragments": 62,
+      "best_fragments": 4
+    },
+    {
+      "step": 576,
+      "temperature": 0.17019960682144442,
+      "current_feasible": true,
+      "current_log_overhead": 253.5114846599776,
+      "best_log_overhead": 41.58883083359672,
+      "current_action_counts": {
+        "wire": 45,
+        "gate": 74,
+        "excision": 13
+      },
+      "current_fragments": 62,
+      "best_fragments": 4
+    },
+    {
+      "step": 624,
+      "temperature": 0.12511235076200716,
+      "current_feasible": true,
+      "current_log_overhead": 253.5114846599776,
+      "best_log_overhead": 41.58883083359672,
+      "current_action_counts": {
+        "wire": 45,
+        "gate": 74,
+        "excision": 13
+      },
+      "current_fragments": 62,
+      "best_fragments": 4
+    },
+    {
+      "step": 672,
+      "temperature": 0.09196907446218199,
+      "current_feasible": true,
+      "current_log_overhead": 253.5114846599776,
+      "best_log_overhead": 41.58883083359672,
+      "current_action_counts": {
+        "wire": 45,
+        "gate": 74,
+        "excision": 13
+      },
+      "current_fragments": 62,
+      "best_fragments": 4
+    },
+    {
+      "step": 720,
+      "temperature": 0.06760572082543674,
+      "current_feasible": true,
+      "current_log_overhead": 253.5114846599776,
+      "best_log_overhead": 41.58883083359672,
+      "current_action_counts": {
+        "wire": 45,
+        "gate": 74,
+        "excision": 13
+      },
+      "current_fragments": 62,
+      "best_fragments": 4
+    },
+    {
+      "step": 768,
+      "temperature": 0.04969641713863622,
+      "current_feasible": true,
+      "current_log_overhead": 253.5114846599776,
+      "best_log_overhead": 41.58883083359672,
+      "current_action_counts": {
+        "wire": 45,
+        "gate": 74,
+        "excision": 13
+      },
+      "current_fragments": 62,
+      "best_fragments": 4
+    },
+    {
+      "step": 816,
+      "temperature": 0.036531433231728735,
+      "current_feasible": true,
+      "current_log_overhead": 253.5114846599776,
+      "best_log_overhead": 41.58883083359672,
+      "current_action_counts": {
+        "wire": 45,
+        "gate": 74,
+        "excision": 13
+      },
+      "current_fragments": 62,
+      "best_fragments": 4
+    },
+    {
+      "step": 864,
+      "temperature": 0.026853960321552423,
+      "current_feasible": true,
+      "current_log_overhead": 253.5114846599776,
+      "best_log_overhead": 41.58883083359672,
+      "current_action_counts": {
+        "wire": 45,
+        "gate": 74,
+        "excision": 13
+      },
+      "current_fragments": 62,
+      "best_fragments": 4
+    },
+    {
+      "step": 912,
+      "temperature": 0.0197401284635387,
+      "current_feasible": true,
+      "current_log_overhead": 250.13417078617647,
+      "best_log_overhead": 41.58883083359672,
+      "current_action_counts": {
+        "wire": 45,
+        "gate": 72,
+        "excision": 13
+      },
+      "current_fragments": 62,
+      "best_fragments": 4
+    },
+    {
+      "step": 960,
+      "temperature": 0.014510808353443034,
+      "current_feasible": true,
+      "current_log_overhead": 250.13417078617647,
+      "best_log_overhead": 41.58883083359672,
+      "current_action_counts": {
+        "wire": 45,
+        "gate": 72,
+        "excision": 13
+      },
+      "current_fragments": 62,
+      "best_fragments": 4
+    }
+  ],
+  "log_sampling_overhead": 33.83274628995561,
+  "sampling_overhead": 493599852628773.3,
+  "widths": [
+    21,
+    21,
+    21,
+    13
+  ],
+  "fragments": 4,
+  "counts": {
+    "wire": 12,
+    "gate": 3,
+    "excision": 0
+  },
+  "segments": 76,
+  "excision_wire_cuts": 0,
+  "raw_wire_cuts": 12,
+  "realization_selection_complete": null
+}

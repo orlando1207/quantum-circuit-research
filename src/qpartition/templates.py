@@ -70,21 +70,29 @@ class ActionTemplate:
     basis: QPDBasis | None = None
     excision: ExcisionDecomposition | None = None
     reconstruction_residual: float | None = None
+    assumed_gamma: float | None = None
 
     @property
     def log_overhead(self) -> float:
-        return 2 * log(self.gamma)
+        return 2 * log(self.gamma if self.assumed_gamma is None else self.assumed_gamma)
 
 
 class TemplateRegistry:
     """One template per supported action; costs never depend on circuit query.
 
-    Qiskit supplies gate/move QPDs. Excision is excluded by default; only the
-    historical/refinement path can opt in to checked PTMs with tolerance zero.
+    Qiskit supplies gate/move QPDs. Excision is excluded by default; the
+    incidence-graph excision factors and legacy compiler opt in to checked PTMs.
     """
 
-    def __init__(self, *, include_excision: bool = False) -> None:
+    def __init__(
+        self, *, include_excision: bool = False, excision_gamma: float | None = None
+    ) -> None:
+        if excision_gamma is not None and (
+            not np.isfinite(excision_gamma) or excision_gamma < 1 or not include_excision
+        ):
+            raise ValueError("An assumed excision gamma requires excision and must be finite >= 1.")
         self.include_excision = include_excision
+        self.excision_gamma = excision_gamma
         self.entries: dict[str, ActionTemplate] = {}
         self.gate_cache: dict[str, tuple[str | None, str | None]] = {}
         basis = QPDBasis.from_instruction(Move())
@@ -144,13 +152,15 @@ class TemplateRegistry:
         coefficients = tuple(term.coefficient for term in excision.terms)
         gamma = float(sum(abs(c) for c in coefficients))
         entry = ActionTemplate(
-            f"excision:{digest}",
+            f"excision:{digest}"
+            + (f":assumed={self.excision_gamma!r}" if self.excision_gamma is not None else ""),
             "excision",
             gate.num_qubits,
             coefficients,
             gamma,
             excision=excision,
             reconstruction_residual=residual,
+            assumed_gamma=self.excision_gamma,
         )
         self.entries[entry.template_id] = entry
         self.gate_cache[digest] = (cut.template_id if cut else None, entry.template_id)
@@ -164,7 +174,10 @@ class TemplateRegistry:
                 "kind": entry.kind,
                 "arity": entry.arity,
                 "gamma": entry.gamma,
-                "sampling_overhead": entry.gamma**2,
+                "sampling_overhead": float(np.exp(entry.log_overhead)),
+                "physical_gamma": entry.gamma,
+                "assumed_gamma": entry.assumed_gamma,
+                "cost_provenance": "assumed" if entry.assumed_gamma is not None else "constructed",
                 "log_overhead": entry.log_overhead,
                 "coefficients": entry.coefficients,
                 "resource_model": "LO-no-ancillas-static-segments",

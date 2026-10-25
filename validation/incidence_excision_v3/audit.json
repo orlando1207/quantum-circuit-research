@@ -1,0 +1,141 @@
+{
+  "plans": [
+    {
+      "circuit": "excision_butterfly_6_L3_s19",
+      "method": "wire_gate",
+      "source_checked": true,
+      "cost_checked": true,
+      "resources_checked": true,
+      "branch_compiled": true
+    },
+    {
+      "circuit": "excision_butterfly_6_L3_s19",
+      "method": "wire_gate_excision",
+      "source_checked": true,
+      "cost_checked": true,
+      "resources_checked": true,
+      "branch_compiled": true
+    },
+    {
+      "circuit": "excision_butterfly_18_L3_s19",
+      "method": "wire_gate",
+      "source_checked": true,
+      "cost_checked": true,
+      "resources_checked": true,
+      "branch_compiled": true
+    },
+    {
+      "circuit": "excision_butterfly_18_L3_s19",
+      "method": "wire_gate_excision",
+      "source_checked": true,
+      "cost_checked": true,
+      "resources_checked": true,
+      "branch_compiled": true
+    },
+    {
+      "circuit": "excision_butterfly_100_L3_s19",
+      "method": "wire_gate",
+      "source_checked": true,
+      "cost_checked": true,
+      "resources_checked": true,
+      "branch_compiled": true
+    },
+    {
+      "circuit": "excision_butterfly_100_L3_s19",
+      "method": "wire_gate_excision",
+      "source_checked": true,
+      "cost_checked": true,
+      "resources_checked": true,
+      "branch_compiled": true
+    },
+    {
+      "circuit": "excision_butterfly_1000_L3_s19",
+      "method": "wire_gate",
+      "source_checked": true,
+      "cost_checked": true,
+      "resources_checked": true,
+      "branch_compiled": true
+    },
+    {
+      "circuit": "excision_butterfly_1000_L3_s19",
+      "method": "wire_gate_excision",
+      "source_checked": true,
+      "cost_checked": true,
+      "resources_checked": true,
+      "branch_compiled": true
+    },
+    {
+      "circuit": "qft6",
+      "method": "wire_gate",
+      "source_checked": true,
+      "cost_checked": true,
+      "resources_checked": true,
+      "branch_compiled": true
+    },
+    {
+      "circuit": "qft6",
+      "method": "wire_gate_excision",
+      "source_checked": true,
+      "cost_checked": true,
+      "resources_checked": true,
+      "branch_compiled": true
+    },
+    {
+      "circuit": "qft12",
+      "method": "wire_gate",
+      "source_checked": true,
+      "cost_checked": true,
+      "resources_checked": true,
+      "branch_compiled": true
+    },
+    {
+      "circuit": "qft12",
+      "method": "wire_gate_excision",
+      "source_checked": true,
+      "cost_checked": true,
+      "resources_checked": true,
+      "branch_compiled": true
+    },
+    {
+      "circuit": "trotter_chain_100_L3_s19",
+      "method": "wire_gate",
+      "source_checked": true,
+      "cost_checked": true,
+      "resources_checked": true,
+      "branch_compiled": true
+    },
+    {
+      "circuit": "trotter_chain_100_L3_s19",
+      "method": "wire_gate_excision",
+      "source_checked": true,
+      "cost_checked": true,
+      "resources_checked": true,
+      "branch_compiled": true
+    },
+    {
+      "circuit": "trotter_chain_1000_L3_s19",
+      "method": "wire_gate",
+      "source_checked": true,
+      "cost_checked": true,
+      "resources_checked": true,
+      "branch_compiled": true
+    },
+    {
+      "circuit": "trotter_chain_1000_L3_s19",
+      "method": "wire_gate_excision",
+      "source_checked": true,
+      "cost_checked": true,
+      "resources_checked": true,
+      "branch_compiled": true
+    }
+  ],
+  "source_hashes_match": true,
+  "archive_hashes_match": true,
+  "original_search_modules": {
+    "annealing.py": true,
+    "label_moves.py": true,
+    "multiway.py": true,
+    "group_heatbath.py": true
+  },
+  "ordinary_group_fingerprint_smoke_check": true
+}

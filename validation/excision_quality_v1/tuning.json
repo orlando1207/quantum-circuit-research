@@ -1,0 +1,197 @@
+{
+  "selected": "slow_cooling",
+  "profiles": [
+    {
+      "profile": "slow_cooling",
+      "changes": {
+        "temperature_calibration": "feasible",
+        "cooling_rate": 0.98
+      },
+      "failures": 0,
+      "mean_median_log10_regret": 0.2318629323803691,
+      "median_seconds": 7.988471327000298,
+      "median_acceptance": 0.85,
+      "median_polish_evaluations": 1131,
+      "cells": {
+        "train_graphstate": 12.40515262271122,
+        "train_aqft": 13.726054036971291,
+        "train_trotter_grid": 93.59201192448697,
+        "train_random_brickwork": 44.89466532707531,
+        "train_excision_butterfly": 2.408239965311849
+      }
+    },
+    {
+      "profile": "long_intervals",
+      "changes": {
+        "temperature_calibration": "feasible",
+        "block_probability": 0.6,
+        "block_size": 8
+      },
+      "failures": 0,
+      "mean_median_log10_regret": 0.5751612006535574,
+      "median_seconds": 7.889509266999994,
+      "median_acceptance": 0.4864583333333333,
+      "median_polish_evaluations": 971,
+      "cells": {
+        "train_graphstate": 12.40515262271122,
+        "train_aqft": 14.693375021360435,
+        "train_trotter_grid": 92.43269726258512,
+        "train_random_brickwork": 46.80315034595395,
+        "train_excision_butterfly": 2.408239965311849
+      }
+    },
+    {
+      "profile": "original",
+      "changes": {},
+      "failures": 0,
+      "mean_median_log10_regret": 0.6135599361560977,
+      "median_seconds": 9.481967826999607,
+      "median_acceptance": 0.5791666666666667,
+      "median_polish_evaluations": 1024,
+      "cells": {
+        "train_graphstate": 12.40515262271122,
+        "train_aqft": 13.726054036971291,
+        "train_trotter_grid": 93.59201192448697,
+        "train_random_brickwork": 46.80315034595395,
+        "train_excision_butterfly": 2.408239965311849
+      }
+    },
+    {
+      "profile": "combined",
+      "changes": {
+        "temperature_calibration": "feasible",
+        "cooling_rate": 0.95,
+        "initial_acceptance": 0.6,
+        "block_probability": 0.6,
+        "block_size": 8,
+        "split_probability": 0.12
+      },
+      "failures": 0,
+      "mean_median_log10_regret": 0.6251366952968773,
+      "median_seconds": 4.960953165000319,
+      "median_acceptance": 0.3385416666666667,
+      "median_polish_evaluations": 786,
+      "cells": {
+        "train_graphstate": 12.65503009592782,
+        "train_aqft": 14.693375021360435,
+        "train_trotter_grid": 92.43269726258512,
+        "train_random_brickwork": 46.80315034595395,
+        "train_excision_butterfly": 2.408239965311849
+      }
+    },
+    {
+      "profile": "feasible_temperature",
+      "changes": {
+        "temperature_calibration": "feasible"
+      },
+      "failures": 0,
+      "mean_median_log10_regret": 0.8070241330339265,
+      "median_seconds": 7.95865753399994,
+      "median_acceptance": 0.4375,
+      "median_polish_evaluations": 950,
+      "cells": {
+        "train_graphstate": 12.40515262271122,
+        "train_aqft": 14.693375021360435,
+        "train_trotter_grid": 93.59201192448697,
+        "train_random_brickwork": 46.80315034595395,
+        "train_excision_butterfly": 2.408239965311849
+      }
+    },
+    {
+      "profile": "fewer_regions",
+      "changes": {
+        "temperature_calibration": "feasible",
+        "block_probability": 0.1
+      },
+      "failures": 0,
+      "mean_median_log10_regret": 0.8070241330339265,
+      "median_seconds": 5.97337146999962,
+      "median_acceptance": 0.43333333333333335,
+      "median_polish_evaluations": 920,
+      "cells": {
+        "train_graphstate": 12.40515262271122,
+        "train_aqft": 14.693375021360435,
+        "train_trotter_grid": 93.59201192448697,
+        "train_random_brickwork": 46.80315034595395,
+        "train_excision_butterfly": 2.408239965311849
+      }
+    },
+    {
+      "profile": "more_regions",
+      "changes": {
+        "temperature_calibration": "feasible",
+        "block_probability": 0.7
+      },
+      "failures": 0,
+      "mean_median_log10_regret": 0.8070241330339265,
+      "median_seconds": 7.6942012819999945,
+      "median_acceptance": 0.478125,
+      "median_polish_evaluations": 959,
+      "cells": {
+        "train_graphstate": 12.40515262271122,
+        "train_aqft": 14.693375021360435,
+        "train_trotter_grid": 93.59201192448697,
+        "train_random_brickwork": 46.80315034595395,
+        "train_excision_butterfly": 2.408239965311849
+      }
+    },
+    {
+      "profile": "more_splits",
+      "changes": {
+        "temperature_calibration": "feasible",
+        "split_probability": 0.5
+      },
+      "failures": 0,
+      "mean_median_log10_regret": 0.8070241330339265,
+      "median_seconds": 7.973313999000311,
+      "median_acceptance": 0.4947916666666667,
+      "median_polish_evaluations": 949,
+      "cells": {
+        "train_graphstate": 12.40515262271122,
+        "train_aqft": 14.693375021360435,
+        "train_trotter_grid": 93.59201192448697,
+        "train_random_brickwork": 46.80315034595395,
+        "train_excision_butterfly": 2.408239965311849
+      }
+    },
+    {
+      "profile": "fast_cooling",
+      "changes": {
+        "temperature_calibration": "feasible",
+        "cooling_rate": 0.88
+      },
+      "failures": 0,
+      "mean_median_log10_regret": 0.8569996276772465,
+      "median_seconds": 3.8379340950004917,
+      "median_acceptance": 0.23645833333333333,
+      "median_polish_evaluations": 820,
+      "cells": {
+        "train_graphstate": 12.65503009592782,
+        "train_aqft": 14.693375021360435,
+        "train_trotter_grid": 93.59201192448697,
+        "train_random_brickwork": 46.80315034595395,
+        "train_excision_butterfly": 2.408239965311849
+      }
+    },
+    {
+      "profile": "fewer_splits",
+      "changes": {
+        "temperature_calibration": "feasible",
+        "split_probability": 0.08
+      },
+      "failures": 0,
+      "mean_median_log10_regret": 0.8569996276772465,
+      "median_seconds": 5.723536205999153,
+      "median_acceptance": 0.36666666666666664,
+      "median_polish_evaluations": 858,
+      "cells": {
+        "train_graphstate": 12.65503009592782,
+        "train_aqft": 14.693375021360435,
+        "train_trotter_grid": 93.59201192448697,
+        "train_random_brickwork": 46.80315034595395,
+        "train_excision_butterfly": 2.408239965311849
+      }
+    }
+  ],
+  "selection": "Failures, then mean across training cases of median-start log10 regret; profile name breaks exact ties. Holdouts not used."
+}

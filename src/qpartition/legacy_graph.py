@@ -156,7 +156,10 @@ class LegacyPartitionGraph:
         partition_mode: str = "two_blocks",
         max_components: int | None = None,
         validate: bool = True,
+        forced_groups: tuple[str, ...] | None = None,
     ) -> GraphEvaluation:
+        if forced_groups is not None:
+            raise ValueError("LegacyPartitionGraph has no grouping/excision-selection library.")
         if validate:
             self.validate_state(state)
         if isinstance(max_qubits, bool) or not isinstance(max_qubits, int) or max_qubits < 1:
